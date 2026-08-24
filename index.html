@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>TripSplit • Secure Group Expenses</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F6F7FB;--card:#fff;--ink:#0F172A;--muted:#64748B;--line:#E2E8F0;
+  --blue:#3B5BFE;--blue-soft:#EEF2FF;--green:#10B981;--green-soft:#ECFDF5;
+  --yellow:#F59E0B;--red:#EF4444;--red-soft:#FEF2F2;--shadow:0 10px 30px rgba(15,23,42,0.06);
+  --radius:20px;--radius-sm:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);padding-bottom:96px;}
+h1,h2,h3{font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:-0.02em;}
+.topbar{position:sticky;top:0;z-index:20;background:rgba(255,255,255,0.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);padding:14px 16px;}
+.topbar-inner{max-width:720px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.brand{display:flex;align-items:center;gap:10px;}
+.logo{width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg,var(--blue),#7C3AED);display:grid;place-items:center;color:white;font-weight:800;font-size:18px;box-shadow:0 8px 20px rgba(59,91,254,0.3);}
+.container{max-width:720px;margin:0 auto;padding:16px;}
+.card{background:var(--card);border-radius:var(--radius);border:1px solid var(--line);box-shadow:var(--shadow);padding:18px;margin-top:16px;}
+.card-hero{background:linear-gradient(135deg,#0F172A 0%,#1E293B 100%);color:white;border:none;position:relative;overflow:hidden;}
+.card-hero::after{content:'';position:absolute;top:-40px;right:-40px;width:180px;height:180px;background:radial-gradient(circle, rgba(59,91,254,0.4) 0%, transparent 70%);border-radius:50%;}
+.card-title{font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.card-title span{color:var(--muted);font-weight:600;font-size:12px;}
+.tabs{display:flex;gap:8px;padding:6px;background:white;border:1px solid var(--line);border-radius:999px;box-shadow:var(--shadow);width:fit-content;margin:14px auto 0;position:sticky;top:68px;z-index:15;}
+.tab{padding:9px 18px;border-radius:999px;border:none;background:transparent;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;transition:0.2s;display:flex;align-items:center;gap:6px;}
+.tab.active{background:var(--ink);color:white;}
+.tab-panel{display:none;animation:fadeIn 0.25s ease;}
+.tab-panel.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.input{width:100%;padding:14px 16px;border:1.5px solid var(--line);border-radius:14px;font-size:15px;font-weight:500;background:white;transition:0.15s;outline:none;}
+.input:focus{border-color:var(--blue);box-shadow:0 0 0 4px var(--blue-soft);}
+.input.big{font-size:26px;font-weight:800;font-family:'Plus Jakarta Sans';padding:16px 16px 16px 52px;}
+.amount-wrap{position:relative;}
+.amount-wrap::before{content:'HKD';position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:12px;font-weight:800;color:var(--muted);}
+.form-group{margin-bottom:16px;}
+.form-group label{font-size:11px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px;}
+.form-row{display:flex;gap:12px;}
+.form-row .form-group{flex:1;}
+.category-grid{display:flex;gap:8px;flex-wrap:wrap;}
+.cat{padding:10px 14px;border-radius:999px;border:1.5px solid var(--line);background:white;font-size:13px;font-weight:700;cursor:pointer;transition:0.15s;}
+.cat.active{background:var(--ink);color:white;border-color:var(--ink);}
+.split-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.person{border:1.5px solid var(--line);border-radius:16px;padding:12px;display:flex;align-items:center;gap:10px;cursor:pointer;background:white;transition:0.15s;}
+.person.selected{border-color:var(--blue);background:var(--blue-soft);}
+.person .avatar{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;font-weight:800;font-size:13px;color:white;flex-shrink:0;}
+.person .meta{flex:1;}
+.person .name{font-weight:700;font-size:13px;}
+.person .sub{font-size:11px;color:var(--muted);}
+.person .check{width:22px;height:22px;border-radius:8px;border:2px solid var(--line);display:grid;place-items:center;font-size:11px;background:white;}
+.person.selected .check{background:var(--blue);border-color:var(--blue);color:white;}
+.btn{border:none;border-radius:14px;padding:14px 18px;font-weight:800;font-size:14px;cursor:pointer;transition:0.15s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn:active{transform:scale(0.98);}
+.btn-primary{background:var(--ink);color:white;box-shadow:0 10px 20px rgba(15,23,42,0.2);width:100%;}
+.btn-soft{background:var(--blue-soft);color:var(--blue);}
+.btn-ghost{background:white;border:1px solid var(--line);color:var(--ink);}
+.btn-sm{padding:8px 12px;font-size:12px;border-radius:10px;}
+.expense{display:flex;gap:12px;padding:14px;border-radius:16px;border:1px solid var(--line);background:white;margin-bottom:10px;}
+.exp-icon{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:18px;flex-shrink:0;}
+.exp-main{flex:1;min-width:0;}
+.exp-title{font-weight:700;font-size:14px;}
+.exp-sub{font-size:12px;color:var(--muted);margin-top:2px;display:flex;gap:6px;flex-wrap:wrap;}
+.exp-sub span{background:#F1F5F9;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600;}
+.exp-right{text-align:right;flex-shrink:0;}
+.exp-amt{font-weight:800;font-size:15px;font-family:'Plus Jakarta Sans';}
+.exp-actions{display:flex;gap:6px;margin-top:6px;justify-content:flex-end;}
+.balance-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(min-width:600px){.balance-grid{grid-template-columns:1fr 1fr 1fr;}}
+.bal-card{border-radius:18px;padding:14px;border:1.5px solid var(--line);background:white;}
+.bal-card.pos{background:#ECFDF5;border-color:#A7F3D0;}
+.bal-card.neg{background:#FEF2F2;border-color:#FECACA;}
+.bal-top{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.bal-avatar{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;color:white;font-weight:800;font-size:12px;}
+.settle-flow{background:white;border-radius:18px;border:1px solid var(--line);padding:14px;display:flex;align-items:center;gap:12px;margin-bottom:10px;box-shadow:var(--shadow);}
+.settle-avatars{display:flex;align-items:center;}
+.settle-avatars .av{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;color:white;font-weight:800;font-size:12px;border:2px solid white;margin-left:-6px;}
+.settle-avatars .av:first-child{margin-left:0;}
+.settle-amt-big{background:var(--ink);color:white;padding:8px 12px;border-radius:10px;font-weight:800;font-size:14px;}
+.bottom-tabs{position:fixed;bottom:0;left:0;right:0;z-index:30;background:rgba(255,255,255,0.95);backdrop-filter:blur(20px);border-top:1px solid var(--line);padding:8px 12px calc(8px + env(safe-area-inset-bottom));display:flex;gap:6px;}
+.bottom-tabs .tab{flex:1;justify-content:center;padding:10px 8px;font-size:11px;flex-direction:column;gap:4px;border-radius:14px;}
+.bottom-tabs .tab i{font-size:18px;font-style:normal;}
+.bottom-tabs .tab.active{background:var(--ink);color:white;}
+@media(min-width:720px){.bottom-tabs{display:none;}.tabs{display:flex;}}@media(max-width:719px){.tabs{display:none;}}
+.empty{text-align:center;padding:40px 20px;color:var(--muted);}
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--ink);color:white;padding:12px 18px;border-radius:999px;font-size:13px;font-weight:700;z-index:100;opacity:0;transition:0.3s;pointer-events:none;box-shadow:0 20px 50px rgba(15,23,42,0.2);}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.modal{position:fixed;inset:0;z-index:50;background:rgba(15,23,42,0.6);backdrop-filter:blur(8px);display:none;align-items:flex-end;justify-content:center;padding:16px;}
+.modal.active{display:flex;}
+.modal-card{background:white;border-radius:24px 24px 0 0;width:100%;max-width:720px;max-height:90vh;overflow:auto;padding:20px;animation:slideUp 0.3s ease;}
+@keyframes slideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+.lobby-hero{text-align:center;padding:30px 20px 10px;}
+.lobby-hero h1{font-size:28px;font-weight:800;}
+.lobby-hero p{color:var(--muted);font-size:14px;margin-top:8px;line-height:1.5;}
+.trip-card{display:flex;gap:12px;padding:16px;border-radius:16px;border:1px solid var(--line);background:white;margin-bottom:10px;cursor:pointer;transition:0.15s;}
+.trip-card:hover{border-color:var(--blue);box-shadow:var(--shadow);}
+.trip-icon{width:48px;height:48px;border-radius:14px;background:var(--blue-soft);display:grid;place-items:center;font-size:20px;flex-shrink:0;}
+</style>
+</head>
+<body>
+<div class="topbar" id="topbar" style="display:none;">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="logo" id="tripLogo">S</div>
+      <div>
+        <h1 id="tripName" style="font-size:16px;cursor:pointer;" onclick="editTripName()">Trip</h1>
+        <p id="tripCodeLine" style="font-size:11px;color:var(--muted);">CODE • 0 friends • Tap to switch</p>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-ghost btn-sm" onclick="showLobby()">Trips</button>
+      <button class="btn btn-ghost btn-sm" onclick="exportExcel()">📥</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOBBY VIEW -->
+<div id="lobbyView">
+  <div class="lobby-hero">
+    <h1>💸 TripSplit</h1>
+    <p>Secure group expenses.<br>Each trip isolated • Password protected • Date tracked</p>
+  </div>
+  <div class="container">
+    <div class="card">
+      <div class="card-title">Create New Trip <span>For BK, Japan, etc.</span></div>
+      <div class="form-group"><label>Trip Name</label><input id="newTripName" class="input" placeholder="e.g., Bangkok Dec 2026"></div>
+      <div class="form-row">
+        <div class="form-group"><label>Trip Code (share with friends)</label><input id="newTripCode" class="input" placeholder="Auto e.g., BK2026" maxlength="12"></div>
+        <div class="form-group"><label>Password / PIN (private)</label><input id="newTripPass" class="input" type="password" placeholder="Min 3 chars" maxlength="20"></div>
+      </div>
+      <div class="form-group"><label>Friends (comma separated, max 8)</label><input id="newTripFriends" class="input" placeholder="Alice, Bob, Charlie, Diana"></div>
+      <button class="btn btn-primary" onclick="createTrip()">+ Create Trip</button>
+      <div style="font-size:11px;color:var(--muted);margin-top:8px;text-align:center;">🔒 Only people with Code + Password can access expenses</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Join Existing Trip</div>
+      <div class="form-row">
+        <div class="form-group"><label>Trip Code</label><input id="joinCode" class="input" placeholder="e.g., BK2026" style="text-transform:uppercase;"></div>
+        <div class="form-group"><label>Password</label><input id="joinPass" class="input" type="password" placeholder="PIN"></div>
+      </div>
+      <button class="btn btn-soft" style="width:100%;" onclick="joinTrip()">🔑 Join Trip</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">My Trips <span id="myTripsCount">0</span></div>
+      <div id="myTripsList"><div class="empty">No trips yet. Create or join one above.</div></div>
+    </div>
+
+    <div class="card" style="background:#FFFBEB;border-color:#FDE68A;">
+      <div style="font-size:13px;line-height:1.6;">
+        <b>🔐 Security:</b> Each trip has its own Code + Password. Only people with both can view/add expenses. Expenses are isolated per trip.<br><br>
+        <b>💾 Persistence:</b> Data saved to server (trips_data.json) + your browser. Even if you close website, data stays. For production hosting (Render), add a Disk or use Supabase to persist across deploys.<br><br>
+        <b>✏️ Wrong entry?</b> Tap expense → Edit or Delete. Date is now editable.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TRIP VIEW -->
+<div id="tripView" style="display:none;">
+  <div class="container">
+    <div class="tabs" id="topTabs">
+      <button class="tab active" data-tab="add" onclick="switchTab('add')">⚡ Add</button>
+      <button class="tab" data-tab="expenses" onclick="switchTab('expenses')">🧾 Expenses</button>
+      <button class="tab" data-tab="balances" onclick="switchTab('balances')">⚖️ Balances</button>
+      <button class="tab" data-tab="settle" onclick="switchTab('settle')">✅ Settle</button>
+    </div>
+
+    <div class="tab-panel active" id="panel-add">
+      <div class="card card-hero">
+        <div style="position:relative;z-index:1;">
+          <div style="display:flex;justify-content:space-between;">
+            <div><div style="font-size:11px;opacity:0.7;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;">Total Spent</div><div style="font-size:30px;font-weight:800;margin-top:4px;" id="heroTotal">HKD 0</div><div style="font-size:12px;opacity:0.8;margin-top:4px;" id="heroAvg">0 per person</div></div>
+            <div style="text-align:right;"><div style="font-size:11px;opacity:0.7;font-weight:700;text-transform:uppercase;">Expenses</div><div style="font-size:22px;font-weight:800;" id="heroCount">0</div><div style="font-size:11px;opacity:0.7;margin-top:4px;" id="heroDateRange">-</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Quick Add Expense <span id="editModeLabel" style="display:none;background:var(--yellow);color:black;padding:2px 8px;border-radius:999px;">EDITING</span></div>
+        <div class="form-row">
+          <div class="form-group" style="flex:1.2;"><label>Date</label><input id="expDate" class="input" type="date"></div>
+          <div class="form-group" style="flex:2;"><label>What?</label><input id="descInput" class="input" placeholder="e.g., Dinner TST"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Amount</label><div class="amount-wrap"><input id="amountInput" class="input big" type="number" inputmode="decimal" placeholder="0"></div></div>
+          <div class="form-group"><label>Paid By</label><select id="paidBySelect" class="input" style="height:60px;font-weight:700;"></select>
+            <div style="margin-top:8px;"><label>Category</label><div class="category-grid" id="categoryRow">
+              <div class="cat active" data-cat="Food">🍜 Food</div><div class="cat" data-cat="Transport">🚕 Taxi</div><div class="cat" data-cat="Hotel">🏨 Hotel</div><div class="cat" data-cat="Activity">🎢 Fun</div><div class="cat" data-cat="Other">🛒 Other</div>
+            </div></div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Split among — tap to exclude</label>
+          <div style="display:flex;gap:8px;margin-bottom:10px;"><button class="btn btn-soft btn-sm" style="flex:1;" onclick="selectAll(true)">Select all</button><button class="btn btn-ghost btn-sm" style="flex:1;" onclick="selectAll(false)">Clear</button></div>
+          <div class="split-grid" id="splitGrid"></div>
+        </div>
+        <button class="btn btn-primary" onclick="saveExpense()" id="saveBtn">+ Add Expense</button>
+        <button class="btn btn-ghost" style="width:100%;margin-top:8px;display:none;" id="cancelEditBtn" onclick="cancelEdit()">Cancel Edit</button>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Friends in this trip <span onclick="editFriends()" style="cursor:pointer;color:var(--blue);">Edit</span></div>
+        <div id="friendsGrid" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="panel-expenses">
+      <div class="card">
+        <div class="card-title">All Expenses <span id="expCountTop">0</span></div>
+        <div style="display:flex;gap:10px;margin-bottom:12px;">
+          <input id="searchInput" class="input" placeholder="🔍 Search..." oninput="renderExpenses()" style="flex:1;">
+          <select id="filterCategory" class="input" style="width:120px;" onchange="renderExpenses()"><option value="">All</option><option>Food</option><option>Transport</option><option>Hotel</option><option>Activity</option><option>Other</option></select>
+        </div>
+        <div id="expensesList"></div>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="panel-balances">
+      <div class="card"><div class="card-title">Balances</div><div class="balance-grid" id="balancesGrid"></div></div>
+      <div class="card"><div class="card-title">By Category</div><div id="breakdownList"></div></div>
+    </div>
+
+    <div class="tab-panel" id="panel-settle">
+      <div class="card" style="border:1.5px solid #A7F3D0;background:linear-gradient(180deg,#ECFDF5 0%, white 100%);">
+        <div class="card-title">Settlement Plan <span id="settleCount" style="background:var(--green);color:white;padding:4px 10px;border-radius:999px;">0</span></div>
+        <div id="settlementList"></div>
+        <div id="settleSummary" style="margin-top:14px;padding:12px;background:white;border-radius:12px;border:1px dashed var(--line);font-size:13px;text-align:center;"></div>
+      </div>
+      <div class="card"><div style="display:flex;gap:10px;"><button class="btn btn-ghost" style="flex:1;" onclick="copySettlement()">📋 Copy</button><button class="btn btn-primary" style="flex:1;" onclick="exportExcel()">📥 Excel</button></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="bottom-tabs" id="bottomTabs" style="display:none;">
+  <button class="tab active" data-tab="add" onclick="switchTab('add')"><i>⚡</i>Add</button>
+  <button class="tab" data-tab="expenses" onclick="switchTab('expenses')"><i>🧾</i>List</button>
+  <button class="tab" data-tab="balances" onclick="switchTab('balances')"><i>⚖️</i>Balance</button>
+  <button class="tab" data-tab="settle" onclick="switchTab('settle')"><i>✅</i>Settle</button>
+</div>
+
+<div class="toast" id="toast"><span id="toastText">Done</span></div>
+
+<script>
+let currentTrip=null;
+let currentPassword=null;
+let friends=[];let expenses=[];let selectedCategory='Food';let splitSel={};let editingId=null;
+const colors=['#3B5BFE','#7C3AED','#10B981','#F59E0B','#EF4444','#06B6D4','#8B5CF6','#EC4899'];
+function avatarColor(n){let h=0;for(let i=0;i<n.length;i++)h=n.charCodeAt(i)+((h<<5)-h);return colors[Math.abs(h)%colors.length];}
+function initials(n){return n.slice(0,2).toUpperCase();}
+function toast(m){const t=document.getElementById('toast');document.getElementById('toastText').textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);}
+function saveLocal(){
+  if(!currentTrip) return;
+  localStorage.setItem(`trip_${currentTrip.id}_pw`, currentPassword);
+  let myTrips=JSON.parse(localStorage.getItem('myTrips')||'[]');
+  if(!myTrips.find(t=>t.id===currentTrip.id)){
+    myTrips.push({id:currentTrip.id,name:currentTrip.name});
+    localStorage.setItem('myTrips',JSON.stringify(myTrips));
+  }
+}
+function loadMyTrips(){
+  const myTrips=JSON.parse(localStorage.getItem('myTrips')||'[]');
+  const list=document.getElementById('myTripsList');
+  const count=document.getElementById('myTripsCount');
+  count.textContent=myTrips.length;
+  if(myTrips.length===0){list.innerHTML='<div class=empty>No trips yet</div>';return;}
+  list.innerHTML='';
+  myTrips.forEach(t=>{
+    const div=document.createElement('div');div.className='trip-card';
+    div.innerHTML=`<div class=trip-icon>✈️</div><div style="flex:1;"><div style="font-weight:800;">${t.name}</div><div style="font-size:12px;color:var(--muted);">Code: ${t.id} • Tap to open</div></div><div style="font-size:18px;">→</div>`;
+    div.onclick=()=>{document.getElementById('joinCode').value=t.id;const pw=localStorage.getItem(`trip_${t.id}_pw`)||'';document.getElementById('joinPass').value=pw;joinTrip();};
+    list.appendChild(div);
+  });
+}
+async function createTrip(){
+  const name=document.getElementById('newTripName').value.trim();
+  let code=document.getElementById('newTripCode').value.trim().toUpperCase();
+  const pass=document.getElementById('newTripPass').value.trim();
+  const friendsRaw=document.getElementById('newTripFriends').value.trim();
+  if(!name){toast('Enter trip name');return;}
+  if(!pass||pass.length<3){toast('Password min 3 chars');return;}
+  const friendsArr=friendsRaw?friendsRaw.split(',').map(s=>s.trim()).filter(Boolean):['Alice','Bob'];
+  const res=await fetch('/api/trips',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,code,password:pass,friends:friendsArr})});
+  const data=await res.json();
+  if(!res.ok){toast(data.error||'Failed');return;}
+  // auto join
+  document.getElementById('joinCode').value=data.id;
+  document.getElementById('joinPass').value=pass;
+  toast(`Trip ${data.id} created!`);
+  joinTrip();
+}
+async function joinTrip(){
+  const code=document.getElementById('joinCode').value.trim().toUpperCase();
+  const pass=document.getElementById('joinPass').value.trim();
+  if(!code||!pass){toast('Enter code + password');return;}
+  const res=await fetch(`/api/trips/${code}/auth`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pass})});
+  const data=await res.json();
+  if(!res.ok){toast(data.error||'Wrong code/password');return;}
+  currentTrip={id:data.id,name:data.name};
+  currentPassword=pass;
+  friends=data.friends;
+  expenses=data.expenses;
+  friends.forEach(f=>splitSel[f]=true);
+  document.getElementById('expDate').valueAsDate=new Date();
+  saveLocal();
+  showTripView();
+  renderAll();
+  toast(`Joined ${data.name}`);
+}
+function showLobby(){
+  document.getElementById('lobbyView').style.display='block';
+  document.getElementById('tripView').style.display='none';
+  document.getElementById('topbar').style.display='none';
+  document.getElementById('bottomTabs').style.display='none';
+  loadMyTrips();
+  currentTrip=null;
+}
+function showTripView(){
+  document.getElementById('lobbyView').style.display='none';
+  document.getElementById('tripView').style.display='block';
+  document.getElementById('topbar').style.display='block';
+  document.getElementById('bottomTabs').style.display='flex';
+  document.getElementById('tripName').innerText=currentTrip.name;
+  document.getElementById('tripLogo').innerText=currentTrip.name[0].toUpperCase();
+  document.getElementById('tripCodeLine').innerText=`${currentTrip.id} • ${friends.length} friends • 🔒 Private`;
+  // set date default
+  if(!document.getElementById('expDate').value) document.getElementById('expDate').valueAsDate=new Date();
+}
+function switchTab(tab){
+  document.querySelectorAll('.tab').forEach(el=>el.classList.toggle('active', el.dataset.tab===tab));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active', p.id==='panel-'+tab));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function renderFriends(){
+  const grid=document.getElementById('friendsGrid');
+  grid.innerHTML='';
+  friends.forEach((f,i)=>{
+    const div=document.createElement('div');
+    div.style.cssText='display:flex;align-items:center;gap:8px;background:white;border:1px solid var(--line);padding:8px 12px;border-radius:999px;box-shadow:var(--shadow);';
+    div.innerHTML=`<div style="width:26px;height:26px;border-radius:8px;background:${avatarColor(f)};display:grid;place-items:center;color:white;font-weight:800;font-size:11px;">${initials(f)}</div><b style="font-size:13px;">${f}</b>`;
+    grid.appendChild(div);
+  });
+  const sel=document.getElementById('paidBySelect');sel.innerHTML='';
+  friends.forEach(f=>{const o=document.createElement('option');o.value=f;o.textContent=f;sel.appendChild(o);});
+}
+function renderSplit(){
+  const g=document.getElementById('splitGrid');g.innerHTML='';
+  friends.forEach(f=>{
+    const d=document.createElement('div');d.className='person '+(splitSel[f]?'selected':'');
+    d.onclick=()=>{splitSel[f]=!splitSel[f];renderSplit();};
+    d.innerHTML=`<div class=avatar style="background:${avatarColor(f)}">${initials(f)}</div><div class=meta><div class=name>${f}</div><div class=sub>${splitSel[f]?'Included':'Excluded'}</div></div><div class=check>${splitSel[f]?'✓':''}</div>`;
+    g.appendChild(d);
+  });
+}
+function selectAll(v){friends.forEach(f=>splitSel[f]=v);renderSplit();}
+document.querySelectorAll('.cat').forEach(c=>c.addEventListener('click',()=>{document.querySelectorAll('.cat').forEach(x=>x.classList.remove('active'));c.classList.add('active');selectedCategory=c.dataset.cat;}));
+async function saveExpense(){
+  const date=document.getElementById('expDate').value || new Date().toISOString().slice(0,10);
+  const desc=document.getElementById('descInput').value.trim()||'Expense';
+  const amt=parseFloat(document.getElementById('amountInput').value);
+  const paid=document.getElementById('paidBySelect').value;
+  if(!amt||amt<=0){toast('Enter amount');return;}
+  if(!paid){toast('Select who paid');return;}
+  const shared=friends.filter(f=>splitSel[f]);
+  if(shared.length===0){toast('Select at least 1');return;}
+  const payload={date,desc,category:selectedCategory,paidBy:paid,amount:amt,sharedWith:shared};
+  let url,method;
+  if(editingId){
+    url=`/api/trips/${currentTrip.id}/expenses/${editingId}`;
+    method='PUT';
+    payload.id=editingId;
+  }else{
+    url=`/api/trips/${currentTrip.id}/expenses`;
+    method='POST';
+  }
+  const res=await fetch(url,{method,headers:{'Content-Type':'application/json','X-Trip-Password':currentPassword},body:JSON.stringify({...payload,password:currentPassword})});
+  const data=await res.json();
+  if(!res.ok){toast(data.error||'Failed');return;}
+  if(editingId){
+    const idx=expenses.findIndex(e=>e.id===editingId);
+    if(idx>=0) expenses[idx]=data;
+    editingId=null;
+    document.getElementById('editModeLabel').style.display='none';
+    document.getElementById('cancelEditBtn').style.display='none';
+    document.getElementById('saveBtn').innerText='+ Add Expense';
+    toast('Expense updated ✏️');
+  }else{
+    expenses.unshift(data);
+    toast(`Added ${desc} • HKD ${amt}`);
+  }
+  document.getElementById('descInput').value='';document.getElementById('amountInput').value='';
+  renderAll();
+}
+function editExpense(id){
+  const exp=expenses.find(e=>e.id===id);
+  if(!exp)return;
+  editingId=id;
+  document.getElementById('expDate').value=exp.date;
+  document.getElementById('descInput').value=exp.desc;
+  document.getElementById('amountInput').value=exp.amount;
+  document.getElementById('paidBySelect').value=exp.paidBy;
+  selectedCategory=exp.category;
+  document.querySelectorAll('.cat').forEach(c=>c.classList.toggle('active',c.dataset.cat===selectedCategory));
+  friends.forEach(f=>splitSel[f]=exp.sharedWith.includes(f));
+  renderSplit();
+  document.getElementById('editModeLabel').style.display='inline-block';
+  document.getElementById('cancelEditBtn').style.display='block';
+  document.getElementById('saveBtn').innerText='✓ Update Expense';
+  switchTab('add');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function cancelEdit(){
+  editingId=null;
+  document.getElementById('editModeLabel').style.display='none';
+  document.getElementById('cancelEditBtn').style.display='none';
+  document.getElementById('saveBtn').innerText='+ Add Expense';
+  document.getElementById('descInput').value='';document.getElementById('amountInput').value='';
+  friends.forEach(f=>splitSel[f]=true);renderSplit();
+}
+async function delExp(id){
+  if(!confirm('Delete this expense?'))return;
+  const res=await fetch(`/api/trips/${currentTrip.id}/expenses/${id}`,{method:'DELETE',headers:{'X-Trip-Password':currentPassword}});
+  if(!res.ok){toast('Failed');return;}
+  expenses=expenses.filter(e=>e.id!==id);
+  renderAll();toast('Deleted');
+}
+function catIcon(c){const m={Food:'🍜',Transport:'🚕',Hotel:'🏨',Activity:'🎢',Other:'🛒'};return m[c]||'💸';}
+function catColor(c){const m={Food:'#FEF3C7',Transport:'#DBEAFE',Hotel:'#E0E7FF',Activity:'#D1FAE5',Other:'#F3F4F6'};return m[c]||'#F3F4F6';}
+function renderExpenses(){
+  const list=document.getElementById('expensesList');
+  const search=(document.getElementById('searchInput')?.value||'').toLowerCase();
+  const filterCat=document.getElementById('filterCategory')?.value||'';
+  let filtered=expenses.filter(e=>{
+    const ms=!search||e.desc.toLowerCase().includes(search)||e.paidBy.toLowerCase().includes(search);
+    const mc=!filterCat||e.category===filterCat;
+    return ms&&mc;
+  });
+  document.getElementById('expCountTop').innerText=`${filtered.length} • HKD ${filtered.reduce((s,e)=>s+e.amount,0).toFixed(0)}`;
+  document.getElementById('heroCount').innerText=expenses.length;
+  const total=expenses.reduce((s,e)=>s+e.amount,0);
+  document.getElementById('heroTotal').innerText=`HKD ${total.toFixed(0)}`;
+  document.getElementById('heroAvg').innerText=friends.length?`HKD ${(total/(friends.length||1)).toFixed(0)} per person`:'';
+  if(filtered.length){
+    const dates=filtered.map(e=>e.date).sort();
+    document.getElementById('heroDateRange').innerText=dates.length?`${dates[0]} → ${dates[dates.length-1]}`:'-';
+  }
+  if(filtered.length===0){list.innerHTML='<div class=empty><div style="font-size:40px;">🧾</div><h3>No expenses</h3><p>Search or add new</p></div>';return;}
+  list.innerHTML='';
+  filtered.forEach(e=>{
+    const div=document.createElement('div');div.className='expense';
+    const shareText=e.sharedWith.length===friends.length?'All':e.sharedWith.join(', ');
+    div.innerHTML=`
+      <div class=exp-icon style="background:${catColor(e.category)}">${catIcon(e.category)}</div>
+      <div class=exp-main>
+        <div class=exp-title>${e.desc} <span style="font-weight:400;color:var(--muted);font-size:12px;">• ${e.date}</span></div>
+        <div class=exp-sub><span>Paid by ${e.paidBy}</span><span>${e.category}</span><span>Split: ${shareText}</span></div>
+        <div style="display:flex;gap:6px;margin-top:8px;"><button class="btn btn-soft btn-sm" onclick="editExpense(${e.id})">✏️ Edit</button><button class="btn btn-ghost btn-sm" onclick="delExp(${e.id})">🗑️ Delete</button></div>
+      </div>
+      <div class=exp-right><div class=exp-amt>HKD ${e.amount.toFixed(0)}</div></div>
+    `;
+    list.appendChild(div);
+  });
+}
+function calcBal(){
+  const bal={};friends.forEach(f=>bal[f]={paid:0,share:0,balance:0});
+  expenses.forEach(ex=>{
+    if(bal[ex.paidBy])bal[ex.paidBy].paid+=ex.amount;
+    const per=ex.amount/ex.sharedWith.length;
+    ex.sharedWith.forEach(n=>{if(bal[n])bal[n].share+=per;});
+  });
+  friends.forEach(f=>bal[f].balance=bal[f].paid-bal[f].share);
+  return bal;
+}
+function calcSettlement(bal){
+  let debtors=[],creditors=[];
+  Object.entries(bal).forEach(([n,d])=>{if(d.balance<-0.01)debtors.push({name:n,amount:-d.balance});else if(d.balance>0.01)creditors.push({name:n,amount:d.balance});});
+  debtors.sort((a,b)=>b.amount-a.amount);creditors.sort((a,b)=>b.amount-a.amount);
+  const trans=[];let i=0,j=0;
+  while(i<debtors.length&&j<creditors.length){
+    const amt=Math.min(debtors[i].amount,creditors[j].amount);
+    if(amt>0.01)trans.push({from:debtors[i].name,to:creditors[j].name,amount:amt});
+    debtors[i].amount-=amt;creditors[j].amount-=amt;
+    if(debtors[i].amount<0.01)i++;if(creditors[j].amount<0.01)j++;
+  }
+  return trans;
+}
+function renderBalances(){
+  const grid=document.getElementById('balancesGrid');const breakdown=document.getElementById('breakdownList');
+  const bal=calcBal();grid.innerHTML='';
+  friends.forEach(f=>{
+    const b=bal[f];const pos=b.balance>0.01;const neg=b.balance<-0.01;
+    const div=document.createElement('div');div.className='bal-card '+(pos?'pos':neg?'neg':'');
+    div.innerHTML=`<div class=bal-top><div class=bal-avatar style="background:${avatarColor(f)}">${initials(f)}</div><div style="font-weight:800;font-size:13px;">${f}</div></div><div style="font-size:20px;font-weight:800;">${neg?'-':''}HKD ${Math.abs(b.balance).toFixed(0)}</div><div style="font-size:10px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;margin-top:4px;opacity:0.8;">${pos?'Gets Back':neg?'Owes':'Settled'}</div><div style="font-size:11px;color:var(--muted);margin-top:8px;">Paid ${b.paid.toFixed(0)}<br>Share ${b.share.toFixed(0)}</div>`;
+    grid.appendChild(div);
+  });
+  const byCat={};expenses.forEach(e=>{byCat[e.category]=(byCat[e.category]||0)+e.amount;});
+  breakdown.innerHTML=Object.entries(byCat).map(([cat,amt])=>{
+    const pct=expenses.length?(amt/expenses.reduce((s,e)=>s+e.amount,0)*100).toFixed(0):0;
+    return `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);"><div style="display:flex;gap:10px;align-items:center;"><div style="width:36px;height:36px;border-radius:10px;background:${catColor(cat)};display:grid;place-items:center;">${catIcon(cat)}</div><div><div style="font-weight:700;font-size:13px;">${cat}</div><div style="font-size:11px;color:var(--muted);">${pct}%</div></div></div><div style="font-weight:800;">HKD ${amt.toFixed(0)}</div></div>`;
+  }).join('')||'<div style="color:var(--muted);font-size:13px;text-align:center;padding:12px;">No data</div>';
+}
+function renderSettlement(){
+  const list=document.getElementById('settlementList');const summary=document.getElementById('settleSummary');
+  const bal=calcBal();const trans=calcSettlement(bal);
+  document.getElementById('settleCount').innerText=`${trans.length} payment${trans.length!==1?'s':''}`;
+  if(trans.length===0){list.innerHTML='<div class=empty><div style="font-size:40px;">🎉</div><h3>All settled!</h3></div>';summary.innerText='No payments needed';return;}
+  list.innerHTML='';trans.forEach(t=>{
+    const div=document.createElement('div');div.className='settle-flow';
+    div.innerHTML=`<div class=settle-avatars><div class=av style="background:${avatarColor(t.from)}">${initials(t.from)}</div><div class=av style="background:${avatarColor(t.to)}">${initials(t.to)}</div></div><div style="width:32px;height:32px;border-radius:999px;background:var(--bg);display:grid;place-items:center;">→</div><div style="flex:1;"><b>${t.from} pays ${t.to}</b><div style="font-size:12px;color:var(--muted);">${t.from} owes, ${t.to} gets back</div></div><div class=settle-amt-big>HKD ${t.amount.toFixed(0)}</div>`;
+    list.appendChild(div);
+  });
+  const total=trans.reduce((s,t)=>s+t.amount,0);
+  summary.innerHTML=`<b>${trans.length} transfer(s)</b> • Total HKD ${total.toFixed(0)} • Avg HKD ${(total/(trans.length||1)).toFixed(0)}`;
+}
+function renderAll(){
+  renderFriends();renderSplit();renderExpenses();renderBalances();renderSettlement();
+  document.getElementById('heroTotal').innerText=`HKD ${expenses.reduce((s,e)=>s+e.amount,0).toFixed(0)}`;
+  document.getElementById('heroCount').innerText=expenses.length;
+}
+function copySettlement(){
+  const bal=calcBal();const trans=calcSettlement(bal);
+  if(!trans.length){toast('Nothing');return;}
+  const text=trans.map(t=>`${t.from} pays ${t.to}: HKD ${t.amount.toFixed(0)}`).join('\n');
+  navigator.clipboard.writeText(text).then(()=>toast('Copied 📋'));
+}
+async function exportExcel(){
+  if(!currentTrip){toast('No trip');return;}
+  toast('Generating Excel...');
+  const res=await fetch(`/api/trips/${currentTrip.id}/export?password=${encodeURIComponent(currentPassword)}`,{headers:{'X-Trip-Password':currentPassword}});
+  if(!res.ok){toast('Export failed');return;}
+  const blob=await res.blob();
+  const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`${currentTrip.name}_${currentTrip.id}.xlsx`;a.click();URL.revokeObjectURL(url);toast('Excel downloaded 📥');
+}
+function editTripName(){
+  const newName=prompt('New trip name:', currentTrip.name);
+  if(!newName||newName===currentTrip.name) return;
+  fetch(`/api/trips/${currentTrip.id}`,{method:'PUT',headers:{'Content-Type':'application/json','X-Trip-Password':currentPassword},body:JSON.stringify({name:newName,password:currentPassword})}).then(r=>{if(r.ok){currentTrip.name=newName;document.getElementById('tripName').innerText=newName;toast('Renamed');saveLocal();loadMyTrips();}});
+}
+function editFriends(){
+  const newFriends=prompt('Edit friends (comma separated, max 8):', friends.join(', '));
+  if(newFriends===null) return;
+  const arr=newFriends.split(',').map(s=>s.trim()).filter(Boolean).slice(0,8);
+  if(arr.length===0){toast('Need at least 1');return;}
+  fetch(`/api/trips/${currentTrip.id}`,{method:'PUT',headers:{'Content-Type':'application/json','X-Trip-Password':currentPassword},body:JSON.stringify({friends:arr,password:currentPassword})}).then(async r=>{
+    if(r.ok){friends=arr;friends.forEach(f=>{if(!(f in splitSel))splitSel[f]=true;});renderAll();toast('Friends updated');}
+  });
+}
+// init
+document.getElementById('expDate').valueAsDate=new Date();
+document.getElementById('newTripCode').value=Math.random().toString(36).substring(2,8).toUpperCase();
+loadMyTrips();
+document.getElementById('friendInput')?.addEventListener('keydown',e=>{if(e.key==='Enter')addFriend();});
+</script>
+</body>
+</html>
