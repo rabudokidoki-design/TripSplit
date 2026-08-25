@@ -23,183 +23,225 @@ window._fb = { db, doc, setDoc, getDoc, collection, addDoc, updateDoc, deleteDoc
 </script>
 <style>
 :root{
-  --bg:#FFF8F0;--paper:#FFFFFF;--ink:#121212;--muted:#9B9B9B;--line:#F0E6D8;
-  --orange:#FF6B2B;--pink:#FF2E93;--violet:#7C3AED;--blue:#2F5BFF;--teal:#00C2A8;--yellow:#FFC93C;
-  --green:#1A7A4C;--red:#E11D48;
-  --r-xl:24px;--r-lg:18px;--r-md:12px;
-  --shadow:0 12px 32px rgba(18,18,18,0.07);
-  --shadow-strong:0 20px 50px rgba(18,18,18,0.12);
+  --bg:#FFECD2;--paper:#FFFFFF;--ink:#1A1A1A;--muted:#B8A99A;--line:#F5E1C8;
+  --orange:#FF7A1A;--pink:#FF3B82;--yellow:#FFD93D;--green:#2ECC77;--blue:#3B82F6;--violet:#8B5CF6;--brown:#2B1E16;
+  --r:20px;--r-lg:28px;--shadow:0 14px 40px rgba(43,30,22,0.08);--shadow-strong:0 24px 60px rgba(43,30,22,0.14);
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);padding-bottom:92px;letter-spacing:-0.01em;}
-.topbar{position:sticky;top:0;z-index:20;background:rgba(255,248,240,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);padding:12px 16px;}
-.topbar-inner{max-width:760px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);padding-bottom:92px;}
+button{font-family:inherit;}
+/* Topbar - new layout like image: white pill header */
+.topbar{position:sticky;top:0;z-index:20;padding:12px 12px 0;}
+.topbar-inner{max-width:760px;margin:0 auto;background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow);}
 .brand{display:flex;align-items:center;gap:10px;}
-.mark{width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg,var(--orange),var(--pink));color:white;display:grid;place-items:center;font-weight:800;font-size:16px;box-shadow:0 8px 20px rgba(255,107,43,0.35);}
-.brand h1{font-size:16px;font-weight:800;letter-spacing:-0.02em;}
-.brand p{font-size:11px;color:var(--muted);margin-top:1px;font-weight:600;}
-.container{max-width:760px;margin:0 auto;padding:0 16px;}
-.tabs{position:sticky;top:61px;z-index:15;display:flex;gap:6px;padding:5px;background:white;border:1px solid var(--line);border-radius:999px;box-shadow:var(--shadow);width:fit-content;margin:14px auto 0;}
-.tab{padding:9px 18px;border-radius:999px;border:none;background:transparent;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;transition:0.18s;}
-.tab.active{background:var(--ink);color:white;box-shadow:0 6px 18px rgba(18,18,18,0.18);}
-.tab-panel{display:none;animation:fadeIn 0.22s ease;}
-.tab-panel.active{display:block;}
-@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
-.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow);padding:18px;margin-top:16px;}
-.card-title{font-size:12px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
-.card-title b{color:var(--ink);text-transform:none;letter-spacing:-0.01em;font-size:15px;font-weight:800;}
-.hero{border-radius:var(--r-xl);padding:20px;position:relative;overflow:hidden;margin-top:16px;color:white;background:linear-gradient(135deg,#121212 0%,#2D2D2D 100%);}
-.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(400px circle at 20% 0%, rgba(255,107,43,0.35), transparent 60%), radial-gradient(400px circle at 90% 20%, rgba(124,58,237,0.35), transparent 60%), radial-gradient(300px circle at 50% 120%, rgba(0,194,168,0.25), transparent 60%);}
-.hero-grid{display:grid;grid-template-columns:1.2fr 0.8fr;gap:12px;position:relative;z-index:1;}
-.hero-main label{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;opacity:0.6;font-weight:800;}
-.hero-main .val{font-size:30px;font-weight:800;margin-top:6px;letter-spacing:-0.03em;}
-.hero-main .sub{font-size:12px;opacity:0.7;margin-top:4px;}
-.hero-side{text-align:right;}
-.hero-side label{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;opacity:0.6;font-weight:800;}
-.hero-side .val{font-size:20px;font-weight:800;margin-top:6px;}
-.input{width:100%;padding:13px 14px;border:1.5px solid var(--line);border-radius:12px;background:#FFFEFB;font-size:15px;font-weight:500;outline:none;transition:0.15s;}
-.input:focus{border-color:var(--ink);box-shadow:0 0 0 3px #F0E6D8;}
+.mark{width:40px;height:40px;border-radius:12px;background:var(--ink);color:white;display:grid;place-items:center;font-weight:900;font-size:16px;letter-spacing:-0.05em;}
+.brand h1{font-size:15px;font-weight:800;letter-spacing:-0.02em;}
+.brand p{font-size:11px;color:var(--muted);font-weight:600;margin-top:1px;}
+.top-actions{display:flex;gap:8px;}
+.icon-btn{width:36px;height:36px;border-radius:12px;border:1px solid var(--line);background:white;display:grid;place-items:center;cursor:pointer;font-size:14px;}
+.container{max-width:760px;margin:0 auto;padding:0 12px;}
+/* Bottom nav - like image: rounded, with icons, active dark */
+.bottom-nav{position:fixed;bottom:12px;left:12px;right:12px;z-index:30;max-width:760px;margin:0 auto;background:var(--ink);border-radius:24px;padding:8px;display:flex;gap:6px;box-shadow:var(--shadow-strong);}
+.bottom-nav .nav-item{flex:1;padding:12px 6px;border-radius:16px;border:none;background:transparent;color:rgba(255,255,255,0.6);font-size:11px;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;transition:0.18s;}
+.bottom-nav .nav-item.active{background:white;color:var(--ink);box-shadow:0 6px 18px rgba(0,0,0,0.15);}
+.bottom-nav .nav-item i{font-size:18px;font-style:normal;}
+/* Cards - image style: white with soft border, big radius, colorful left accent */
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow);padding:18px;margin-top:14px;position:relative;overflow:hidden;}
+.card-accent{border:none;position:relative;overflow:hidden;}
+.card-accent::before{content:'';position:absolute;left:0;top:0;bottom:0;width:6px;}
+.card-accent.orange::before{background:var(--orange);}
+.card-accent.pink::before{background:var(--pink);}
+.card-accent.yellow::before{background:var(--yellow);}
+.card-accent.green::before{background:var(--green);}
+.card-accent.blue::before{background:var(--blue);}
+.card-accent.violet::before{background:var(--violet);}
+.card-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.card-title b{font-size:14px;font-weight:800;letter-spacing:-0.02em;}
+.card-title span{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0.04em;text-transform:uppercase;}
+/* Hero - new colorful blocks like image */
+.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;}
+.hero-block{border-radius:var(--r-lg);padding:18px;position:relative;overflow:hidden;min-height:110px;}
+.hero-block.dark{background:var(--brown);color:white;}
+.hero-block.light{background:white;border:1px solid var(--line);}
+.hero-block.yellow{background:var(--yellow);color:var(--ink);}
+.hero-block.green{background:var(--green);color:white;}
+.hero-block.orange{background:var(--orange);color:white;}
+.hero-block.blue{background:var(--blue);color:white;}
+.hero-block.pink{background:var(--pink);color:white;}
+.hero-block label{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;opacity:0.7;font-weight:800;display:block;}
+.hero-block .val{font-size:26px;font-weight:800;margin-top:8px;letter-spacing:-0.03em;line-height:1;}
+.hero-block .sub{font-size:12px;opacity:0.8;margin-top:6px;font-weight:500;}
+/* Inputs */
+.input{width:100%;padding:13px 14px;border:1.5px solid var(--line);border-radius:14px;background:#FFFEFB;font-size:15px;font-weight:500;outline:none;transition:0.15s;}
+.input:focus{border-color:var(--ink);box-shadow:0 0 0 3px #FFF0D9;}
 .input.big{font-size:26px;font-weight:800;letter-spacing:-0.03em;padding:16px 14px 16px 54px;}
 .amount-wrap{position:relative;}
-.amount-wrap::before{content:'HKD';position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:800;letter-spacing:0.06em;color:var(--muted);}
-.form-group{margin-bottom:16px;}
+.amount-wrap::before{content:attr(data-cur);position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:800;color:var(--muted);}
+.form-group{margin-bottom:14px;}
 .form-group label{font-size:11px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px;}
-.form-row{display:flex;gap:12px;}
+.form-row{display:flex;gap:10px;}
 .form-row .form-group{flex:1;}
 .chips{display:flex;gap:8px;flex-wrap:wrap;}
 .chip{padding:9px 14px;border-radius:999px;border:1.5px solid var(--line);background:white;font-size:13px;font-weight:700;cursor:pointer;transition:0.15s;}
-.chip.active{color:white;border-color:transparent;box-shadow:0 6px 16px rgba(18,18,18,0.12);}
-.chip[data-cat="Food"].active{background:linear-gradient(135deg,#FF6B2B,#FF8A4B);}
-.chip[data-cat="Transport"].active{background:linear-gradient(135deg,#2F5BFF,#5B7FFF);}
-.chip[data-cat="Hotel"].active{background:linear-gradient(135deg,#7C3AED,#A78BFA);}
-.chip[data-cat="Activity"].active{background:linear-gradient(135deg,#00C2A8,#34D399);}
-.chip[data-cat="Other"].active{background:linear-gradient(135deg,#FF2E93,#FF6B9D);}
-.date-strip{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 8px;scrollbar-width:none;}
+.chip.active{color:white;border-color:transparent;box-shadow:0 6px 16px rgba(23,23,23,0.12);}
+.chip[data-cat="Food"].active{background:var(--orange);}
+.chip[data-cat="Transport"].active{background:var(--blue);}
+.chip[data-cat="Hotel"].active{background:var(--violet);}
+.chip[data-cat="Activity"].active{background:var(--green);}
+.chip[data-cat="Other"].active{background:var(--pink);}
+/* Date strip - colorful like image */
+.date-strip{display:flex;gap:8px;overflow-x:auto;padding:6px 2px 10px;scrollbar-width:none;}
 .date-strip::-webkit-scrollbar{display:none;}
-.date-card{min-width:72px;border:1.5px solid var(--line);border-radius:14px;padding:10px 8px;text-align:center;background:white;cursor:pointer;transition:0.18s;flex-shrink:0;position:relative;overflow:hidden;}
-.date-card.active{background:var(--ink);color:white;border-color:var(--ink);box-shadow:0 10px 24px rgba(18,18,18,0.18);transform:translateY(-1px);}
-.date-card.has-exp::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--orange),var(--pink));}
-.date-card.active.has-exp::after{background:linear-gradient(90deg,#FFC93C,#FF6B2B);}
-.date-card .dow{font-size:10px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;opacity:0.6;}
-.date-card.active .dow{opacity:0.8;}
-.date-card .day{font-size:20px;font-weight:800;margin-top:2px;letter-spacing:-0.02em;}
-.date-card .mon{font-size:11px;font-weight:600;margin-top:1px;opacity:0.7;}
+.date-card{min-width:64px;border-radius:16px;padding:10px 6px;text-align:center;background:white;border:1.5px solid var(--line);cursor:pointer;transition:0.18s;flex-shrink:0;}
+.date-card.active{background:var(--ink);color:white;border-color:var(--ink);transform:translateY(-2px);box-shadow:0 10px 20px rgba(23,23,23,0.15);}
+.date-card.has-exp{border-color:var(--ink);}
+.date-card.has-exp::after{content:'';display:block;width:4px;height:4px;border-radius:50%;background:var(--orange);margin:6px auto 0;}
+.date-card.active.has-exp::after{background:var(--yellow);}
+.date-card .dow{font-size:9px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;opacity:0.6;}
+.date-card .day{font-size:18px;font-weight:800;margin-top:2px;}
+.date-card .mon{font-size:10px;font-weight:600;opacity:0.7;}
 .person-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.person{border:1.5px solid var(--line);border-radius:16px;padding:12px;display:flex;align-items:center;gap:10px;cursor:pointer;background:white;transition:0.18s;position:relative;}
-.person.selected{border-color:var(--ink);background:#FFFBF2;box-shadow:0 0 0 3px #FFF1E0;}
-.person .av{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;color:white;font-weight:800;font-size:12px;flex-shrink:0;box-shadow:0 4px 12px rgba(0,0,0,0.15);}
-.person .name{font-weight:700;font-size:13px;}
-.person .sub{font-size:11px;color:var(--muted);font-weight:600;}
-.person .check{margin-left:auto;width:22px;height:22px;border-radius:8px;border:1.5px solid var(--line);display:grid;place-items:center;font-size:11px;background:white;transition:0.15s;}
+.person{border:1.5px solid var(--line);border-radius:16px;padding:12px;display:flex;align-items:center;gap:10px;cursor:pointer;background:white;transition:0.18s;}
+.person.selected{border-color:var(--ink);background:#FFF8F0;box-shadow:0 0 0 3px #FFE9C8;}
+.person .av{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;color:white;font-weight:800;font-size:12px;flex-shrink:0;}
+.person .check{margin-left:auto;width:20px;height:20px;border-radius:8px;border:1.5px solid var(--line);display:grid;place-items:center;font-size:11px;background:white;}
 .person.selected .check{background:var(--ink);border-color:var(--ink);color:white;}
 .btn{border:none;border-radius:14px;padding:13px 16px;font-weight:800;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:0.15s;}
 .btn:active{transform:scale(0.98);}
-.btn-primary{background:var(--ink);color:white;width:100%;box-shadow:0 12px 24px rgba(18,18,18,0.18);}
-.btn-soft{background:#FFF1E0;color:var(--ink);border:1px solid #FFE4C0;}
+.btn-primary{background:var(--ink);color:white;width:100%;box-shadow:0 12px 24px rgba(23,23,23,0.18);}
+.btn-soft{background:#FFF1D6;border:1px solid #FFE4B8;color:var(--ink);}
 .btn-ghost{background:white;border:1px solid var(--line);color:var(--ink);}
 .btn-sm{padding:8px 12px;font-size:12px;border-radius:10px;}
-.expense-group{margin-bottom:18px;}
-.expense-group-head{display:flex;align-items:baseline;justify-content:space-between;padding:8px 4px 10px;position:sticky;top:61px;background:var(--bg);z-index:5;border-bottom:1px solid var(--line);margin-bottom:10px;}
-.expense-group-head b{font-size:14px;font-weight:800;}
-.expense-group-head span{font-size:12px;color:var(--muted);font-weight:600;}
-.expense{display:flex;gap:12px;padding:14px;border-radius:16px;border:1px solid var(--line);background:white;margin-bottom:10px;cursor:pointer;transition:0.15s;}
-.expense:hover{transform:translateY(-1px);box-shadow:var(--shadow);}
-.expense .icon{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:16px;flex-shrink:0;color:white;font-weight:800;}
-.exp-main{flex:1;min-width:0;}
+/* Expense list - new layout like image: left color block + content */
+.expense-group{margin-bottom:20px;}
+.expense-group-head{display:flex;align-items:center;justify-content:space-between;padding:12px 4px 8px;position:sticky;top:60px;background:var(--bg);z-index:5;margin-bottom:8px;}
+.expense-group-head b{font-size:13px;font-weight:800;letter-spacing:-0.01em;background:var(--ink);color:white;padding:6px 12px;border-radius:999px;}
+.expense-group-head span{font-size:11px;font-weight:700;color:var(--muted);background:white;border:1px solid var(--line);padding:4px 10px;border-radius:999px;}
+.expense{display:flex;gap:0;border-radius:var(--r);border:1px solid var(--line);background:white;overflow:hidden;margin-bottom:10px;cursor:pointer;transition:0.18s;box-shadow:var(--shadow);}
+.expense:hover{transform:translateY(-2px);box-shadow:var(--shadow-strong);}
+.expense .left-bar{width:56px;display:grid;place-items:center;flex-shrink:0;color:white;font-weight:800;font-size:14px;}
+.expense .left-bar.food{background:var(--orange);}
+.expense .left-bar.transport{background:var(--blue);}
+.expense .left-bar.hotel{background:var(--violet);}
+.expense .left-bar.activity{background:var(--green);}
+.expense .left-bar.other{background:var(--pink);}
+.exp-main{flex:1;padding:12px 12px 12px 14px;min-width:0;}
 .exp-title{font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.exp-meta{font-size:12px;color:var(--muted);margin-top:3px;display:flex;gap:6px;flex-wrap:wrap;}
-.exp-meta span{background:#FFF8F0;border:1px solid var(--line);padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600;}
-.exp-amt{font-weight:800;font-size:14px;white-space:nowrap;}
+.exp-meta{font-size:11px;color:var(--muted);margin-top:4px;display:flex;gap:6px;flex-wrap:wrap;font-weight:600;}
+.exp-meta span{background:#FFF8F0;border:1px solid var(--line);padding:2px 8px;border-radius:999px;}
+.exp-right{padding:12px 14px;text-align:right;flex-shrink:0;display:flex;flex-direction:column;justify-content:center;gap:2px;border-left:1px solid var(--line);min-width:92px;}
+.exp-amt{font-weight:800;font-size:14px;}
+.exp-amt small{display:block;font-size:10px;color:var(--muted);font-weight:600;}
+.receipt-dot{width:8px;height:8px;border-radius:50%;background:var(--orange);display:inline-block;margin-left:6px;}
+/* Balances - colorful blocks like image */
 .bal-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-@media(min-width:600px){.bal-grid{grid-template-columns:1fr 1fr 1fr;}}
-.bal-card{border:1px solid var(--line);border-radius:18px;padding:14px;background:white;cursor:pointer;transition:0.18s;position:relative;overflow:hidden;}
-.bal-card:hover{transform:translateY(-2px);box-shadow:var(--shadow);}
-.bal-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;}
-.bal-card.pos::before{background:linear-gradient(90deg,#00C2A8,#34D399);}
-.bal-card.neg::before{background:linear-gradient(90deg,#FF2E93,#FF6B2B);}
-.bal-card.zero::before{background:var(--line);}
-.bal-top{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
-.bal-av{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;color:white;font-weight:800;font-size:11px;box-shadow:0 4px 10px rgba(0,0,0,0.15);}
-.settle-row{display:flex;align-items:center;gap:12px;padding:14px;border:1px solid var(--line);border-radius:16px;background:white;margin-bottom:10px;box-shadow:var(--shadow);}
+.bal-card{border-radius:var(--r-lg);padding:16px;cursor:pointer;transition:0.18s;position:relative;overflow:hidden;min-height:110px;border:1px solid var(--line);}
+.bal-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-strong);}
+.bal-card .bal-top{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.bal-card .bal-av{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;color:white;font-weight:800;font-size:11px;}
+.bal-card .bal-name{font-weight:800;font-size:13px;}
+.bal-card .bal-amt{font-size:20px;font-weight:800;letter-spacing:-0.02em;}
+.bal-card .bal-status{font-size:10px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;margin-top:4px;opacity:0.7;}
+.bal-card.color-0{background:var(--yellow);color:var(--ink);border-color:#F5C842;}
+.bal-card.color-1{background:var(--green);color:white;border-color:#27AE60;}
+.bal-card.color-2{background:var(--blue);color:white;border-color:#2F6BFF;}
+.bal-card.color-3{background:var(--pink);color:white;border-color:#E8437A;}
+.bal-card.color-4{background:var(--orange);color:white;border-color:#E56A17;}
+.bal-card.color-5{background:var(--violet);color:white;border-color:#7A3FD6;}
+.bal-card.color-6{background:white;color:var(--ink);}
+.bal-card.color-7{background:var(--brown);color:white;}
+/* Settlement */
+.settle-row{display:flex;align-items:center;gap:12px;padding:14px;border-radius:var(--r);background:white;border:1px solid var(--line);margin-bottom:10px;box-shadow:var(--shadow);}
 .settle-avatars{display:flex;}
-.settle-avatars .av{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;color:white;font-weight:800;font-size:11px;border:2px solid white;margin-left:-6px;box-shadow:0 4px 10px rgba(0,0,0,0.12);}
+.settle-avatars .av{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;color:white;font-weight:800;font-size:11px;border:2px solid white;margin-left:-6px;}
 .settle-avatars .av:first-child{margin-left:0;}
-.settle-amt{margin-left:auto;background:var(--ink);color:white;padding:7px 12px;border-radius:10px;font-weight:800;font-size:13px;}
-.bottom-tabs{position:fixed;bottom:0;left:0;right:0;z-index:30;background:rgba(255,255,255,0.92);backdrop-filter:blur(18px);border-top:1px solid var(--line);padding:8px 10px calc(8px + env(safe-area-inset-bottom));display:flex;gap:6px;}
-.bottom-tabs .tab{flex:1;justify-content:center;flex-direction:column;gap:3px;padding:9px 6px;font-size:10px;border-radius:14px;}
-.bottom-tabs .tab.active{background:var(--ink);color:white;}
-@media(min-width:720px){.bottom-tabs{display:none;}.tabs{display:flex;}}@media(max-width:719px){.tabs{display:none;}}
+.settle-amt{margin-left:auto;background:var(--ink);color:white;padding:8px 12px;border-radius:10px;font-weight:800;font-size:13px;text-align:right;}
+.settle-amt small{display:block;font-size:10px;opacity:0.7;}
+.trip-card{display:flex;gap:12px;padding:14px;border-radius:var(--r);background:white;border:1px solid var(--line);margin-bottom:10px;cursor:pointer;box-shadow:var(--shadow);}
+.trip-card:hover{border-color:var(--ink);}
 .empty{text-align:center;padding:36px 20px;color:var(--muted);}
 .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--ink);color:white;padding:11px 16px;border-radius:999px;font-size:13px;font-weight:700;z-index:100;opacity:0;transition:0.25s;pointer-events:none;box-shadow:var(--shadow-strong);}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-.modal{position:fixed;inset:0;z-index:60;background:rgba(18,18,18,0.45);backdrop-filter:blur(10px);display:none;align-items:flex-end;justify-content:center;padding:0 0 env(safe-area-inset-bottom);}
+.modal{position:fixed;inset:0;z-index:60;background:rgba(23,23,23,0.45);backdrop-filter:blur(10px);display:none;align-items:flex-end;justify-content:center;padding:0 0 env(safe-area-inset-bottom);}
 .modal.active{display:flex;}
-.modal-card{background:white;border-radius:24px 24px 0 0;width:100%;max-width:720px;max-height:88vh;overflow:auto;animation:slideUp 0.28s ease;}
+.modal-card{background:white;border-radius:24px 24px 0 0;width:100%;max-width:760px;max-height:88vh;overflow:auto;animation:slideUp 0.28s ease;}
 @keyframes slideUp{from{transform:translateY(24px);opacity:0;}to{transform:translateY(0);opacity:1;}}
 .modal-head{position:sticky;top:0;background:white;padding:18px 18px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;z-index:2;}
-.trip-card{display:flex;gap:12px;padding:14px;border:1px solid var(--line);border-radius:16px;background:white;margin-bottom:10px;cursor:pointer;transition:0.15s;}
-.trip-card:hover{border-color:var(--ink);box-shadow:var(--shadow);}
-.admin-gate{background:#FFF8F0;border:1px dashed #FFC9A0;border-radius:14px;padding:12px;text-align:center;margin-top:12px;}
-.admin-gate a{color:var(--orange);font-weight:700;font-size:12px;cursor:pointer;text-decoration:underline;}
+.upload-area{border:1.5px dashed var(--line);border-radius:12px;padding:14px;text-align:center;background:#FFFEFB;cursor:pointer;}
+.receipt-preview{width:100%;border-radius:12px;border:1px solid var(--line);margin-top:8px;max-height:180px;object-fit:cover;display:none;}
+.chips{display:flex;gap:8px;flex-wrap:wrap;}
 </style>
 </head>
 <body>
 <div class="topbar" id="topbar" style="display:none;">
   <div class="topbar-inner">
     <div class="brand"><div class="mark" id="tripMark">T</div><div><h1 id="tripName">Trip</h1><p id="tripMeta">CODE • 0 members</p></div></div>
-    <div style="display:flex;gap:8px;"><button class="btn btn-ghost btn-sm" onclick="showLobby()">Trips</button><button class="btn btn-ghost btn-sm" onclick="exportExcel()">Export</button></div>
+    <div style="display:flex;gap:8px;"><button class="icon-btn" onclick="showLobby()">◧</button><button class="icon-btn" onclick="exportExcel()">↗</button></div>
   </div>
 </div>
 
 <div id="lobbyView">
   <div style="text-align:center;padding:36px 20px 12px;">
-    <div style="width:56px;height:56px;border-radius:18px;background:linear-gradient(135deg,var(--orange),var(--pink));display:grid;place-items:center;color:white;font-weight:800;font-size:22px;margin:0 auto;box-shadow:0 12px 24px rgba(255,107,43,0.35);">S</div>
-    <h1 style="font-size:28px;font-weight:800;letter-spacing:-0.03em;margin-top:14px;">TripSplit</h1>
-    <p style="color:var(--muted);font-size:13px;margin-top:6px;font-weight:500;">Private group expenses • Each trip isolated</p>
+    <div style="width:64px;height:64px;border-radius:20px;background:linear-gradient(135deg,#FF7A1A 0%,#FF3B82 100%);display:grid;place-items:center;color:white;font-weight:900;font-size:24px;margin:0 auto;box-shadow:0 16px 32px rgba(255,107,43,0.35);">S</div>
+    <h1 style="font-size:30px;font-weight:900;letter-spacing:-0.04em;margin-top:14px;">TripSplit</h1>
+    <p style="color:var(--muted);font-size:13px;margin-top:6px;font-weight:600;">Colorful • Private • Receipts • Multi-currency</p>
   </div>
   <div class="container">
-    <!-- JOIN FIRST - Production focus -->
-    <div class="card" style="border:1.5px solid var(--ink);">
-      <div class="card-title"><b>Join trip</b><span>Enter code + password</span></div>
-      <div style="display:flex;gap:12px;">
-        <div style="flex:1;"><label style="font-size:11px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px;">Code</label><input id="joinCode" class="input" placeholder="BK2026" style="text-transform:uppercase;font-weight:700;"></div>
-        <div style="flex:1;"><label style="font-size:11px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px;">Password</label><input id="joinPass" class="input" type="password" placeholder="••••"></div>
+    <div class="card" style="border:2px solid var(--ink);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><b style="font-size:15px;font-weight:800;">Join trip</b><span style="font-size:11px;background:var(--ink);color:white;padding:4px 10px;border-radius:999px;font-weight:700;">CODE + PASSWORD</span></div>
+      <div style="display:flex;gap:10px;">
+        <div style="flex:1;"><input id="joinCode" class="input" placeholder="BK2026" style="text-transform:uppercase;font-weight:800;"></div>
+        <div style="flex:1;"><input id="joinPass" class="input" type="password" placeholder="Password"></div>
       </div>
-      <button class="btn btn-primary" style="margin-top:14px;" onclick="joinTrip()">Join trip</button>
+      <button class="btn btn-primary" style="margin-top:12px;" onclick="joinTrip()">Join trip</button>
     </div>
 
     <div class="card">
-      <div class="card-title"><b>My trips</b><span id="myTripsCount">0</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><b style="font-size:15px;font-weight:800;">My trips</b><span id="myTripsCount" style="font-size:11px;color:var(--muted);font-weight:700;">0</span></div>
       <div id="myTripsList"><div class="empty">No trips yet</div></div>
     </div>
 
-    <!-- HIDDEN CREATE - Only admin -->
     <div id="createTripSection" style="display:none;">
-      <div class="card" style="border:1px solid var(--orange);background:linear-gradient(180deg,#FFF8F0 0%, white 100%);">
-        <div class="card-title"><b>Create trip</b><span>Admin only</span></div>
+      <div class="card" style="border:1.5px solid var(--orange);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><b style="font-size:15px;font-weight:800;">Create trip</b><span style="font-size:11px;background:var(--orange);color:white;padding:4px 10px;border-radius:999px;">ADMIN</span></div>
         <div style="display:flex;flex-direction:column;gap:12px;">
-          <div><label style="font-size:11px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px;">Trip name</label><input id="newTripName" class="input" placeholder="Bangkok December"></div>
-          <div style="display:flex;gap:12px;">
-            <div style="flex:1;"><label style="font-size:11px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px;">Code</label><input id="newTripCode" class="input" placeholder="BK2026" maxlength="12" style="text-transform:uppercase;"></div>
-            <div style="flex:1;"><label style="font-size:11px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px;">Password</label><input id="newTripPass" class="input" type="password" placeholder="••••"></div>
+          <input id="newTripName" class="input" placeholder="Trip name, e.g., Bangkok December">
+          <div style="display:flex;gap:10px;">
+            <input id="newTripCode" class="input" placeholder="Code BK2026" maxlength="12" style="text-transform:uppercase;flex:1;">
+            <input id="newTripPass" class="input" type="password" placeholder="Password" style="flex:1;">
           </div>
-          <div><label style="font-size:11px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px;">Members</label><input id="newTripFriends" class="input" placeholder="Alice, Bob, Charlie"></div>
+          <div style="display:flex;gap:10px;">
+            <input id="newTripStart" class="input" type="date" style="flex:1;">
+            <input id="newTripEnd" class="input" type="date" style="flex:1;">
+          </div>
+          <div style="display:flex;gap:10px;">
+            <select id="newTripCurrency" class="input" style="flex:1;"><option value="HKD">HKD</option><option value="THB">THB</option><option value="JPY">JPY</option><option value="USD">USD</option><option value="EUR">EUR</option><option value="CNY">CNY</option><option value="TWD">TWD</option><option value="KRW">KRW</option><option value="SGD">SGD</option><option value="MYR">MYR</option></select>
+            <input id="newTripRate" class="input" type="number" step="0.0001" placeholder="Rate to HKD" style="flex:1;">
+          </div>
+          <input id="newTripFriends" class="input" placeholder="Members: Alice, Bob, Charlie">
           <button class="btn btn-primary" onclick="createTrip()">Create trip</button>
         </div>
       </div>
     </div>
 
-    <div class="admin-gate" id="adminGate">
-      <div style="font-size:12px;color:var(--muted);">Need to create a new trip?</div>
-      <a onclick="unlockCreate()">Admin: Create trip</a>
-      <div style="font-size:10px;color:var(--muted);margin-top:6px;">Only authorized people can create trips. Join is open for members with code+password.</div>
+    <div style="background:white;border:1px dashed var(--line);border-radius:14px;padding:12px;text-align:center;margin-top:12px;">
+      <a onclick="unlockCreate()" style="color:var(--orange);font-weight:800;font-size:12px;cursor:pointer;text-decoration:underline;">Admin: Create trip</a>
+      <div style="font-size:10px;color:var(--muted);margin-top:4px;">Only authorized can create • Join open with code+password</div>
     </div>
   </div>
 </div>
 
 <div id="tripView" style="display:none;">
   <div class="container">
-    <div class="tabs" id="topTabs">
+    <!-- Hero blocks like image -->
+    <div class="hero-grid">
+      <div class="hero-block dark"><label>Total spent</label><div class="val" id="heroTotal">HKD 0</div><div class="sub" id="heroAvg">—</div></div>
+      <div class="hero-block yellow"><label>Entries</label><div class="val" id="heroCount">0</div><div class="sub" id="heroRange">—</div></div>
+      <div class="hero-block light"><label>Currency</label><div class="val" id="heroCurrency" style="font-size:18px;">HKD</div><div class="sub" id="heroRate">Rate 1</div></div>
+      <div class="hero-block green"><label>Members</label><div class="val" id="heroMembers">0</div><div class="sub" id="heroMembersList">—</div></div>
+    </div>
+
+    <div class="tabs" id="topTabs" style="display:none;">
       <button class="tab active" data-tab="add" onclick="switchTab('add')">New</button>
       <button class="tab" data-tab="expenses" onclick="switchTab('expenses')">Expenses</button>
       <button class="tab" data-tab="balances" onclick="switchTab('balances')">Balances</button>
@@ -207,38 +249,37 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Ar
     </div>
 
     <div class="tab-panel active" id="panel-add">
-      <div class="hero">
-        <div style="position:relative;z-index:1;display:flex;justify-content:space-between;">
-          <div><div style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;opacity:0.6;font-weight:800;">Total spent</div><div style="font-size:28px;font-weight:800;margin-top:6px;letter-spacing:-0.02em;" id="heroTotal">HKD 0</div><div style="font-size:12px;opacity:0.7;margin-top:4px;" id="heroAvg">—</div></div>
-          <div style="text-align:right;"><div style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;opacity:0.6;font-weight:800;">Entries</div><div style="font-size:20px;font-weight:800;margin-top:6px;" id="heroCount">0</div><div style="font-size:11px;opacity:0.7;margin-top:4px;" id="heroRange">—</div></div>
-        </div>
-      </div>
-
       <div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><b style="font-size:15px;font-weight:800;">New expense</b><span id="editBadge" style="display:none;background:#FFC93C;color:#111;padding:4px 10px;border-radius:999px;font-size:10px;font-weight:800;">EDITING</span></div>
-        
-        <div style="margin-bottom:16px;">
-          <label style="font-size:11px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px;">Date — tap a card or pick</label>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><b style="font-size:15px;font-weight:800;">New expense</b><span id="editBadge" style="display:none;background:var(--yellow);color:var(--ink);padding:4px 10px;border-radius:999px;font-size:10px;font-weight:800;">EDITING</span></div>
+        <div style="margin-bottom:14px;">
+          <label style="font-size:11px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px;">Date — tap card (trip dates) or pick</label>
           <div class="date-strip" id="dateStrip"></div>
           <input id="expDate" type="date" class="input" style="margin-top:10px;">
         </div>
-
-        <div style="margin-bottom:16px;"><label style="font-size:11px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px;">Description</label><input id="descInput" class="input" placeholder="Dinner, Taxi, Hotel"></div>
-        <div style="display:flex;gap:12px;margin-bottom:16px;">
-          <div style="flex:1;"><label style="font-size:11px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px;">Amount</label><div class="amount-wrap"><input id="amountInput" class="input big" type="number" inputmode="decimal" placeholder="0"></div></div>
-          <div style="flex:1;"><label style="font-size:11px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px;">Paid by</label><select id="paidBySelect" class="input" style="height:60px;font-weight:700;"></select>
-            <div style="margin-top:12px;"><label style="font-size:11px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px;">Category</label><div class="chips" id="categoryRow">
+        <div class="form-group"><label>Description</label><input id="descInput" class="input" placeholder="Dinner, Taxi, Hotel"></div>
+        <div class="form-row">
+          <div class="form-group"><label>Amount (<span id="amountCurLabel">HKD</span>)</label><div class="amount-wrap" id="amountWrap" data-cur="HKD"><input id="amountInput" class="input big" type="number" inputmode="decimal" placeholder="0"></div><div style="font-size:11px;color:var(--muted);margin-top:6px;" id="amountHKDPreview"></div></div>
+          <div class="form-group"><label>Paid by</label><select id="paidBySelect" class="input" style="height:60px;font-weight:700;"></select>
+            <div style="margin-top:10px;"><label>Category</label><div class="chips" id="categoryRow">
               <div class="chip active" data-cat="Food">Food</div><div class="chip" data-cat="Transport">Transport</div><div class="chip" data-cat="Hotel">Hotel</div><div class="chip" data-cat="Activity">Activity</div><div class="chip" data-cat="Other">Other</div>
             </div></div>
           </div>
         </div>
-
-        <div style="margin-bottom:16px;">
-          <label style="font-size:11px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px;">Split among</label>
+        <div class="form-group">
+          <label>Receipt — upload first, edit later (free)</label>
+          <div class="upload-area" onclick="document.getElementById('receiptInput').click()">
+            <div style="font-size:13px;font-weight:700;">📎 Tap to upload receipt</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:4px;">Compressed &lt;500KB, stored free</div>
+          </div>
+          <input id="receiptInput" type="file" accept="image/*" capture="environment" style="display:none;" onchange="handleReceipt(this)">
+          <img id="receiptPreview" class="receipt-preview" style="width:100%;border-radius:12px;border:1px solid var(--line);margin-top:8px;max-height:180px;object-fit:cover;display:none;">
+          <div style="display:flex;gap:8px;margin-top:8px;"><button class="btn btn-ghost btn-sm" style="display:none;" id="removeReceiptBtn" onclick="removeReceipt()">Remove</button><button class="btn btn-ghost btn-sm" style="display:none;" id="viewReceiptBtn" onclick="viewReceipt()">View</button></div>
+        </div>
+        <div class="form-group">
+          <label>Split among</label>
           <div style="display:flex;gap:8px;margin-bottom:10px;"><button class="btn btn-soft btn-sm" style="flex:1;" onclick="selectAll(true)">All</button><button class="btn btn-ghost btn-sm" style="flex:1;" onclick="selectAll(false)">None</button></div>
           <div class="person-grid" id="splitGrid"></div>
         </div>
-
         <button class="btn btn-primary" onclick="saveExpense()" id="saveBtn">Add expense</button>
         <button class="btn btn-ghost" style="width:100%;margin-top:8px;display:none;" id="cancelEditBtn" onclick="cancelEdit()">Cancel</button>
       </div>
@@ -246,19 +287,23 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Ar
 
     <div class="tab-panel" id="panel-expenses">
       <div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><b style="font-size:15px;font-weight:800;">Expenses</b><span id="expCountTop" style="font-size:12px;color:var(--muted);font-weight:600;">0</span></div>
-        <div style="display:flex;gap:8px;margin-bottom:12px;"><input id="searchInput" class="input" placeholder="Search" oninput="renderExpenses()" style="flex:1;"><select id="filterCategory" class="input" style="width:120px;" onchange="renderExpenses()"><option value="">All</option><option>Food</option><option>Transport</option><option>Hotel</option><option>Activity</option><option>Other</option></select></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><b style="font-size:15px;font-weight:800;">Expenses</b><span id="expCountTop" style="font-size:11px;color:var(--muted);font-weight:700;">Date desc</span></div>
+        <div style="display:flex;gap:8px;margin-bottom:12px;"><input id="searchInput" class="input" placeholder="Search" oninput="renderExpenses()" style="flex:1;"><select id="filterCategory" class="input" style="width:110px;" onchange="renderExpenses()"><option value="">All</option><option>Food</option><option>Transport</option><option>Hotel</option><option>Activity</option><option>Other</option></select></div>
         <div id="expensesList"></div>
       </div>
     </div>
 
     <div class="tab-panel" id="panel-balances">
-      <div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><b style="font-size:15px;font-weight:800;">Balances</b><span style="font-size:12px;color:var(--muted);">Tap for detail</span></div><div class="bal-grid" id="balancesGrid"></div></div>
+      <div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><b style="font-size:15px;font-weight:800;">Balances</b><span style="font-size:11px;color:var(--muted);">Tap for detail</span></div><div class="bal-grid" id="balancesGrid"></div></div>
       <div class="card"><div style="font-size:13px;font-weight:800;margin-bottom:12px;">By category</div><div id="breakdownList"></div></div>
+      <div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;"><b style="font-size:13px;font-weight:800;">Trip settings</b><span style="font-size:11px;color:var(--muted);">Editable</span></div>
+        <div style="display:flex;gap:10px;"><select id="tripCurrencyEdit" class="input" style="flex:1;"><option>HKD</option><option>THB</option><option>JPY</option><option>USD</option><option>EUR</option><option>CNY</option><option>TWD</option><option>KRW</option><option>SGD</option><option>MYR</option></select><input id="tripRateEdit" class="input" type="number" step="0.0001" style="flex:1;"></div>
+        <button class="btn btn-soft" style="width:100%;margin-top:10px;" onclick="saveTripSettings()">Save currency</button>
+      </div>
     </div>
 
     <div class="tab-panel" id="panel-settle">
-      <div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><b style="font-size:15px;font-weight:800;">Settlement</b><span id="settleCount" style="background:var(--ink);color:white;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700;">0</span></div><div id="settlementList"></div><div id="settleSummary" style="margin-top:14px;padding:12px;background:#FFFBF2;border-radius:12px;border:1px dashed var(--line);font-size:13px;text-align:center;color:var(--muted);"></div></div>
+      <div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><b style="font-size:15px;font-weight:800;">Settlement</b><span id="settleCount" style="background:var(--ink);color:white;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700;">0</span></div><div id="settlementList"></div><div id="settleSummary" style="margin-top:12px;padding:12px;background:#FFFBF2;border-radius:12px;border:1px dashed var(--line);font-size:13px;text-align:center;color:var(--muted);"></div></div>
       <div class="card"><div style="display:flex;gap:10px;"><button class="btn btn-ghost" style="flex:1;" onclick="copySettlement()">Copy</button><button class="btn btn-primary" style="flex:1;" onclick="exportExcel()">Export Excel</button></div></div>
     </div>
   </div>
@@ -276,19 +321,27 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Ar
     <div class="modal-head"><div style="display:flex;align-items:center;gap:12px;"><div id="modalAvatar" style="width:36px;height:36px;border-radius:12px;display:grid;place-items:center;color:white;font-weight:800;"></div><div><div id="modalName" style="font-weight:800;"></div><div id="modalBalance" style="font-size:12px;color:var(--muted);"></div></div></div><button class="btn btn-ghost btn-sm" onclick="closePersonModal()">Close</button></div>
     <div style="padding:16px;">
       <div style="display:flex;gap:8px;margin-bottom:14px;overflow-x:auto;"><button class="chip active" data-ptab="overview" onclick="switchPersonTab('overview')">Overview</button><button class="chip" data-ptab="paid" onclick="switchPersonTab('paid')">Paid</button><button class="chip" data-ptab="owes" onclick="switchPersonTab('owes')">Owes</button><button class="chip" data-ptab="settle" onclick="switchPersonTab('settle')">Settlement</button></div>
-      <div id="personTab-overview"></div>
-      <div id="personTab-paid" style="display:none;"></div>
-      <div id="personTab-owes" style="display:none;"></div>
-      <div id="personTab-settle" style="display:none;"></div>
+      <div id="personTab-overview"></div><div id="personTab-paid" style="display:none;"></div><div id="personTab-owes" style="display:none;"></div><div id="personTab-settle" style="display:none;"></div>
     </div>
   </div>
+</div>
+
+<div class="modal" id="whoModal" onclick="if(event.target===this) closeWhoModal()">
+  <div class="modal-card" style="max-width:420px;">
+    <div class="modal-head"><div><b>Who are you?</b><div style="font-size:12px;color:var(--muted);">Default Paid By will be you</div></div></div>
+    <div style="padding:16px;"><div id="whoList" style="display:grid;gap:10px;"></div><div style="margin-top:12px;"><button class="btn btn-ghost" style="width:100%;" onclick="closeWhoModal()">Skip</button></div></div>
+  </div>
+</div>
+
+<div class="modal" id="receiptModal" onclick="if(event.target===this) closeReceiptModal()">
+  <div class="modal-card" style="max-width:600px;"><div class="modal-head"><b>Receipt</b><button class="btn btn-ghost btn-sm" onclick="closeReceiptModal()">Close</button></div><div style="padding:16px;"><img id="receiptModalImg" style="width:100%;border-radius:12px;"></div></div>
 </div>
 
 <div class="toast" id="toast"><span id="toastText">Done</span></div>
 
 <script type="module">
-const ADMIN_CREATE_PASSWORD = "ADMIN2026"; // Change this to your secret admin password
-const colors=['#FF6B2B','#7C3AED','#00C2A8','#2F5BFF','#FF2E93','#FFC93C','#10B981','#E11D48'];
+const ADMIN_CREATE_PASSWORD = "ADMIN2026";
+const colors=['#FF7A1A','#FF3B82','#FFC93C','#2ECC71','#3B82F6','#8B5CF6','#E11D48','#2B1E16'];
 function avatarColor(n){let h=0;for(let i=0;i<n.length;i++)h=n.charCodeAt(i)+((h<<5)-h);return colors[Math.abs(h)%colors.length];}
 function initials(n){return n.slice(0,2).toUpperCase();}
 function toast(m){const t=document.getElementById('toast');document.getElementById('toastText').textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);}
@@ -299,23 +352,21 @@ function fmtDayNum(d){ const dt=new Date(d); return dt.getDate(); }
 
 let currentTrip=null, currentTripId=null, currentPassword=null;
 let friends=[], expenses=[], selectedCategory='Food', splitSel={}, editingId=null;
-let unsubscribeExpenses=null;
+let receiptBase64=null, myIdentity=null, unsubscribeExpenses=null;
 
 async function hashPw(pw){ const enc=new TextEncoder().encode(pw); const buf=await crypto.subtle.digest('SHA-256',enc); return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join(''); }
 
 window.unlockCreate=function(){
   const pw=prompt('Admin password to create trip:');
-  if(pw===ADMIN_CREATE_PASSWORD){
-    document.getElementById('createTripSection').style.display='block';
-    document.getElementById('adminGate').style.display='none';
-    toast('Admin unlocked');
-  }else if(pw!==null){ toast('Wrong admin password'); }
+  if(pw===ADMIN_CREATE_PASSWORD){ document.getElementById('createTripSection').style.display='block'; toast('Admin unlocked'); }
+  else if(pw!==null){ toast('Wrong admin password'); }
 }
 
 function saveMyTrips(){
   let myTrips=JSON.parse(localStorage.getItem('myTrips')||'[]');
   if(!myTrips.find(t=>t.id===currentTripId)){ myTrips.push({id:currentTripId,name:currentTrip?.name||currentTripId}); localStorage.setItem('myTrips',JSON.stringify(myTrips)); }
   localStorage.setItem(`trip_${currentTripId}_pw`, currentPassword);
+  if(myIdentity) localStorage.setItem(`trip_${currentTripId}_who`, myIdentity);
 }
 function loadMyTrips(){
   const myTrips=JSON.parse(localStorage.getItem('myTrips')||'[]');
@@ -325,7 +376,7 @@ function loadMyTrips(){
   list.innerHTML='';
   myTrips.forEach(t=>{
     const div=document.createElement('div');div.className='trip-card';
-    div.innerHTML=`<div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#FF6B2B,#FF2E93);display:grid;place-items:center;color:white;font-weight:800;">✈</div><div style="flex:1;"><div style="font-weight:800;">${t.name}</div><div style="font-size:12px;color:#9B9B9B;">${t.id}</div></div><div>→</div>`;
+    div.innerHTML=`<div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#FF7A1A,#FF3B82);display:grid;place-items:center;color:white;font-weight:800;">✈</div><div style="flex:1;"><div style="font-weight:800;">${t.name}</div><div style="font-size:12px;color:#A8A29E;">${t.id}</div></div><div>→</div>`;
     div.onclick=()=>{document.getElementById('joinCode').value=t.id;document.getElementById('joinPass').value=localStorage.getItem(`trip_${t.id}_pw`)||'';joinTrip();};
     list.appendChild(div);
   });
@@ -338,16 +389,22 @@ window.createTrip=async function(){
   let code=document.getElementById('newTripCode').value.trim().toUpperCase()||Math.random().toString(36).substring(2,8).toUpperCase();
   code=code.replace(/[^A-Z0-9]/g,'').slice(0,20);
   const pass=document.getElementById('newTripPass').value.trim();
+  const start=document.getElementById('newTripStart').value;
+  const end=document.getElementById('newTripEnd').value;
+  const currency=document.getElementById('newTripCurrency').value;
+  const rate=parseFloat(document.getElementById('newTripRate').value)||1;
   const friendsRaw=document.getElementById('newTripFriends').value.trim();
   if(!name){toast('Enter trip name');return;}
   if(!pass||pass.length<3){toast('Password min 3');return;}
+  if(!start||!end){toast('Enter start and end date');return;}
+  if(new Date(start) > new Date(end)){toast('Start after end');return;}
   const friendsArr=friendsRaw?friendsRaw.split(',').map(s=>s.trim()).filter(Boolean).slice(0,8):['Alice','Bob'];
   const pwHash=await hashPw(pass);
   try{
     const ref=fb.doc(fb.db,'trips',code);
     const snap=await fb.getDoc(ref);
     if(snap.exists()){toast('Code exists');return;}
-    await fb.setDoc(ref,{id:code,name,friends:friendsArr,passwordHash:pwHash,createdAt:new Date().toISOString()});
+    await fb.setDoc(ref,{id:code,name,friends:friendsArr,passwordHash:pwHash,startDate:start,endDate:end,currency,exchangeRate:rate,baseCurrency:'HKD',createdAt:new Date().toISOString()});
     document.getElementById('joinCode').value=code;
     document.getElementById('joinPass').value=pass;
     toast(`Created ${code}`);
@@ -357,7 +414,7 @@ window.createTrip=async function(){
 
 window.joinTrip=async function(){
   const fb=window._fb;
-  if(!fb.configValid){toast('Firebase not configured - set config first');return;}
+  if(!fb.configValid){toast('Firebase not configured');return;}
   const code=document.getElementById('joinCode').value.trim().toUpperCase();
   const pass=document.getElementById('joinPass').value.trim();
   if(!code||!pass){toast('Enter code + password');return;}
@@ -371,9 +428,12 @@ window.joinTrip=async function(){
     currentTripId=code; currentTrip=data; currentPassword=pass;
     friends=data.friends||[];
     friends.forEach(f=>splitSel[f]=true);
+    myIdentity=localStorage.getItem(`trip_${code}_who`)||null;
     saveMyTrips();
     showTripView();
     listenExpenses();
+    if(!myIdentity){ setTimeout(()=>showWhoModal(), 600); }
+    else{ document.getElementById('paidBySelect').value=myIdentity; }
     toast(`Joined ${data.name}`);
   }catch(e){toast('Error: '+e.message);}
 }
@@ -396,7 +456,9 @@ function showTripView(){
   document.getElementById('bottomTabs').style.display='flex';
   document.getElementById('tripName').innerText=currentTrip.name;
   document.getElementById('tripMark').innerText=currentTrip.name[0].toUpperCase();
-  document.getElementById('tripMeta').innerText=`${currentTripId} • ${friends.length} members`;
+  document.getElementById('tripMeta').innerText=`${currentTripId} • ${currentTrip.startDate||''}→${currentTrip.endDate||''} • ${currentTrip.currency||'HKD'}→HKD ${currentTrip.exchangeRate||1}`;
+  document.getElementById('tripCurrencyEdit').value=currentTrip.currency||'HKD';
+  document.getElementById('tripRateEdit').value=currentTrip.exchangeRate||1;
   document.getElementById('expDate').valueAsDate=new Date();
   renderFriends();renderDateStrip();renderSplit();
 }
@@ -408,7 +470,13 @@ window.switchTab=function(tab){
 }
 
 function getTripDates(){
-  const dates=new Set(expenses.map(e=>e.date).filter(Boolean));
+  const dates=new Set();
+  if(currentTrip && currentTrip.startDate && currentTrip.endDate){
+    const start=new Date(currentTrip.startDate);
+    const end=new Date(currentTrip.endDate);
+    for(let d=new Date(start); d<=end; d.setDate(d.getDate()+1)){ dates.add(d.toISOString().slice(0,10)); }
+  }
+  expenses.forEach(e=>{ if(e.date) dates.add(e.date); });
   const today=new Date();
   for(let i=-2;i<=2;i++){ const d=new Date(today); d.setDate(today.getDate()+i); dates.add(d.toISOString().slice(0,10)); }
   return Array.from(dates).sort();
@@ -419,10 +487,19 @@ function renderDateStrip(){
   const tripDates=getTripDates();
   const selected=document.getElementById('expDate').value;
   let displayDates=tripDates;
-  if(tripDates.length>10){
-    const selIdx=tripDates.indexOf(selected);
-    if(selIdx>=0){ const start=Math.max(0, selIdx-5); displayDates=tripDates.slice(start, start+10); }
-    else{ displayDates=tripDates.slice(-10); }
+  if(tripDates.length>12){
+    if(currentTrip && currentTrip.startDate){
+      const tripRange=[];
+      const start=new Date(currentTrip.startDate);
+      const end=new Date(currentTrip.endDate);
+      for(let d=new Date(start); d<=end; d.setDate(d.getDate()+1)){ tripRange.push(d.toISOString().slice(0,10)); }
+      displayDates=tripRange.slice(0,12);
+      if(selected && !displayDates.includes(selected)){ displayDates[displayDates.length-1]=selected; displayDates.sort(); }
+    }else{
+      const selIdx=tripDates.indexOf(selected);
+      if(selIdx>=0){ const start=Math.max(0, selIdx-5); displayDates=tripDates.slice(start, start+12); }
+      else{ displayDates=tripDates.slice(-12); }
+    }
   }
   strip.innerHTML='';
   displayDates.forEach(d=>{
@@ -430,7 +507,7 @@ function renderDateStrip(){
     const div=document.createElement('div');
     div.className='date-card'+(d===selected?' active':'')+(count?' has-exp':'');
     div.innerHTML=`<div class=dow>${fmtDay(d)}</div><div class=day>${fmtDayNum(d)}</div><div class=mon>${fmtMon(d)}</div>`;
-    div.onclick=()=>{document.getElementById('expDate').value=d;renderDateStrip();};
+    div.onclick=()=>{document.getElementById('expDate').value=d;renderDateStrip();updateAmountPreview();};
     strip.appendChild(div);
   });
 }
@@ -438,6 +515,7 @@ function renderDateStrip(){
 function renderFriends(){
   const sel=document.getElementById('paidBySelect');sel.innerHTML='';
   friends.forEach(f=>{const o=document.createElement('option');o.value=f;o.textContent=f;sel.appendChild(o);});
+  if(myIdentity && friends.includes(myIdentity)){ sel.value=myIdentity; }
 }
 function renderSplit(){
   const g=document.getElementById('splitGrid');g.innerHTML='';
@@ -450,17 +528,103 @@ function renderSplit(){
 }
 window.selectAll=function(v){friends.forEach(f=>splitSel[f]=v);renderSplit();}
 document.querySelectorAll('.chip').forEach(c=>c.addEventListener('click',()=>{if(c.parentElement.id==='categoryRow'){document.querySelectorAll('#categoryRow .chip').forEach(x=>x.classList.remove('active'));c.classList.add('active');selectedCategory=c.dataset.cat;}}));
-document.getElementById('expDate').addEventListener('change',()=>renderDateStrip());
+document.getElementById('expDate').addEventListener('change',()=>{renderDateStrip();});
+document.getElementById('amountInput').addEventListener('input',()=>updateAmountPreview());
+document.getElementById('newTripCurrency').addEventListener('change',(e)=>{
+  const cur=e.target.value;
+  const defaults={HKD:1,THB:0.21,JPY:0.052,USD:7.8,EUR:8.4,CNY:1.08,TWD:0.25,KRW:0.0057,SGD:5.8,MYR:1.65};
+  document.getElementById('newTripRate').value=defaults[cur]||1;
+});
+
+function updateAmountPreview(){
+  const amt=parseFloat(document.getElementById('amountInput').value)||0;
+  const rate=currentTrip?.exchangeRate||1;
+  const cur=currentTrip?.currency||'HKD';
+  const wrap=document.getElementById('amountWrap');
+  wrap.setAttribute('data-cur', cur);
+  document.getElementById('amountCurLabel').innerText=cur;
+  if(cur==='HKD' || !rate || rate===1){ document.getElementById('amountHKDPreview').innerText=''; }
+  else{ const hkd=amt*rate; document.getElementById('amountHKDPreview').innerText=`≈ HKD ${hkd.toFixed(2)} (rate ${rate}) • Settle HKD`; }
+}
+
+window.handleReceipt=async function(input){
+  const file=input.files[0];
+  if(!file) return;
+  if(file.size>10*1024*1024){toast('Image too large');return;}
+  try{
+    const compressed=await compressImage(file, 800, 0.7);
+    receiptBase64=compressed;
+    const preview=document.getElementById('receiptPreview');
+    preview.src=compressed; preview.style.display='block';
+    document.getElementById('removeReceiptBtn').style.display='inline-flex';
+    document.getElementById('viewReceiptBtn').style.display='inline-flex';
+    toast('Receipt attached');
+  }catch(e){toast('Failed');}
+}
+function compressImage(file, maxWidth, quality){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onload=e=>{
+      const img=new Image();
+      img.onload=()=>{
+        const canvas=document.createElement('canvas');
+        let w=img.width, h=img.height;
+        if(w>maxWidth){ h=(maxWidth/w)*h; w=maxWidth; }
+        canvas.width=w; canvas.height=h;
+        const ctx=canvas.getContext('2d');
+        ctx.drawImage(img,0,0,w,h);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.onerror=reject;
+      img.src=e.target.result;
+    };
+    reader.onerror=reject;
+    reader.readAsDataURL(file);
+  });
+}
+window.removeReceipt=function(){
+  receiptBase64=null;
+  document.getElementById('receiptInput').value='';
+  document.getElementById('receiptPreview').style.display='none';
+  document.getElementById('removeReceiptBtn').style.display='none';
+  document.getElementById('viewReceiptBtn').style.display='none';
+}
+window.viewReceipt=function(){
+  const src=receiptBase64 || document.getElementById('receiptPreview').src;
+  if(!src) return;
+  document.getElementById('receiptModalImg').src=src;
+  document.getElementById('receiptModal').classList.add('active');
+}
+window.closeReceiptModal=function(){document.getElementById('receiptModal').classList.remove('active');}
 
 function listenExpenses(){
   const fb=window._fb;
   if(unsubscribeExpenses) unsubscribeExpenses();
-  const q=fb.query(fb.collection(fb.db,'trips',currentTripId,'expenses'), fb.orderBy('createdAt','desc'));
-  unsubscribeExpenses=fb.onSnapshot(q,(snap)=>{
-    expenses=[];
-    snap.forEach(doc=>{expenses.push({id:doc.id, ...doc.data()});});
-    renderAll();
-  });
+  const q=fb.query(fb.collection(fb.db,'trips',currentTripId,'expenses'), fb.orderBy('date','desc'), fb.orderBy('createdAt','desc'));
+  try{
+    unsubscribeExpenses=fb.onSnapshot(q,(snap)=>{
+      expenses=[];
+      snap.forEach(doc=>{expenses.push({id:doc.id, ...doc.data()});});
+      expenses.sort((a,b)=> (b.date||'').localeCompare(a.date||'') || (b.createdAt||'').localeCompare(a.createdAt||''));
+      renderAll();
+    }, ()=>{
+      const q2=fb.query(fb.collection(fb.db,'trips',currentTripId,'expenses'), fb.orderBy('createdAt','desc'));
+      unsubscribeExpenses=fb.onSnapshot(q2,(snap)=>{
+        expenses=[];
+        snap.forEach(doc=>{expenses.push({id:doc.id, ...doc.data()});});
+        expenses.sort((a,b)=> (b.date||'').localeCompare(a.date||''));
+        renderAll();
+      });
+    });
+  }catch(e){
+    const q2=fb.query(fb.collection(fb.db,'trips',currentTripId,'expenses'), fb.orderBy('createdAt','desc'));
+    unsubscribeExpenses=fb.onSnapshot(q2,(snap)=>{
+      expenses=[];
+      snap.forEach(doc=>{expenses.push({id:doc.id, ...doc.data()});});
+      expenses.sort((a,b)=> (b.date||'').localeCompare(a.date||''));
+      renderAll();
+    });
+  }
 }
 
 window.saveExpense=async function(){
@@ -473,20 +637,19 @@ window.saveExpense=async function(){
   if(!paid){toast('Select payer');return;}
   const shared=friends.filter(f=>splitSel[f]);
   if(shared.length===0){toast('Select at least 1');return;}
-  const payload={date,desc,category:selectedCategory,paidBy:paid,amount:amt,sharedWith:shared,createdAt:new Date().toISOString()};
+  const rate=currentTrip?.exchangeRate||1;
+  const payload={date,desc,category:selectedCategory,paidBy:paid,amount:amt,amountHKD:amt*rate,currency:currentTrip?.currency||'HKD',exchangeRate:rate,sharedWith:shared,receiptImage:receiptBase64||null,createdAt:new Date().toISOString()};
   try{
     if(editingId){
+      if(!receiptBase64){ const existing=expenses.find(e=>e.id===editingId); if(existing && existing.receiptImage) payload.receiptImage=existing.receiptImage; }
       await fb.updateDoc(fb.doc(fb.db,'trips',currentTripId,'expenses',editingId), payload);
-      toast('Updated');
-      editingId=null;
-      document.getElementById('editBadge').style.display='none';
-      document.getElementById('cancelEditBtn').style.display='none';
-      document.getElementById('saveBtn').innerText='Add expense';
+      toast('Updated'); editingId=null;
+      document.getElementById('editBadge').style.display='none';document.getElementById('cancelEditBtn').style.display='none';document.getElementById('saveBtn').innerText='Add expense';
     }else{
       await fb.addDoc(fb.collection(fb.db,'trips',currentTripId,'expenses'), payload);
       toast('Added');
     }
-    document.getElementById('descInput').value='';document.getElementById('amountInput').value='';
+    document.getElementById('descInput').value='';document.getElementById('amountInput').value='';removeReceipt();updateAmountPreview();
   }catch(e){toast('Error: '+e.message);}
 }
 
@@ -501,19 +664,15 @@ window.editExpense=function(id){
   selectedCategory=exp.category;
   document.querySelectorAll('#categoryRow .chip').forEach(c=>c.classList.toggle('active',c.dataset.cat===selectedCategory));
   friends.forEach(f=>splitSel[f]=exp.sharedWith.includes(f));
-  renderSplit();renderDateStrip();
-  document.getElementById('editBadge').style.display='inline-block';
-  document.getElementById('cancelEditBtn').style.display='block';
-  document.getElementById('saveBtn').innerText='Update';
+  if(exp.receiptImage){ receiptBase64=exp.receiptImage; const p=document.getElementById('receiptPreview'); p.src=receiptBase64; p.style.display='block'; document.getElementById('removeReceiptBtn').style.display='inline-flex'; document.getElementById('viewReceiptBtn').style.display='inline-flex'; }else{ removeReceipt(); }
+  renderSplit();renderDateStrip();updateAmountPreview();
+  document.getElementById('editBadge').style.display='inline-block';document.getElementById('cancelEditBtn').style.display='block';document.getElementById('saveBtn').innerText='Update';
   switchTab('add');
 }
 window.cancelEdit=function(){
   editingId=null;
-  document.getElementById('editBadge').style.display='none';
-  document.getElementById('cancelEditBtn').style.display='none';
-  document.getElementById('saveBtn').innerText='Add expense';
-  document.getElementById('descInput').value='';document.getElementById('amountInput').value='';
-  friends.forEach(f=>splitSel[f]=true);renderSplit();
+  document.getElementById('editBadge').style.display='none';document.getElementById('cancelEditBtn').style.display='none';document.getElementById('saveBtn').innerText='Add expense';
+  document.getElementById('descInput').value='';document.getElementById('amountInput').value='';removeReceipt();friends.forEach(f=>splitSel[f]=true);renderSplit();updateAmountPreview();
 }
 window.delExp=async function(id){
   if(!confirm('Delete expense?'))return;
@@ -531,33 +690,30 @@ function renderExpenses(){
   const list=document.getElementById('expensesList');
   const search=(document.getElementById('searchInput')?.value||'').toLowerCase();
   const filterCat=document.getElementById('filterCategory')?.value||'';
-  let filtered=expenses.filter(e=>{
-    const ms=!search||e.desc.toLowerCase().includes(search)||e.paidBy.toLowerCase().includes(search);
-    const mc=!filterCat||e.category===filterCat;
-    return ms&&mc;
-  });
-  document.getElementById('expCountTop').innerText=`${filtered.length} • HKD ${filtered.reduce((s,e)=>s+e.amount,0).toFixed(0)}`;
+  let filtered=expenses.filter(e=>{ const ms=!search||e.desc.toLowerCase().includes(search)||e.paidBy.toLowerCase().includes(search); const mc=!filterCat||e.category===filterCat; return ms&&mc; });
+  document.getElementById('expCountTop').innerText=`${filtered.length} • Date desc • HKD ${filtered.reduce((s,e)=>s+(e.amountHKD||e.amount),0).toFixed(0)}`;
   if(filtered.length===0){list.innerHTML='<div class=empty>No expenses</div>';return;}
   const grouped=groupByDate(filtered);
   list.innerHTML='';
   grouped.forEach(([date, exps])=>{
-    const total=exps.reduce((s,e)=>s+e.amount,0);
+    const total=exps.reduce((s,e)=>s+(e.amountHKD||e.amount),0);
+    const totalOrig=exps.reduce((s,e)=>s+e.amount,0);
     const header=document.createElement('div');header.className='expense-group-head';
     const dObj=new Date(date); const isValid=!isNaN(dObj);
     const label=isValid? `${fmtDay(date)} • ${fmtDate(date)}` : date;
-    header.innerHTML=`<b>${label}</b><span>${exps.length} • HKD ${total.toFixed(0)}</span>`;
+    header.innerHTML=`<b>${label}</b><span>${exps.length} • ${currentTrip.currency||'HKD'} ${totalOrig.toFixed(0)} • HKD ${total.toFixed(0)}</span>`;
     list.appendChild(header);
     const groupDiv=document.createElement('div');
     exps.forEach(e=>{
-      const div=document.createElement('div');div.className='expense';
+      const div=document.createElement('div');div.className='expense'+(e.receiptImage?' has-receipt':'');
       div.onclick=()=>editExpense(e.id);
       const shareText=e.sharedWith.length===friends.length?'All':e.sharedWith.join(', ');
-      const catColors={Food:'linear-gradient(135deg,#FF6B2B,#FF8A4B)',Transport:'linear-gradient(135deg,#2F5BFF,#5B7FFF)',Hotel:'linear-gradient(135deg,#7C3AED,#A78BFA)',Activity:'linear-gradient(135deg,#00C2A8,#34D399)',Other:'linear-gradient(135deg,#FF2E93,#FF6B9D)'};
-      div.innerHTML=`
-        <div class=icon style="background:${catColors[e.category]||'linear-gradient(135deg,#111,#444)'};color:white;">${e.category[0]}</div>
-        <div class=exp-main><div class=exp-title>${e.desc}</div><div class=exp-meta><span>${e.paidBy}</span><span>${e.category}</span><span>${shareText}</span></div></div>
-        <div style="text-align:right;"><div class=exp-amt>HKD ${e.amount.toFixed(0)}</div><div style="font-size:11px;color:#9B9B9B;margin-top:4px;">Edit →</div></div>
-      `;
+      const catColors={Food:'linear-gradient(135deg,#FF7A1A,#FF8A4B)',Transport:'linear-gradient(135deg,#3B82F6,#5B7FFF)',Hotel:'linear-gradient(135deg,#8B5CF6,#A78BFA)',Activity:'linear-gradient(135deg,#00C2A8,#34D399)',Other:'linear-gradient(135deg,#FF3B82,#FF6B9D)'};
+      const leftClass=e.category.toLowerCase();
+      div.innerHTML=`<div class="left-bar ${leftClass}" style="background:${(catColors[e.category]||'linear-gradient(135deg,#111,#444)').includes('gradient')?'':catColors[e.category]};${catColors[e.category]?.includes('gradient')?`background:${catColors[e.category]}`:''}">${e.category[0]}</div><div class=exp-main><div class=exp-title>${e.desc}${e.receiptImage?'<span class=receipt-dot></span>':''}</div><div class=exp-meta><span>${e.paidBy}</span><span>${e.category}</span><span>${shareText}</span></div></div><div class=exp-right><div class=exp-amt>${currentTrip.currency||'HKD'} ${e.amount.toFixed(0)}<small>HKD ${(e.amountHKD||e.amount).toFixed(0)}</small></div></div>`;
+      // fix left-bar background gradient via style
+      const leftBar=div.querySelector('.left-bar');
+      leftBar.style.background=catColors[e.category]||'#111';
       groupDiv.appendChild(div);
     });
     list.appendChild(groupDiv);
@@ -565,18 +721,19 @@ function renderExpenses(){
 }
 
 function calcBal(){
-  const bal={};friends.forEach(f=>bal[f]={paid:0,share:0,balance:0,paidList:[],shareList:[]});
+  const bal={};friends.forEach(f=>bal[f]={paid:0,paidHKD:0,share:0,shareHKD:0,balance:0,balanceHKD:0,paidList:[],shareList:[]});
   expenses.forEach(ex=>{
-    if(bal[ex.paidBy]){bal[ex.paidBy].paid+=ex.amount; bal[ex.paidBy].paidList.push(ex);}
-    const per=ex.amount/ex.sharedWith.length;
-    ex.sharedWith.forEach(n=>{if(bal[n]){bal[n].share+=per; bal[n].shareList.push({...ex, per});}});
+    const amtHKD=ex.amountHKD||ex.amount;
+    if(bal[ex.paidBy]){bal[ex.paidBy].paid+=ex.amount; bal[ex.paidBy].paidHKD+=amtHKD; bal[ex.paidBy].paidList.push(ex);}
+    const per=ex.amount/ex.sharedWith.length; const perHKD=amtHKD/ex.sharedWith.length;
+    ex.sharedWith.forEach(n=>{if(bal[n]){bal[n].share+=per; bal[n].shareHKD+=perHKD; bal[n].shareList.push({...ex, per, perHKD});}});
   });
-  friends.forEach(f=>bal[f].balance=bal[f].paid-bal[f].share);
+  friends.forEach(f=>{bal[f].balance=bal[f].paid-bal[f].share; bal[f].balanceHKD=bal[f].paidHKD-bal[f].shareHKD;});
   return bal;
 }
 function calcSettlement(bal){
   let debtors=[],creditors=[];
-  Object.entries(bal).forEach(([n,d])=>{if(d.balance<-0.01)debtors.push({name:n,amount:-d.balance});else if(d.balance>0.01)creditors.push({name:n,amount:d.balance});});
+  Object.entries(bal).forEach(([n,d])=>{if(d.balanceHKD<-0.01)debtors.push({name:n,amount:-d.balanceHKD});else if(d.balanceHKD>0.01)creditors.push({name:n,amount:d.balanceHKD});});
   debtors.sort((a,b)=>b.amount-a.amount);creditors.sort((a,b)=>b.amount-a.amount);
   const trans=[];let i=0,j=0;
   while(i<debtors.length&&j<creditors.length){
@@ -591,58 +748,79 @@ function calcSettlement(bal){
 function renderBalances(){
   const grid=document.getElementById('balancesGrid');const breakdown=document.getElementById('breakdownList');
   const bal=calcBal();grid.innerHTML='';
-  friends.forEach(f=>{
-    const b=bal[f];const pos=b.balance>0.01;const neg=b.balance<-0.01;
+  friends.forEach((f,idx)=>{
+    const b=bal[f];const pos=b.balanceHKD>0.01;const neg=b.balanceHKD<-0.01;
     const div=document.createElement('div');div.className='bal-card '+(pos?'pos':neg?'neg':'zero');
+    div.style.background=['#FFD93D','#2ECC71','#3B82F6','#FF3B82','#FF7A1A','#8B5CF6','#FFFFFF','#2B1E16'][idx%8];
+    div.style.color=[0,1,2,3,4].includes(idx%8)? (idx%8===0?'#1A1A1A':'white') : (idx%8===6?'#1A1A1A':'white');
     div.onclick=()=>openPersonModal(f);
-    div.innerHTML=`<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><div style="width:32px;height:32px;border-radius:10px;background:${avatarColor(f)};display:grid;place-items:center;color:white;font-weight:800;font-size:11px;box-shadow:0 4px 10px rgba(0,0,0,0.15);">${initials(f)}</div><div style="font-weight:800;font-size:13px;">${f}</div></div><div style="font-size:18px;font-weight:800;">${neg?'-':''}HKD ${Math.abs(b.balance).toFixed(0)}</div><div style="font-size:10px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;margin-top:4px;opacity:0.7;">${pos?'Gets back':neg?'Owes':'Settled'}</div><div style="font-size:11px;color:#9B9B9B;margin-top:8px;">Paid ${b.paid.toFixed(0)} • Share ${b.share.toFixed(0)}</div>`;
+    div.innerHTML=`<div class=bal-top><div class=bal-av style="background:${avatarColor(f)}">${initials(f)}</div><div style="font-weight:800;font-size:13px;">${f}</div></div><div class=bal-amt>HKD ${b.balanceHKD>0?'+':''}${b.balanceHKD.toFixed(0)}</div><div class=bal-status>${pos?'Gets back':neg?'Owes':'Settled'}</div><div style="font-size:11px;opacity:0.8;margin-top:8px;">Paid ${b.paid.toFixed(0)} • Share ${b.share.toFixed(0)}</div>`;
     grid.appendChild(div);
   });
-  const byCat={};expenses.forEach(e=>{byCat[e.category]=(byCat[e.category]||0)+e.amount;});
+  const byCat={};expenses.forEach(e=>{byCat[e.category]=(byCat[e.category]||0)+(e.amountHKD||e.amount);});
   breakdown.innerHTML=Object.entries(byCat).map(([cat,amt])=>{
-    const pct=expenses.length?(amt/expenses.reduce((s,e)=>s+e.amount,0)*100).toFixed(0):0;
-    const catColors={Food:'#FF6B2B',Transport:'#2F5BFF',Hotel:'#7C3AED',Activity:'#00C2A8',Other:'#FF2E93'};
-    return `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #F0E6D8;"><div style="display:flex;gap:10px;align-items:center;"><div style="width:36px;height:36px;border-radius:10px;background:${catColors[cat]||'#111'};display:grid;place-items:center;color:white;font-weight:800;">${cat[0]}</div><div><div style="font-weight:700;font-size:13px;">${cat}</div><div style="font-size:11px;color:#9B9B9B;">${pct}%</div></div></div><div style="font-weight:800;">HKD ${amt.toFixed(0)}</div></div>`;
-  }).join('')||'<div style="color:#9B9B9B;font-size:13px;text-align:center;padding:12px;">No data</div>';
+    const pct=expenses.length?(amt/expenses.reduce((s,e)=>s+(e.amountHKD||e.amount),0)*100).toFixed(0):0;
+    const catColors={Food:'#FF7A1A',Transport:'#3B82F6',Hotel:'#8B5CF6',Activity:'#2ECC71',Other:'#FF3B82'};
+    return `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #F5E6D8;"><div style="display:flex;gap:10px;align-items:center;"><div style="width:36px;height:36px;border-radius:10px;background:${catColors[cat]||'#111'};display:grid;place-items:center;color:white;font-weight:800;">${cat[0]}</div><div><div style="font-weight:700;font-size:13px;">${cat}</div><div style="font-size:11px;color:#A8A29E;">${pct}%</div></div></div><div style="font-weight:800;">HKD ${amt.toFixed(0)}</div></div>`;
+  }).join('')||'<div style="color:#A8A29E;font-size:13px;text-align:center;padding:12px;">No data</div>';
 }
 
 function renderSettlement(){
   const list=document.getElementById('settlementList');const summary=document.getElementById('settleSummary');
   const bal=calcBal();const trans=calcSettlement(bal);
   document.getElementById('settleCount').innerText=`${trans.length}`;
-  if(trans.length===0){list.innerHTML='<div class=empty>All settled</div>';summary.innerText='No payments needed';return;}
+  if(trans.length===0){list.innerHTML='<div class=empty>All settled</div>';summary.innerText='No payments needed • Settle HKD';return;}
   list.innerHTML='';trans.forEach(t=>{
     const div=document.createElement('div');div.className='settle-row';
-    div.innerHTML=`<div class=settle-avatars><div class=av style="background:${avatarColor(t.from)}">${initials(t.from)}</div><div class=av style="background:${avatarColor(t.to)}">${initials(t.to)}</div></div><div style="flex:1;"><b>${t.from} → ${t.to}</b><div style="font-size:12px;color:#9B9B9B;">${t.from} pays ${t.to}</div></div><div class=settle-amt>HKD ${t.amount.toFixed(0)}</div>`;
+    div.innerHTML=`<div class=settle-avatars><div class=av style="background:${avatarColor(t.from)}">${initials(t.from)}</div><div class=av style="background:${avatarColor(t.to)}">${initials(t.to)}</div></div><div style="flex:1;"><b>${t.from} → ${t.to}</b><div style="font-size:12px;color:#A8A29E;">${t.from} pays ${t.to} in HKD</div></div><div class=settle-amt>HKD ${t.amount.toFixed(0)}<small>HKD</small></div>`;
     list.appendChild(div);
   });
   const total=trans.reduce((s,t)=>s+t.amount,0);
-  summary.innerHTML=`${trans.length} transfers • Total HKD ${total.toFixed(0)}`;
+  summary.innerHTML=`${trans.length} transfers • Total HKD ${total.toFixed(0)} • Default HKD`;
 }
 
 function renderAll(){
   renderDateStrip();renderFriends();renderSplit();renderExpenses();renderBalances();renderSettlement();
-  const total=expenses.reduce((s,e)=>s+e.amount,0);
+  const total=expenses.reduce((s,e)=>s+(e.amountHKD||e.amount),0);
+  const totalOrig=expenses.reduce((s,e)=>s+e.amount,0);
   document.getElementById('heroTotal').innerText=`HKD ${total.toFixed(0)}`;
   document.getElementById('heroCount').innerText=`${expenses.length} entries`;
+  document.getElementById('heroAvg').innerText=friends.length?`HKD ${(total/(friends.length||1)).toFixed(0)} per person`:'';
+  document.getElementById('heroCurrency').innerText=`${currentTrip.currency||'HKD'} ${totalOrig.toFixed(0)} • Rate ${currentTrip.exchangeRate||1} • ${currentTrip.startDate||''}→${currentTrip.endDate||''}`;
   if(expenses.length){
     const dates=expenses.map(e=>e.date).filter(Boolean).sort();
     document.getElementById('heroRange').innerText=dates.length?`${fmtDate(dates[0])} → ${fmtDate(dates[dates.length-1])}`:'';
   }
-  document.getElementById('heroAvg').innerText=friends.length?`HKD ${(total/(friends.length||1)).toFixed(0)} per person`:'';
+  document.getElementById('heroMembers').innerText=friends.length;
+  document.getElementById('heroMembersList').innerText=friends.join(', ');
 }
+
+function showWhoModal(){
+  const list=document.getElementById('whoList');
+  list.innerHTML='';
+  friends.forEach(f=>{
+    const div=document.createElement('div');
+    div.style.cssText='display:flex;align-items:center;gap:12px;padding:14px;border:1.5px solid #F5E6D8;border-radius:14px;cursor:pointer;background:white;';
+    div.innerHTML=`<div style="width:40px;height:40px;border-radius:12px;background:${avatarColor(f)};display:grid;place-items:center;color:white;font-weight:800;">${initials(f)}</div><div style="flex:1;font-weight:700;">${f}</div><div>→</div>`;
+    div.onclick=()=>{ myIdentity=f; localStorage.setItem(`trip_${currentTripId}_who`, f); document.getElementById('paidBySelect').value=f; saveMyTrips(); closeWhoModal(); toast(`You are ${f}`); };
+    list.appendChild(div);
+  });
+  document.getElementById('whoModal').classList.add('active');
+}
+window.closeWhoModal=function(){document.getElementById('whoModal').classList.remove('active');}
+window.showWhoModal=showWhoModal;
 
 window.exportExcel=function(){
   const bal=calcBal();
   const trans=calcSettlement(bal);
   const wb=XLSX.utils.book_new();
-  const expData=[["Date","Description","Category","Paid By","Amount","Shared With"]];
-  expenses.slice().reverse().forEach(e=>{expData.push([e.date,e.desc,e.category,e.paidBy,e.amount,e.sharedWith.join(', ')]);});
+  const expData=[["Date","Description","Category","Paid By",`Amount (${currentTrip.currency})`,"Amount HKD","Shared With","Receipt"]];
+  expenses.slice().reverse().forEach(e=>{expData.push([e.date,e.desc,e.category,e.paidBy,e.amount,e.amountHKD||e.amount,e.sharedWith.join(', '),e.receiptImage?'Yes':'No']);});
   XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(expData),"Expenses");
-  const balData=[["Friend","Paid","Share","Balance","Status"]];
-  Object.entries(bal).forEach(([n,b])=>{balData.push([n,b.paid,b.share,b.balance,b.balance>0.01?"GETS BACK":b.balance<-0.01?"OWES":"OK"]);});
+  const balData=[["Friend","Paid Orig","Paid HKD","Share Orig","Share HKD","Balance HKD","Status"]];
+  Object.entries(bal).forEach(([n,b])=>{balData.push([n,b.paid,b.paidHKD,b.share,b.shareHKD,b.balanceHKD,b.balanceHKD>0.01?"GETS BACK":b.balanceHKD<-0.01?"OWES":"OK"]);});
   XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(balData),"Balances");
-  const settleData=[["From","To","Amount"],...trans.map(t=>[t.from,t.to,t.amount])];
+  const settleData=[["From","To","Amount HKD"],...trans.map(t=>[t.from,t.to,t.amount])];
   XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(settleData),"Settlement");
   XLSX.writeFile(wb,`${currentTrip?.name||'Trip'}_${currentTripId}.xlsx`);
   toast('Exported');
@@ -654,24 +832,23 @@ window.copySettlement=function(){
   navigator.clipboard.writeText(text).then(()=>toast('Copied'));
 }
 
-// Person detail modal
 window.openPersonModal=function(name){
   const bal=calcBal()[name];
   if(!bal) return;
   document.getElementById('modalAvatar').style.background=avatarColor(name);
   document.getElementById('modalAvatar').innerText=initials(name);
   document.getElementById('modalName').innerText=name;
-  document.getElementById('modalBalance').innerText=`Balance HKD ${bal.balance.toFixed(2)} • Paid ${bal.paid.toFixed(0)} • Share ${bal.share.toFixed(0)}`;
+  document.getElementById('modalBalance').innerText=`Balance HKD ${bal.balanceHKD.toFixed(2)} • Paid ${bal.paid.toFixed(0)} • Share ${bal.share.toFixed(0)}`;
   const overview=document.getElementById('personTab-overview');
-  overview.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;"><div style="background:#FFFBF2;padding:12px;border-radius:12px;border:1px solid #FFE4C0;"><div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:#9B9B9B;font-weight:700;">Total paid</div><div style="font-size:20px;font-weight:800;margin-top:4px;">HKD ${bal.paid.toFixed(0)}</div><div style="font-size:12px;color:#9B9B9B;">${bal.paidList.length} expenses</div></div><div style="background:#F7F5F1;padding:12px;border-radius:12px;"><div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:#9B9B9B;font-weight:700;">Total share</div><div style="font-size:20px;font-weight:800;margin-top:4px;">HKD ${bal.share.toFixed(0)}</div><div style="font-size:12px;color:#9B9B9B;">${bal.shareList.length} shared</div></div></div><div style="padding:12px;background:${bal.balance>0?'#E8F5EE':bal.balance<0?'#FEF0EF':'#F7F5F1'};border-radius:12px;text-align:center;"><div style="font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;opacity:0.7;">Net</div><div style="font-size:24px;font-weight:800;margin-top:4px;">${bal.balance>0?'+':''}HKD ${bal.balance.toFixed(0)}</div><div style="font-size:12px;margin-top:2px;">${bal.balance>0?'Gets back':bal.balance<0?'Owes':'Settled'}</div></div>`;
+  overview.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;"><div style="background:#FFF8F0;padding:12px;border-radius:12px;border:1px solid #FFE4C0;"><div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:#A8A29E;font-weight:700;">Total paid</div><div style="font-size:20px;font-weight:800;margin-top:4px;">${currentTrip.currency} ${bal.paid.toFixed(0)}</div><div style="font-size:12px;color:#A8A29E;">HKD ${bal.paidHKD.toFixed(0)} • ${bal.paidList.length} expenses</div></div><div style="background:#F7F5F1;padding:12px;border-radius:12px;"><div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:#A8A29E;font-weight:700;">Total share</div><div style="font-size:20px;font-weight:800;margin-top:4px;">${currentTrip.currency} ${bal.share.toFixed(0)}</div><div style="font-size:12px;color:#A8A29E;">HKD ${bal.shareHKD.toFixed(0)} • ${bal.shareList.length} shared</div></div></div><div style="padding:12px;background:${bal.balanceHKD>0?'#E8F5EE':bal.balanceHKD<0?'#FEF0EF':'#F7F5F1'};border-radius:12px;text-align:center;"><div style="font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;opacity:0.7;">Net HKD</div><div style="font-size:24px;font-weight:800;margin-top:4px;">${bal.balanceHKD>0?'+':''}HKD ${bal.balanceHKD.toFixed(0)}</div><div style="font-size:12px;margin-top:2px;">${bal.balanceHKD>0?'Gets back':bal.balanceHKD<0?'Owes':'Settled'}</div></div>`;
   const paidTab=document.getElementById('personTab-paid');
-  paidTab.innerHTML=bal.paidList.length? bal.paidList.map(e=>`<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #F0E6D8;"><div><div style="font-weight:600;font-size:13px;">${e.desc}</div><div style="font-size:11px;color:#9B9B9B;">${e.date} • Split ${e.sharedWith.length}</div></div><div style="font-weight:700;">HKD ${e.amount.toFixed(0)}</div></div>`).join('') : '<div style="color:#9B9B9B;text-align:center;padding:20px;">No payments made</div>';
+  paidTab.innerHTML=bal.paidList.length? bal.paidList.map(e=>`<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #F5E6D8;"><div><div style="font-weight:600;font-size:13px;">${e.desc}</div><div style="font-size:11px;color:#A8A29E;">${e.date} • Split ${e.sharedWith.length} ${e.receiptImage?'• 📎':''}</div></div><div style="text-align:right;"><div style="font-weight:700;">${currentTrip.currency} ${e.amount.toFixed(0)}</div><div style="font-size:11px;color:#A8A29E;">HKD ${(e.amountHKD||e.amount).toFixed(0)}</div></div></div>`).join('') : '<div style="color:#A8A29E;text-align:center;padding:20px;">No payments made</div>';
   const owesTab=document.getElementById('personTab-owes');
-  owesTab.innerHTML=bal.shareList.length? bal.shareList.map(e=>`<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #F0E6D8;"><div><div style="font-weight:600;font-size:13px;">${e.desc}</div><div style="font-size:11px;color:#9B9B9B;">${e.date} • Paid by ${e.paidBy}</div></div><div style="text-align:right;"><div style="font-weight:700;">HKD ${e.per.toFixed(0)}</div><div style="font-size:11px;color:#9B9B9B;">of ${e.amount.toFixed(0)}</div></div></div>`).join('') : '<div style="color:#9B9B9B;text-align:center;padding:20px;">No shared expenses</div>';
+  owesTab.innerHTML=bal.shareList.length? bal.shareList.map(e=>`<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #F5E6D8;"><div><div style="font-weight:600;font-size:13px;">${e.desc}</div><div style="font-size:11px;color:#A8A29E;">${e.date} • Paid by ${e.paidBy}</div></div><div style="text-align:right;"><div style="font-weight:700;">${currentTrip.currency} ${e.per.toFixed(0)}</div><div style="font-size:11px;color:#A8A29E;">HKD ${e.perHKD.toFixed(0)}</div></div></div>`).join('') : '<div style="color:#A8A29E;text-align:center;padding:20px;">No shared expenses</div>';
   const settleTab=document.getElementById('personTab-settle');
   const allTrans=calcSettlement(calcBal());
   const myTrans=allTrans.filter(t=>t.from===name||t.to===name);
-  settleTab.innerHTML=myTrans.length? myTrans.map(t=>`<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #F0E6D8;"><div style="flex:1;"><b>${t.from===name?`You pay ${t.to}`:`${t.from} pays you`}</b><div style="font-size:11px;color:#9B9B9B;">${t.from} → ${t.to}</div></div><div style="background:#111;color:white;padding:6px 10px;border-radius:8px;font-weight:700;font-size:13px;">HKD ${t.amount.toFixed(0)}</div></div>`).join('') : '<div style="color:#9B9B9B;text-align:center;padding:20px;">No settlement needed</div>';
+  settleTab.innerHTML=myTrans.length? myTrans.map(t=>`<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #F5E6D8;"><div style="flex:1;"><b>${t.from===name?`You pay ${t.to}`:`${t.from} pays you`}</b><div style="font-size:11px;color:#A8A29E;">${t.from} → ${t.to}</div></div><div style="background:#111;color:white;padding:6px 10px;border-radius:8px;font-weight:700;font-size:13px;">HKD ${t.amount.toFixed(0)}</div></div>`).join('') : '<div style="color:#A8A29E;text-align:center;padding:20px;">No settlement needed</div>';
   document.getElementById('personModal').classList.add('active');
 }
 window.closePersonModal=function(){document.getElementById('personModal').classList.remove('active');}
@@ -680,7 +857,19 @@ window.switchPersonTab=function(tab){
   document.querySelectorAll('[id^="personTab-"]').forEach(p=>p.style.display=p.id===`personTab-${tab}`?'block':'none');
 }
 
-// init
+window.saveTripSettings=async function(){
+  const fb=window._fb;
+  const cur=document.getElementById('tripCurrencyEdit').value;
+  const rate=parseFloat(document.getElementById('tripRateEdit').value)||1;
+  try{
+    await fb.updateDoc(fb.doc(fb.db,'trips',currentTripId), {currency:cur, exchangeRate:rate});
+    currentTrip.currency=cur;
+    currentTrip.exchangeRate=rate;
+    toast('Currency saved');
+    renderAll();
+  }catch(e){toast('Error: '+e.message);}
+}
+
 setTimeout(()=>{
   const myTrips=JSON.parse(localStorage.getItem('myTrips')||'[]');
   document.getElementById('myTripsCount').innerText=myTrips.length;
@@ -690,14 +879,17 @@ setTimeout(()=>{
     list.innerHTML='';
     myTrips.forEach(t=>{
       const div=document.createElement('div');div.className='trip-card';
-      div.innerHTML=`<div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#FF6B2B,#FF2E93);display:grid;place-items:center;color:white;font-weight:800;">✈</div><div style="flex:1;"><div style="font-weight:800;">${t.name}</div><div style="font-size:12px;color:#9B9B9B;">${t.id}</div></div><div>→</div>`;
+      div.innerHTML=`<div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#FF7A1A,#FF3B82);display:grid;place-items:center;color:white;font-weight:800;">✈</div><div style="flex:1;"><div style="font-weight:800;">${t.name}</div><div style="font-size:12px;color:#A8A29E;">${t.id}</div></div><div>→</div>`;
       div.onclick=()=>{document.getElementById('joinCode').value=t.id;document.getElementById('joinPass').value=localStorage.getItem(`trip_${t.id}_pw`)||'';joinTrip();};
       list.appendChild(div);
     });
   }
   document.getElementById('expDate').valueAsDate=new Date();
   document.getElementById('newTripCode').value=Math.random().toString(36).substring(2,8).toUpperCase();
+  const today=new Date(); const tomorrow=new Date(); tomorrow.setDate(today.getDate()+3);
+  document.getElementById('newTripStart').valueAsDate=today;
+  document.getElementById('newTripEnd').valueAsDate=tomorrow;
 },400);
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a30a1e6d19c3cabc',t:'MTc4NzY1NTg5Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
