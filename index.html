@@ -29,23 +29,24 @@ window.dispatchEvent(new Event('fb-ready'));
 </script>
 <style>
 :root{
-  --bg:#FFF7ED;--paper:#FFFFFF;--ink:#171717;--muted:#A8A29E;--line:#F5E6D3;
-  --orange:#FF7A1A;--pink:#FF3B82;--yellow:#FFC93C;--green:#2ECC71;--blue:#3B82F6;--violet:#8B5CF6;--brown:#2B1E16;
-  --r:18px;--r-lg:24px;--r-xl:28px;--shadow:0 10px 30px rgba(23,23,23,0.06);--shadow-strong:0 18px 40px rgba(23,23,23,0.14);
+  --bg:#EEF4FF;--paper:#FFFFFF;--ink:#0F1B2E;--muted:#8A9BB5;--line:#D6E4FF;
+  --blue:#1A5CFF;--blue-dark:#0F2E6E;--blue-light:#E8EFFF;--blue-soft:#F0F6FF;
+  --orange:#FF7A1A;--pink:#FF3B82;--yellow:#FFC93C;--green:#12C48B;--violet:#7C3AED;
+  --r:16px;--r-lg:20px;--r-xl:26px;--shadow:0 12px 32px rgba(15,46,110,0.08);--shadow-strong:0 20px 50px rgba(15,46,110,0.16);
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);padding-bottom:96px;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);padding-bottom:120px;}
 h1,h2,h3{font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:-0.02em;}
 .topbar{position:sticky;top:0;z-index:20;padding:10px 12px 0;}
 .topbar-inner{max-width:760px;margin:0 auto;background:white;border:1px solid var(--line);border-radius:20px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow);}
 .brand{display:flex;align-items:center;gap:10px;}
-.mark{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--orange),var(--pink));color:white;display:grid;place-items:center;font-weight:800;font-size:16px;box-shadow:0 8px 20px rgba(255,107,43,0.3);}
+.mark{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--blue-dark),var(--blue));color:white;display:grid;place-items:center;font-weight:800;font-size:16px;box-shadow:0 8px 20px rgba(26,92,255,0.3);}
 .brand h1{font-size:15px;font-weight:800;}
 .brand p{font-size:11px;color:var(--muted);font-weight:600;}
 .container{max-width:760px;margin:0 auto;padding:0 12px;}
 .tabs{position:sticky;top:62px;z-index:15;display:flex;gap:6px;padding:5px;background:white;border:1px solid var(--line);border-radius:999px;box-shadow:var(--shadow);width:fit-content;margin:14px auto 0;}
 .tab{padding:9px 18px;border-radius:999px;border:none;background:transparent;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;transition:0.18s;}
-.tab.active{background:var(--ink);color:white;box-shadow:0 6px 18px rgba(23,23,23,0.18);}
+.tab.active{background:var(--ink);color:white;box-shadow:0 6px 18px rgba(15,27,46,0.18);}
 .tab-panel{display:none;animation:fadeIn 0.22s ease;}
 .tab-panel.active{display:block;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
@@ -53,53 +54,61 @@ h1,h2,h3{font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:-0.02em;}
 .card-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
 .card-title b{font-size:14px;font-weight:800;}
 .card-title span{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;}
-.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;}
+.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px;}
 .hero-block{border-radius:var(--r-lg);padding:16px;min-height:96px;position:relative;overflow:hidden;border:1px solid var(--line);}
-.hero-block.dark{background:var(--ink);color:white;border-color:var(--ink);}
-.hero-block.yellow{background:var(--yellow);color:var(--ink);}
-.hero-block.green{background:var(--green);color:white;}
-.hero-block.white{background:white;}
+.hero-block.dark{background:linear-gradient(135deg,var(--blue-dark),var(--blue));color:white;border-color:transparent;}
+.hero-block.blue-light{background:var(--blue-light);color:var(--blue-dark);border-color:#D0DDFF;}
+.hero-block.yellow{background:var(--yellow);color:var(--ink);border-color:#F5C842;}
+.hero-block.green{background:var(--green);color:white;border-color:#0FB67A;}
 .hero-block label{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;opacity:0.7;font-weight:800;display:block;}
 .hero-block .val{font-size:22px;font-weight:800;margin-top:6px;letter-spacing:-0.02em;}
-.hero-block .sub{font-size:11px;opacity:0.8;margin-top:4px;font-weight:500;}
-.input{width:100%;padding:13px 14px;border:1.5px solid var(--line);border-radius:12px;background:#FFFEFB;font-size:15px;font-weight:500;outline:none;transition:0.15s;}
-.input:focus{border-color:var(--ink);box-shadow:0 0 0 3px #FFF0D9;}
+.hero-block .sub{font-size:11px;opacity:0.85;margin-top:4px;font-weight:500;}
+.input{width:100%;padding:13px 14px;border:1.5px solid var(--line);border-radius:12px;background:#FBFDFF;font-size:15px;font-weight:500;outline:none;transition:0.15s;}
+.input:focus{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-light);}
 .input.big{font-size:24px;font-weight:800;padding:16px 14px 16px 54px;font-family:'Plus Jakarta Sans';}
-.input.invalid{border-color:var(--pink);background:#FFF0F3;}
-.amount-wrap{position:relative;}
-.amount-wrap::before{content:attr(data-cur);position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:800;color:var(--muted);}
+.input.invalid{border-color:#FF3B82;background:#FFF1F2;}
+.password-wrap{position:relative;display:flex;align-items:center;}
+.password-wrap .input{padding-right:44px;}
+.eye-btn{position:absolute;right:8px;width:32px;height:32px;border-radius:8px;border:none;background:#F0F6FF;display:grid;place-items:center;cursor:pointer;font-size:14px;}
+.amount-wrap{position:relative;display:flex;gap:8px;}
+.amount-wrap .input{flex:1;}
+.amount-wrap::before{content:attr(data-cur);position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:800;color:var(--muted);pointer-events:none;}
+.currency-select{width:90px;padding:13px 8px;border:1.5px solid var(--line);border-radius:12px;background:white;font-weight:700;font-size:13px;}
 .form-group{margin-bottom:14px;}
 .form-group label{font-size:11px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px;}
 .form-row{display:flex;gap:10px;}
 .form-row .form-group{flex:1;}
 .chips{display:flex;gap:8px;flex-wrap:wrap;}
 .chip{padding:9px 14px;border-radius:999px;border:1.5px solid var(--line);background:white;font-size:13px;font-weight:700;cursor:pointer;transition:0.15s;}
-.chip.active{color:white;border-color:transparent;}
-.chip[data-cat="Food"].active{background:var(--orange);}
-.chip[data-cat="Transport"].active{background:var(--blue);}
-.chip[data-cat="Hotel"].active{background:var(--violet);}
-.chip[data-cat="Activity"].active{background:var(--green);}
-.chip[data-cat="Other"].active{background:var(--pink);}
-.date-strip{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:none;}
+.chip.active{background:var(--ink);color:white;border-color:var(--ink);}
+.chip.desc-chip{background:#F0F6FF;border-color:#D0DDFF;color:var(--blue-dark);}
+.chip.desc-chip.active{background:var(--blue);color:white;border-color:var(--blue);}
+.chip[data-cat="Food"].active{background:#FF7A1A;}
+.chip[data-cat="Transport"].active{background:#3B82F6;}
+.chip[data-cat="Hotel"].active{background:#8B5CF6;}
+.chip[data-cat="Activity"].active{background:#12C48B;}
+.chip[data-cat="Other"].active{background:#FF3B82;}
+.chip[data-cat="Pending Update"].active{background:#9CA3AF;}
+.date-strip{display:flex;gap:8px;overflow-x:auto;padding:6px 2px 10px;scrollbar-width:none;}
 .date-strip::-webkit-scrollbar{display:none;}
 .date-card{min-width:68px;border:1.5px solid var(--line);border-radius:14px;padding:10px 6px;text-align:center;background:white;cursor:pointer;transition:0.18s;flex-shrink:0;position:relative;}
 .date-card.active{background:var(--ink);color:white;border-color:var(--ink);transform:translateY(-1px);box-shadow:0 8px 20px rgba(23,23,23,0.15);}
-.date-card.today{border-color:var(--orange);box-shadow:0 0 0 2px #FFE4C0;}
-.date-card.has-exp::after{content:'';position:absolute;bottom:0;left:8px;right:8px;height:3px;border-radius:999px;background:var(--orange);}
+.date-card.today{border-color:var(--blue);box-shadow:0 0 0 2px var(--blue-light);}
+.date-card.has-exp::after{content:'';position:absolute;bottom:0;left:8px;right:8px;height:3px;border-radius:999px;background:var(--blue);}
 .date-card .dow{font-size:9px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;opacity:0.6;}
 .date-card .day{font-size:18px;font-weight:800;margin-top:2px;}
 .date-card .mon{font-size:10px;font-weight:600;opacity:0.7;}
 .person-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .person{border:1.5px solid var(--line);border-radius:16px;padding:12px;display:flex;align-items:center;gap:10px;cursor:pointer;background:white;transition:0.18s;}
-.person.selected{border-color:var(--ink);background:#FFF8F0;box-shadow:0 0 0 3px #FFE9C8;}
+.person.selected{border-color:var(--ink);background:#F0F6FF;box-shadow:0 0 0 3px var(--blue-light);}
 .person .av{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;color:white;font-weight:800;font-size:12px;flex-shrink:0;}
 .person .check{margin-left:auto;width:20px;height:20px;border-radius:8px;border:1.5px solid var(--line);display:grid;place-items:center;font-size:11px;background:white;}
 .person.selected .check{background:var(--ink);border-color:var(--ink);color:white;}
 .btn{border:none;border-radius:14px;padding:13px 16px;font-weight:800;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:0.15s;}
 .btn:active{transform:scale(0.98);}
 .btn:disabled{opacity:0.5;pointer-events:none;}
-.btn-primary{background:var(--ink);color:white;width:100%;box-shadow:0 12px 24px rgba(23,23,23,0.18);}
-.btn-soft{background:#FFF1D6;border:1px solid #FFE4B8;color:var(--ink);}
+.btn-primary{background:var(--ink);color:white;width:100%;box-shadow:0 12px 24px rgba(15,27,46,0.18);}
+.btn-soft{background:var(--blue-light);color:var(--blue-dark);border:1px solid #D0DDFF;}
 .btn-ghost{background:white;border:1px solid var(--line);color:var(--ink);}
 .btn-sm{padding:8px 12px;font-size:12px;border-radius:10px;}
 .btn-danger{background:#FFF1F2;border:1px solid #FECDD3;color:#BE123C;}
@@ -108,52 +117,46 @@ h1,h2,h3{font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:-0.02em;}
 .expense-group-head b{font-size:12px;font-weight:800;background:var(--ink);color:white;padding:5px 12px;border-radius:999px;}
 .expense-group-head span{font-size:11px;font-weight:700;color:var(--muted);background:white;border:1px solid var(--line);padding:4px 10px;border-radius:999px;}
 .expense{display:flex;gap:0;border-radius:16px;border:1px solid var(--line);background:white;overflow:hidden;margin-bottom:10px;cursor:pointer;box-shadow:var(--shadow);transition:0.18s;}
-.expense:hover{transform:translateY(-1px);box-shadow:0 18px 40px rgba(23,23,23,0.12);}
+.expense:hover{transform:translateY(-1px);box-shadow:0 18px 40px rgba(15,46,110,0.12);}
+.expense.pending{border-color:#FBBF24;background:#FFFBEB;}
 .expense .left-bar{width:52px;display:grid;place-items:center;flex-shrink:0;color:white;font-weight:800;font-size:13px;}
 .exp-main{flex:1;padding:11px 12px;min-width:0;}
 .exp-title{font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .exp-meta{font-size:11px;color:var(--muted);margin-top:3px;display:flex;gap:5px;flex-wrap:wrap;font-weight:600;}
-.exp-meta span{background:#FFF8F0;border:1px solid var(--line);padding:2px 7px;border-radius:999px;}
+.exp-meta span{background:#F0F6FF;border:1px solid var(--line);padding:2px 7px;border-radius:999px;}
 .exp-right{padding:11px 12px;text-align:right;flex-shrink:0;display:flex;flex-direction:column;justify-content:center;gap:2px;border-left:1px solid var(--line);min-width:88px;}
 .exp-amt{font-weight:800;font-size:13px;}
 .exp-amt small{display:block;font-size:10px;color:var(--muted);}
 .bal-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.bal-card{border-radius:18px;padding:14px;cursor:pointer;transition:0.18s;position:relative;overflow:hidden;min-height:100px;border:1px solid var(--line);}
-.bal-card:hover{transform:translateY(-2px);box-shadow:0 18px 40px rgba(23,23,23,0.12);}
-.bal-card.color-0{background:#FFD93D;color:#1A1A1A;}
-.bal-card.color-1{background:#2ECC71;color:white;}
-.bal-card.color-2{background:#3B82F6;color:white;}
-.bal-card.color-3{background:#FF3B82;color:white;}
-.bal-card.color-4{background:#FF7A1A;color:white;}
-.bal-card.color-5{background:#8B5CF6;color:white;}
-.bal-card.color-6{background:white;}
-.bal-card.color-7{background:#1A1A1A;color:white;}
+.bal-card{border-radius:18px;padding:14px;cursor:pointer;transition:0.18s;position:relative;overflow:hidden;min-height:100px;border:1px solid var(--line);background:white;}
+.bal-card:hover{transform:translateY(-2px);box-shadow:0 18px 40px rgba(15,46,110,0.12);}
+.bal-card.pos::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#12C48B,#00C2A8);}
+.bal-card.neg::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#FF3B82,#FF7A1A);}
 .settle-row{display:flex;align-items:center;gap:12px;padding:14px;border-radius:16px;background:white;border:1px solid var(--line);margin-bottom:10px;box-shadow:var(--shadow);}
 .settle-avatars{display:flex;}
 .settle-avatars .av{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;color:white;font-weight:800;font-size:11px;border:2px solid white;margin-left:-6px;}
 .settle-avatars .av:first-child{margin-left:0;}
 .settle-amt{margin-left:auto;background:var(--ink);color:white;padding:7px 12px;border-radius:10px;font-weight:800;font-size:13px;text-align:right;}
-.bottom-tabs{position:fixed;bottom:12px;left:12px;right:12px;z-index:30;max-width:760px;margin:0 auto;background:var(--ink);border-radius:22px;padding:6px;display:flex;gap:6px;box-shadow:0 20px 50px rgba(23,23,23,0.2);}
+.bottom-tabs{position:fixed;bottom:20px;left:12px;right:12px;z-index:40;max-width:760px;margin:0 auto;background:var(--ink);border-radius:22px;padding:6px;display:flex;gap:6px;box-shadow:0 20px 50px rgba(15,27,46,0.25);}
 .bottom-tabs .nav-item{flex:1;justify-content:center;flex-direction:column;gap:3px;padding:10px 6px;font-size:10px;border-radius:14px;color:rgba(255,255,255,0.6);background:transparent;border:none;font-weight:700;cursor:pointer;display:flex;align-items:center;}
 .bottom-tabs .nav-item.active{background:white;color:var(--ink);}
-@media(min-width:720px){.bottom-tabs{display:none;}.tabs{display:flex;}}@media(max-width:719px){.tabs{display:none;}}
+@media(min-width:720px){.bottom-tabs{bottom:16px;}.tabs{display:flex;}}@media(max-width:719px){.tabs{display:none;}}
 .empty{text-align:center;padding:32px 20px;color:var(--muted);}
-.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--ink);color:white;padding:11px 16px;border-radius:999px;font-size:13px;font-weight:700;z-index:100;opacity:0;transition:0.25s;pointer-events:none;display:flex;gap:8px;align-items:center;box-shadow:0 20px 50px rgba(23,23,23,0.2);}
+.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--ink);color:white;padding:11px 16px;border-radius:999px;font-size:13px;font-weight:700;z-index:100;opacity:0;transition:0.25s;pointer-events:none;display:flex;gap:8px;align-items:center;box-shadow:0 20px 50px rgba(23,23,23,0.2);}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 .toast.undo{pointer-events:auto;cursor:pointer;}
-.modal{position:fixed;inset:0;z-index:60;background:rgba(23,23,23,0.45);backdrop-filter:blur(10px);display:none;align-items:flex-end;justify-content:center;padding:0 0 env(safe-area-inset-bottom);}
+.modal{position:fixed;inset:0;z-index:60;background:rgba(15,27,46,0.45);backdrop-filter:blur(10px);display:none;align-items:flex-end;justify-content:center;padding:0 0 env(safe-area-inset-bottom);}
 .modal.active{display:flex;}
 .modal-card{background:white;border-radius:24px 24px 0 0;width:100%;max-width:760px;max-height:88vh;overflow:auto;animation:slideUp 0.28s ease;}
 @keyframes slideUp{from{transform:translateY(24px);opacity:0;}to{transform:translateY(0);opacity:1;}}
 .modal-head{position:sticky;top:0;background:white;padding:18px 18px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;z-index:2;}
 .trip-card{display:flex;gap:12px;padding:14px;border-radius:16px;background:white;border:1px solid var(--line);margin-bottom:10px;cursor:pointer;box-shadow:var(--shadow);}
-.upload-area{border:1.5px dashed var(--line);border-radius:12px;padding:14px;text-align:center;background:#FFFEFB;cursor:pointer;}
+.upload-area{border:1.5px dashed var(--line);border-radius:12px;padding:14px;text-align:center;background:#FBFDFF;cursor:pointer;}
 .receipt-preview{width:100%;border-radius:12px;border:1px solid var(--line);margin-top:8px;max-height:180px;object-fit:cover;display:none;}
 .pagination{display:flex;gap:8px;justify-content:center;align-items:center;padding:16px 0 8px;flex-wrap:wrap;}
 .page-btn{min-width:36px;height:36px;border-radius:10px;border:1px solid var(--line);background:white;display:grid;place-items:center;font-weight:700;font-size:13px;cursor:pointer;transition:0.15s;}
-.page-btn.active{background:var(--ink);color:white;border-color:var(--ink);box-shadow:0 6px 16px rgba(23,23,23,0.15);}
+.page-btn.active{background:var(--ink);color:white;border-color:var(--ink);}
 .page-btn:disabled{opacity:0.4;pointer-events:none;}
-.page-info{font-size:12px;color:var(--muted);font-weight:600;padding:0 8px;}
 </style>
 </head>
 <body>
@@ -166,19 +169,26 @@ h1,h2,h3{font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:-0.02em;}
 
 <div id="lobbyView">
   <div style="text-align:center;padding:36px 20px 12px;">
-    <div style="width:64px;height:64px;border-radius:20px;background:linear-gradient(135deg,#FF7A1A 0%,#FF3B82 100%);display:grid;place-items:center;color:white;font-weight:900;font-size:24px;margin:0 auto;box-shadow:0 16px 32px rgba(255,107,43,0.35);">S</div>
-    <h1 style="font-family:'Plus Jakarta Sans';font-size:30px;font-weight:900;letter-spacing:-0.04em;margin-top:14px;">TripSplit</h1>
-    <p style="color:var(--muted);font-size:13px;margin-top:6px;font-weight:600;">Private • Colorful • Receipts • Multi-currency</p>
-    <div id="fbStatus" style="font-size:11px;margin-top:10px;padding:6px 12px;border-radius:999px;display:inline-block;background:white;border:1px solid var(--line);">Checking storage...</div>
+    <div style="width:64px;height:64px;border-radius:20px;background:linear-gradient(135deg,#0F2E6E,#1A5CFF);display:grid;place-items:center;color:white;font-weight:900;font-size:24px;margin:0 auto;box-shadow:0 16px 32px rgba(26,92,255,0.35);">S</div>
+    <h1 style="font-family:'Plus Jakarta Sans';font-size:30px;font-weight:900;letter-spacing:-0.04em;margin-top:14px;color:var(--blue-dark);">TripSplit</h1>
+    <p style="color:var(--muted);font-size:13px;margin-top:6px;font-weight:600;">Private • Blue tone • Receipts • Multi-currency</p>
+    <div id="fbStatus" style="font-size:11px;margin-top:10px;padding:6px 12px;border-radius:999px;display:inline-block;background:white;border:1px solid var(--line);">Checking...</div>
   </div>
   <div class="container">
-    <div class="card" style="border:2px solid var(--ink);">
+    <div class="card" style="border:2px solid var(--blue-dark);">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><b style="font-size:15px;font-weight:800;">Join trip</b><span style="font-size:11px;background:var(--ink);color:white;padding:4px 10px;border-radius:999px;">CODE + PASSWORD</span></div>
       <div style="display:flex;gap:10px;">
-        <div style="flex:1;"><input id="joinCode" class="input" placeholder="BK2026" style="text-transform:uppercase;font-weight:800;"></div>
-        <div style="flex:1;"><input id="joinPass" class="input" type="password" placeholder="Password"></div>
+        <div style="flex:1;">
+          <input id="joinCode" class="input" placeholder="BK2026" style="text-transform:uppercase;font-weight:800;">
+        </div>
+        <div style="flex:1;">
+          <div class="password-wrap"><input id="joinPass" class="input" type="password" placeholder="Password"><button class="eye-btn" onclick="togglePassword('joinPass', this)">👁</button></div>
+        </div>
       </div>
-      <button class="btn btn-primary" style="margin-top:12px;" onclick="joinTrip()">Join trip</button>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:10px;">
+        <input type="checkbox" id="rememberMe" checked><label for="rememberMe" style="font-size:12px;font-weight:600;color:var(--muted);">Remember me — don't ask who I am again</label>
+      </div>
+      <button class="btn btn-primary" style="margin-top:12px;background:linear-gradient(135deg,var(--blue-dark),var(--blue));" onclick="joinTrip()">Join trip</button>
     </div>
 
     <div class="card">
@@ -187,20 +197,20 @@ h1,h2,h3{font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:-0.02em;}
     </div>
 
     <div id="createTripSection" style="display:none;">
-      <div class="card" style="border:1.5px solid var(--orange);">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><b style="font-size:15px;font-weight:800;">Create trip</b><span style="font-size:11px;background:var(--orange);color:white;padding:4px 10px;border-radius:999px;">ADMIN</span></div>
+      <div class="card" style="border:1.5px solid var(--blue);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><b style="font-size:15px;font-weight:800;">Create trip</b><span style="font-size:11px;background:var(--blue);color:white;padding:4px 10px;border-radius:999px;">ADMIN</span></div>
         <div style="display:flex;flex-direction:column;gap:12px;">
           <input id="newTripName" class="input" placeholder="Trip name, e.g., Bangkok December">
           <div style="display:flex;gap:10px;">
             <input id="newTripCode" class="input" placeholder="Code auto" maxlength="12" style="text-transform:uppercase;flex:1;" readonly>
-            <input id="newTripPass" class="input" type="password" placeholder="Password for members" style="flex:1;">
+            <div style="flex:1;position:relative;" class="password-wrap"><input id="newTripPass" class="input" type="password" placeholder="Password for members"><button class="eye-btn" onclick="togglePassword('newTripPass', this)">👁</button></div>
           </div>
           <div style="display:flex;gap:10px;">
             <input id="newTripStart" class="input" type="date" style="flex:1;">
             <input id="newTripEnd" class="input" type="date" style="flex:1;">
           </div>
           <div style="display:flex;gap:10px;">
-            <select id="newTripCurrency" class="input" style="flex:1;"><option value="HKD">HKD</option><option value="THB">THB - Thai Baht</option><option value="JPY">JPY - Yen</option><option value="USD">USD</option><option value="EUR">EUR</option><option value="CNY">CNY</option><option value="TWD">TWD</option><option value="KRW">KRW</option><option value="SGD">SGD</option><option value="MYR">MYR</option></select>
+            <select id="newTripCurrency" class="input" style="flex:1;"><option value="HKD">HKD</option><option value="THB">THB</option><option value="JPY">JPY</option><option value="USD">USD</option><option value="EUR">EUR</option><option value="CNY">CNY</option><option value="TWD">TWD</option><option value="KRW">KRW</option><option value="SGD">SGD</option><option value="MYR">MYR</option></select>
             <input id="newTripRate" class="input" type="number" step="0.0001" placeholder="Rate to HKD" style="flex:1;">
           </div>
           <input id="newTripFriends" class="input" placeholder="Members: Alice, Bob, Charlie">
@@ -210,13 +220,13 @@ h1,h2,h3{font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:-0.02em;}
     </div>
 
     <div style="background:white;border:1px dashed var(--line);border-radius:14px;padding:12px;text-align:center;margin-top:12px;" id="adminGate">
-      <a onclick="unlockCreate()" style="color:var(--orange);font-weight:800;font-size:12px;cursor:pointer;text-decoration:underline;">Admin: Create trip</a>
+      <a onclick="unlockCreate()" style="color:var(--blue);font-weight:800;font-size:12px;cursor:pointer;text-decoration:underline;">Admin: Create trip</a>
       <div style="font-size:10px;color:var(--muted);margin-top:4px;">Only authorized can create • ?admin=1 to auto-unlock</div>
     </div>
 
     <div class="card" id="adminDeleteAllCard" style="display:none;border:1.5px solid #FECDD3;background:#FFF1F2;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;"><b style="font-size:13px;color:#BE123C;">Admin: Delete All Trips</b><span style="font-size:10px;background:#BE123C;color:white;padding:3px 8px;border-radius:999px;">DANGER</span></div>
-      <div style="font-size:12px;color:#9F1239;margin-bottom:10px;">This will delete <b>all trips and all expenses</b> in database. Type <b>DELETE ALL</b> to confirm.</div>
+      <div style="font-size:12px;color:#9F1239;margin-bottom:10px;">Type <b>DELETE ALL</b> to confirm.</div>
       <div style="display:flex;gap:8px;"><input id="deleteAllInput" class="input" placeholder="Type DELETE ALL"><button class="btn btn-danger btn-sm" onclick="deleteAllTrips()">Delete all</button></div>
     </div>
   </div>
@@ -224,13 +234,6 @@ h1,h2,h3{font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:-0.02em;}
 
 <div id="tripView" style="display:none;">
   <div class="container">
-    <div class="hero-grid">
-      <div class="hero-block dark"><label>Total spent</label><div class="val" id="heroTotal">HKD 0</div><div class="sub" id="heroAvg">—</div></div>
-      <div class="hero-block yellow"><label>Entries</label><div class="val" id="heroCount">0</div><div class="sub" id="heroRange">—</div></div>
-      <div class="hero-block white"><label>Currency</label><div class="val" id="heroCurrency" style="font-size:18px;">HKD</div><div class="sub" id="heroRate">Rate 1</div></div>
-      <div class="hero-block green"><label>Members</label><div class="val" id="heroMembers">0</div><div class="sub" id="heroMembersList">—</div></div>
-    </div>
-
     <div class="tabs" id="topTabs" style="display:none;">
       <button class="tab active" data-tab="add" onclick="switchTab('add')">New</button>
       <button class="tab" data-tab="expenses" onclick="switchTab('expenses')">Expenses</button>
@@ -242,41 +245,82 @@ h1,h2,h3{font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:-0.02em;}
     <div class="tab-panel active" id="panel-add">
       <div class="card">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><b style="font-size:15px;font-weight:800;">New expense</b><span id="editBadge" style="display:none;background:var(--yellow);color:var(--ink);padding:4px 10px;border-radius:999px;font-size:10px;font-weight:800;">EDITING</span></div>
+        
         <div style="margin-bottom:14px;">
           <label style="font-size:11px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px;">Date — trip dates (tap card)</label>
           <div class="date-strip" id="dateStrip"></div>
           <input id="expDate" type="date" class="input" style="margin-top:10px;">
         </div>
+
+        <div class="form-group">
+          <label>Quick description — tap to auto-fill category</label>
+          <div class="chips" id="descChips">
+            <div class="chip desc-chip" data-desc="Lunch" data-cat="Food">🍜 Lunch</div>
+            <div class="chip desc-chip" data-desc="Dinner" data-cat="Food">🍽️ Dinner</div>
+            <div class="chip desc-chip" data-desc="Breakfast" data-cat="Food">🥐 Breakfast</div>
+            <div class="chip desc-chip" data-desc="Taxi" data-cat="Transport">🚕 Taxi</div>
+            <div class="chip desc-chip" data-desc="Hotel" data-cat="Hotel">🏨 Hotel</div>
+            <div class="chip desc-chip" data-desc="Drinks" data-cat="Food">🍹 Drinks</div>
+            <div class="chip desc-chip" data-desc="Groceries" data-cat="Food">🛒 Groceries</div>
+            <div class="chip desc-chip" data-desc="Flight" data-cat="Transport">✈️ Flight</div>
+          </div>
+        </div>
+
         <div class="form-group"><label>Description *</label><input id="descInput" class="input" placeholder="Dinner, Taxi, Hotel" maxlength="80"></div>
         <div class="form-row">
-          <div class="form-group"><label>Amount * (<span id="amountCurLabel">HKD</span>)</label><div class="amount-wrap" id="amountWrap" data-cur="HKD"><input id="amountInput" class="input big" type="number" inputmode="decimal" placeholder="0" min="0.01" step="0.01"></div><div style="font-size:11px;color:var(--muted);margin-top:6px;" id="amountHKDPreview"></div></div>
+          <div class="form-group"><label>Amount *</label>
+            <div style="display:flex;gap:8px;">
+              <div class="amount-wrap" id="amountWrap" data-cur="HKD" style="flex:1;"><input id="amountInput" class="input big" type="number" inputmode="decimal" placeholder="0" min="0.01" step="0.01"></div>
+              <select id="expCurrency" class="currency-select" onchange="updateAmountPreview()"><option value="HKD">HKD</option><option value="THB">THB</option><option value="JPY">JPY</option><option value="USD">USD</option><option value="EUR">EUR</option><option value="CNY">CNY</option><option value="TWD">TWD</option><option value="KRW">KRW</option><option value="SGD">SGD</option><option value="MYR">MYR</option></select>
+            </div>
+            <div style="font-size:11px;color:var(--muted);margin-top:6px;" id="amountHKDPreview"></div>
+          </div>
           <div class="form-group"><label>Paid by *</label><select id="paidBySelect" class="input" style="height:60px;font-weight:700;"></select>
             <div style="margin-top:10px;"><label>Category</label><div class="chips" id="categoryRow">
-              <div class="chip active" data-cat="Food">Food</div><div class="chip" data-cat="Transport">Transport</div><div class="chip" data-cat="Hotel">Hotel</div><div class="chip" data-cat="Activity">Activity</div><div class="chip" data-cat="Other">Other</div>
+              <div class="chip active" data-cat="Food">Food</div><div class="chip" data-cat="Transport">Transport</div><div class="chip" data-cat="Hotel">Hotel</div><div class="chip" data-cat="Activity">Activity</div><div class="chip" data-cat="Other">Other</div><div class="chip" data-cat="Pending Update">Pending</div>
             </div></div>
           </div>
         </div>
+
         <div class="form-group">
-          <label>Receipt — free</label>
-          <div class="upload-area" onclick="document.getElementById('receiptInput').click()"><div style="font-size:13px;font-weight:700;">📎 Upload receipt / Take photo</div><div style="font-size:11px;color:var(--muted);margin-top:4px;">Compressed &lt;500KB, stored free</div></div>
+          <label>Receipt — upload first, edit later (free)</label>
+          <div class="upload-area" onclick="document.getElementById('receiptInput').click()">
+            <div style="font-size:13px;font-weight:700;">📎 Upload receipt / Take photo</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:4px;">If uploaded, other fields optional — auto pending, revise later</div>
+          </div>
           <input id="receiptInput" type="file" accept="image/*" capture="environment" style="display:none;" onchange="handleReceipt(this)">
           <img id="receiptPreview" class="receipt-preview">
           <div style="display:flex;gap:8px;margin-top:8px;"><button class="btn btn-ghost btn-sm" style="display:none;" id="removeReceiptBtn" onclick="removeReceipt()">Remove</button><button class="btn btn-ghost btn-sm" style="display:none;" id="viewReceiptBtn" onclick="viewReceipt()">View</button></div>
         </div>
+
         <div class="form-group">
           <label>Split among</label>
           <div style="display:flex;gap:8px;margin-bottom:10px;"><button class="btn btn-soft btn-sm" style="flex:1;" onclick="selectAll(true)">All</button><button class="btn btn-ghost btn-sm" style="flex:1;" onclick="selectAll(false)">None</button></div>
           <div class="person-grid" id="splitGrid"></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:6px;">If receipt only, leave split empty — will be pending.</div>
         </div>
+
         <button class="btn btn-primary" onclick="saveExpense()" id="saveBtn">Add expense</button>
         <button class="btn btn-ghost" style="width:100%;margin-top:8px;display:none;" id="cancelEditBtn" onclick="cancelEdit()">Cancel</button>
+      </div>
+
+      <!-- Moved top 4 cards to bottom -->
+      <div class="hero-grid">
+        <div class="hero-block dark"><label>Total spent</label><div class="val" id="heroTotal">HKD 0</div><div class="sub" id="heroAvg">—</div></div>
+        <div class="hero-block yellow"><label>Entries</label><div class="val" id="heroCount">0</div><div class="sub" id="heroRange">—</div></div>
+        <div class="hero-block white"><label>Currency</label><div class="val" id="heroCurrency" style="font-size:18px;">HKD</div><div class="sub" id="heroRate">Rate 1</div></div>
+        <div class="hero-block green"><label>Members</label><div class="val" id="heroMembers">0</div><div class="sub" id="heroMembersList">—</div></div>
       </div>
     </div>
 
     <div class="tab-panel" id="panel-expenses">
       <div class="card">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><b style="font-size:15px;font-weight:800;">Expenses</b><span id="expCountTop" style="font-size:11px;color:var(--muted);font-weight:700;">Date desc</span></div>
-        <div style="display:flex;gap:8px;margin-bottom:12px;"><input id="searchInput" class="input" placeholder="Search" oninput="resetPagination();renderExpenses()" style="flex:1;"><select id="filterCategory" class="input" style="width:110px;" onchange="resetPagination();renderExpenses()"><option value="">All</option><option>Food</option><option>Transport</option><option>Hotel</option><option>Activity</option><option>Other</option></select></div>
+        <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+          <input id="searchInput" class="input" placeholder="Search" oninput="resetPagination();renderExpenses()" style="flex:1;min-width:120px;">
+          <select id="filterCategory" class="input" style="width:110px;" onchange="resetPagination();renderExpenses()"><option value="">All cats</option><option>Food</option><option>Transport</option><option>Hotel</option><option>Activity</option><option>Other</option><option>Pending Update</option></select>
+          <button class="btn btn-soft btn-sm" onclick="filterPending()">Pending only</button>
+        </div>
         <div id="expensesList"></div>
         <div class="pagination" id="expensesPagination"></div>
       </div>
@@ -288,7 +332,7 @@ h1,h2,h3{font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:-0.02em;}
     </div>
 
     <div class="tab-panel" id="panel-settle">
-      <div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><b style="font-size:15px;font-weight:800;">Settlement</b><span id="settleCount" style="background:var(--ink);color:white;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700;">0</span></div><div id="settlementList"></div><div id="settleSummary" style="margin-top:12px;padding:12px;background:#FFFBF2;border-radius:12px;border:1px dashed var(--line);font-size:13px;text-align:center;color:var(--muted);"></div></div>
+      <div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><b style="font-size:15px;font-weight:800;">Settlement</b><span id="settleCount" style="background:var(--ink);color:white;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700;">0</span></div><div id="settlementList"></div><div id="settleSummary" style="margin-top:12px;padding:12px;background:#EEF4FF;border-radius:12px;border:1px dashed var(--line);font-size:13px;text-align:center;color:var(--muted);"></div><div style="font-size:11px;color:var(--muted);margin-top:8px;text-align:center;">Settle default HKD</div></div>
       <div class="card"><div style="display:flex;gap:10px;"><button class="btn btn-ghost" style="flex:1;" onclick="copySettlement()">Copy</button><button class="btn btn-primary" style="flex:1;" onclick="exportExcel()">Export Excel</button></div></div>
     </div>
 
@@ -312,12 +356,22 @@ h1,h2,h3{font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:-0.02em;}
           </div>
         </div>
       </div>
+
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><b style="font-size:15px;font-weight:800;">Password</b><span style="font-size:11px;color:var(--muted);">Edit trip password</span></div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div class="password-wrap"><input id="tripPassEdit" class="input" type="password" placeholder="New password"><button class="eye-btn" onclick="togglePassword('tripPassEdit', this)">👁</button></div>
+          <button class="btn btn-soft" style="width:100%;" onclick="saveTripPassword()">Update password</button>
+          <div style="font-size:11px;color:var(--muted);">Members will need new password to re-join.</div>
+        </div>
+      </div>
+
       <div class="card" style="border:1.5px solid #FECDD3;background:#FFF1F2;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;"><b style="font-size:13px;color:#BE123C;">Delete trip</b><span style="font-size:10px;background:#BE123C;color:white;padding:3px 8px;border-radius:999px;">ADMIN</span></div>
         <div style="font-size:12px;color:#9F1239;margin-bottom:10px;line-height:1.5;">Delete <b>all related data</b>: trip + <span id="deleteCount">0</span> expenses + receipts. Copy trip name to confirm.</div>
         <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;background:white;border:1px solid #FECDD3;padding:8px 12px;border-radius:10px;">
-          <div style="font-size:11px;color:#9F1239;font-weight:700;">Trip name:</div>
-          <div id="deleteTripNameDisplay" style="font-weight:800;flex:1;user-select:all;"></div>
+          <div style="font-size:11px;color:#9F1239;font-weight:700;white-space:nowrap;">Trip name:</div>
+          <div id="deleteTripNameDisplay" style="font-weight:800;flex:1;user-select:all;overflow:hidden;text-overflow:ellipsis;"></div>
           <button class="btn btn-ghost btn-sm" onclick="copyTripName()">Copy</button>
         </div>
         <div style="display:flex;gap:8px;"><input id="deleteTripInput" class="input" placeholder="Paste trip name to confirm"><button class="btn btn-danger btn-sm" onclick="deleteTrip()">Delete trip</button></div>
@@ -338,7 +392,13 @@ h1,h2,h3{font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:-0.02em;}
   <div class="modal-card">
     <div class="modal-head"><div style="display:flex;align-items:center;gap:12px;"><div id="modalAvatar" style="width:36px;height:36px;border-radius:12px;display:grid;place-items:center;color:white;font-weight:800;"></div><div><div id="modalName" style="font-weight:800;"></div><div id="modalBalance" style="font-size:12px;color:var(--muted);"></div></div></div><button class="btn btn-ghost btn-sm" onclick="closePersonModal()">Close</button></div>
     <div style="padding:16px;">
-      <div style="display:flex;gap:8px;margin-bottom:14px;overflow-x:auto;"><button class="chip active" data-ptab="overview" onclick="switchPersonTab('overview')">Overview</button><button class="chip" data-ptab="paid" onclick="switchPersonTab('paid')">Paid</button><button class="chip" data-ptab="owes" onclick="switchPersonTab('owes')">Owes</button><button class="chip" data-ptab="settle" onclick="switchPersonTab('settle')">Settlement</button></div>
+      <div style="display:flex;gap:8px;margin-bottom:12px;align-items:center;flex-wrap:wrap;">
+        <div style="display:flex;gap:8px;overflow-x:auto;"><button class="chip active" data-ptab="overview" onclick="switchPersonTab('overview')">Overview</button><button class="chip" data-ptab="paid" onclick="switchPersonTab('paid')">Paid</button><button class="chip" data-ptab="owes" onclick="switchPersonTab('owes')">Owes</button><button class="chip" data-ptab="settle" onclick="switchPersonTab('settle')">Settlement</button></div>
+        <div style="margin-left:auto;display:flex;gap:6px;align-items:center;">
+          <span style="font-size:11px;font-weight:700;color:var(--muted);">Currency:</span>
+          <select id="personCurrency" class="input" style="width:90px;padding:6px 8px;font-size:12px;" onchange="renderPersonCurrency()"><option value="HKD">HKD</option><option value="ORIG">Trip cur</option></select>
+        </div>
+      </div>
       <div id="personTab-overview"></div><div id="personTab-paid" style="display:none;"></div><div id="personTab-owes" style="display:none;"></div><div id="personTab-settle" style="display:none;"></div>
     </div>
   </div>
@@ -346,7 +406,7 @@ h1,h2,h3{font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:-0.02em;}
 
 <div class="modal" id="whoModal" onclick="if(event.target===this) closeWhoModal()">
   <div class="modal-card" style="max-width:420px;">
-    <div class="modal-head"><div><b>Who are you?</b><div style="font-size:12px;color:var(--muted);">Default Paid By will be you</div></div></div>
+    <div class="modal-head"><div><b>Who are you?</b><div style="font-size:12px;color:var(--muted);">Default Paid By will be you • Remembered</div></div></div>
     <div style="padding:16px;"><div id="whoList" style="display:grid;gap:10px;"></div><div style="margin-top:12px;"><button class="btn btn-ghost" style="width:100%;" onclick="closeWhoModal()">Skip</button></div></div>
   </div>
 </div>
@@ -358,7 +418,7 @@ h1,h2,h3{font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:-0.02em;}
 <div class="toast" id="toast"><span id="toastText">Done</span></div>
 
 <script type="module">
-const colors=['#FF7A1A','#FF3B82','#FFC93C','#2ECC71','#3B82F6','#8B5CF6','#E11D48','#2B1E16'];
+const colors=['#1A5CFF','#FF7A1A','#FF3B82','#2ECC71','#8B5CF6','#FFC93C','#E11D48','#0F2E6E'];
 function avatarColor(n){let h=0;for(let i=0;i<n.length;i++)h=n.charCodeAt(i)+((h<<5)-h);return colors[Math.abs(h)%colors.length];}
 function initials(n){return n.slice(0,2).toUpperCase();}
 let toastTimer=null;
@@ -386,6 +446,12 @@ let currentPage=1, itemsPerPage=10;
 
 async function hashPw(pw){ const enc=new TextEncoder().encode(pw); const buf=await crypto.subtle.digest('SHA-256',enc); return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join(''); }
 
+window.togglePassword=function(inputId, btn){
+  const input=document.getElementById(inputId);
+  if(input.type==='password'){ input.type='text'; btn.innerText='🙈'; }
+  else{ input.type='password'; btn.innerText='👁'; }
+}
+
 function checkAdminFromUrl(){
   const params=new URLSearchParams(window.location.search);
   if(params.get('admin')==='1' || params.get('admin')===window.ADMIN_CREATE_PASSWORD){
@@ -408,8 +474,11 @@ window.unlockCreate=function(){
 function saveMyTrips(){
   let myTrips=JSON.parse(localStorage.getItem('myTrips')||'[]');
   if(!myTrips.find(t=>t.id===currentTripId)){ myTrips.push({id:currentTripId,name:currentTrip?.name||currentTripId}); localStorage.setItem('myTrips',JSON.stringify(myTrips)); }
-  localStorage.setItem(`trip_${currentTripId}_pw`, currentPassword);
-  if(myIdentity) localStorage.setItem(`trip_${currentTripId}_who`, myIdentity);
+  const remember=document.getElementById('rememberMe')?.checked;
+  if(remember!==false){ // default remember
+    localStorage.setItem(`trip_${currentTripId}_pw`, currentPassword);
+    if(myIdentity) localStorage.setItem(`trip_${currentTripId}_who`, myIdentity);
+  }
 }
 function loadMyTrips(){
   const myTrips=JSON.parse(localStorage.getItem('myTrips')||'[]');
@@ -419,8 +488,8 @@ function loadMyTrips(){
   list.innerHTML='';
   myTrips.forEach(t=>{
     const div=document.createElement('div');div.className='trip-card';
-    div.innerHTML=`<div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#FF7A1A,#FF3B82);display:grid;place-items:center;color:white;font-weight:800;">✈</div><div style="flex:1;"><div style="font-weight:800;">${t.name}</div><div style="font-size:12px;color:#A8A29E;">${t.id}</div></div><div>→</div>`;
-    div.onclick=()=>{document.getElementById('joinCode').value=t.id;document.getElementById('joinPass').value=localStorage.getItem(`trip_${t.id}_pw`)||'';joinTrip();};
+    div.innerHTML=`<div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#0F2E6E,#1A5CFF);display:grid;place-items:center;color:white;font-weight:800;">✈</div><div style="flex:1;"><div style="font-weight:800;">${t.name}</div><div style="font-size:12px;color:#8A9BB5;">${t.id}</div></div><div>→</div>`;
+    div.onclick=()=>{document.getElementById('joinCode').value=t.id;const savedPw=localStorage.getItem(`trip_${t.id}_pw`); if(savedPw) document.getElementById('joinPass').value=savedPw;joinTrip();};
     list.appendChild(div);
   });
 }
@@ -492,12 +561,21 @@ window.joinTrip=async function(){
     friends=data.friends||[];
     friends.forEach(f=>splitSel[f]=true);
     myIdentity=localStorage.getItem(`trip_${code}_who`)||null;
-    saveMyTrips();
+    const rememberMe=document.getElementById('rememberMe')?.checked;
+    if(rememberMe!==false){
+      saveMyTrips();
+    }
     showTripView();
     listenExpenses();
-    if(!myIdentity){ setTimeout(()=>showWhoModal(), 600); }
-    else{ document.getElementById('paidBySelect').value=myIdentity; }
-    toast(`Joined ${data.name}`);
+    // Remember me: if identity exists, don't ask again
+    const savedWho=localStorage.getItem(`trip_${code}_who`);
+    if(!savedWho){
+      setTimeout(()=>showWhoModal(), 600);
+    }else{
+      myIdentity=savedWho;
+      document.getElementById('paidBySelect').value=myIdentity;
+      toast(`Welcome back ${myIdentity} - remembered`);
+    }
   }catch(e){toast('Error: '+e.message);}
 }
 
@@ -521,6 +599,7 @@ function showTripView(){
   document.getElementById('tripMark').innerText=currentTrip.name[0].toUpperCase();
   document.getElementById('tripMeta').innerText=`${currentTripId} • ${currentTrip.startDate||''}→${currentTrip.endDate||''} • ${currentTrip.currency||'HKD'}→HKD ${currentTrip.exchangeRate||1}`;
   document.getElementById('expDate').valueAsDate=new Date();
+  document.getElementById('expCurrency').value=currentTrip.currency||'HKD';
   renderFriends();renderDateStrip();renderSplit();
   switchTab('add', true);
   resetPagination();
@@ -593,7 +672,15 @@ function renderSplit(){
   });
 }
 window.selectAll=function(v){friends.forEach(f=>splitSel[f]=v);renderSplit();}
-document.querySelectorAll('.chip').forEach(c=>c.addEventListener('click',()=>{if(c.parentElement.id==='categoryRow'){document.querySelectorAll('#categoryRow .chip').forEach(x=>x.classList.remove('active'));c.classList.add('active');selectedCategory=c.dataset.cat;}}));
+document.querySelectorAll('#categoryRow .chip').forEach(c=>c.addEventListener('click',()=>{document.querySelectorAll('#categoryRow .chip').forEach(x=>x.classList.remove('active'));c.classList.add('active');selectedCategory=c.dataset.cat;}));
+document.querySelectorAll('#descChips .chip').forEach(c=>c.addEventListener('click',()=>{
+  const desc=c.dataset.desc;
+  const cat=c.dataset.cat;
+  document.getElementById('descInput').value=desc;
+  selectedCategory=cat;
+  document.querySelectorAll('#categoryRow .chip').forEach(x=>x.classList.toggle('active', x.dataset.cat===cat));
+  toast(`Description: ${desc} → Category: ${cat}`);
+}));
 document.getElementById('expDate').addEventListener('change',()=>{renderDateStrip();});
 document.getElementById('amountInput').addEventListener('input',()=>updateAmountPreview());
 document.getElementById('newTripCurrency').addEventListener('change',(e)=>{
@@ -604,13 +691,27 @@ document.getElementById('newTripCurrency').addEventListener('change',(e)=>{
 
 function updateAmountPreview(){
   const amt=parseFloat(document.getElementById('amountInput').value)||0;
-  const rate=currentTrip?.exchangeRate||1;
-  const cur=currentTrip?.currency||'HKD';
+  const expCur=document.getElementById('expCurrency').value||currentTrip?.currency||'HKD';
+  const rateToHKD = expCur===currentTrip?.currency ? (currentTrip?.exchangeRate||1) : 1; // simplified, if exp currency different, use 1 for now, or fetch
   const wrap=document.getElementById('amountWrap');
-  wrap.setAttribute('data-cur', cur);
-  document.getElementById('amountCurLabel').innerText=cur;
-  if(cur==='HKD' || !rate || rate===1){ document.getElementById('amountHKDPreview').innerText=''; }
-  else{ const hkd=amt*rate; document.getElementById('amountHKDPreview').innerText=`≈ HKD ${hkd.toFixed(2)} (rate ${rate}) • Settle HKD`; }
+  wrap.setAttribute('data-cur', expCur);
+  document.getElementById('amountCurLabel').innerText=expCur;
+  if(expCur==='HKD' || !currentTrip || currentTrip.currency==='HKD'){
+    if(expCur!=='HKD'){
+      // need rate for expCur to HKD
+      document.getElementById('amountHKDPreview').innerText=`${expCur} ${amt} → Enter rate in settings`;
+    }else{
+      document.getElementById('amountHKDPreview').innerText='';
+    }
+  }else{
+    const rate=currentTrip.exchangeRate||1;
+    if(expCur===currentTrip.currency){
+      const hkd=amt*rate;
+      document.getElementById('amountHKDPreview').innerText=`≈ HKD ${hkd.toFixed(2)} (rate ${rate}) • Settle HKD`;
+    }else{
+      document.getElementById('amountHKDPreview').innerText=`${expCur} ${amt} • Settle HKD (rate in settings)`;
+    }
+  }
 }
 
 window.handleReceipt=async function(input){
@@ -624,7 +725,25 @@ window.handleReceipt=async function(input){
     preview.src=compressed; preview.style.display='block';
     document.getElementById('removeReceiptBtn').style.display='inline-flex';
     document.getElementById('viewReceiptBtn').style.display='inline-flex';
-    toast('Receipt attached');
+    // If receipt uploaded, auto-fill pending if empty
+    const descInput=document.getElementById('descInput');
+    const amountInput=document.getElementById('amountInput');
+    if(!descInput.value.trim()){
+      descInput.value='Receipt - pending update';
+      // set category to pending
+      selectedCategory='Pending Update';
+      document.querySelectorAll('#categoryRow .chip').forEach(x=>x.classList.toggle('active', x.dataset.cat==='Pending Update'));
+    }
+    if(!amountInput.value){
+      // leave amount empty but allow save - will be handled in saveExpense as pending
+    }
+    // default split empty for pending - deselect all
+    if(!descInput.value || descInput.value.includes('pending')){
+      // keep split empty to indicate pending
+      // Actually for pending we allow empty split, so deselect all
+      // But we will not enforce split check if receipt present
+    }
+    toast('Receipt attached - other fields optional, will be pending');
   }catch(e){toast('Failed');}
 }
 function compressImage(file, maxWidth, quality){
@@ -722,18 +841,39 @@ window.saveExpense=async function(){
   if(isSaving) return;
   const fb=window._fb;
   const date=document.getElementById('expDate').value || new Date().toISOString().slice(0,10);
-  const desc=document.getElementById('descInput').value.trim();
-  const amt=parseFloat(document.getElementById('amountInput').value);
+  let desc=document.getElementById('descInput').value.trim();
+  let amt=parseFloat(document.getElementById('amountInput').value);
   const paid=document.getElementById('paidBySelect').value;
-  if(!desc){ toast('Enter description'); document.getElementById('descInput').focus(); return; }
-  if(!amt||amt<=0){ toast('Enter valid amount'); return; }
-  if(!paid){ toast('Select payer'); return; }
-  const shared=friends.filter(f=>splitSel[f]);
-  if(shared.length===0){toast('Select at least 1');return;}
+  const expCur=document.getElementById('expCurrency').value||currentTrip?.currency||'HKD';
+  let shared=friends.filter(f=>splitSel[f]);
+
+  const hasReceipt=!!receiptBase64 || (editingId && expenses.find(e=>e.id===editingId)?.receiptImage);
+
+  // If receipt uploaded, allow empty fields -> auto pending
+  if(hasReceipt){
+    if(!desc) desc='Receipt - pending update';
+    if(!amt || amt<=0){
+      amt=0;
+      selectedCategory='Pending Update';
+      document.querySelectorAll('#categoryRow .chip').forEach(x=>x.classList.toggle('active', x.dataset.cat==='Pending Update'));
+    }
+    if(shared.length===0){
+      // allow empty split for pending - will be handled as pending
+      // For calculation, treat as 0 share for now
+    }
+  }else{
+    // normal validation
+    if(!desc){ toast('Enter description'); document.getElementById('descInput').focus(); return; }
+    if(!amt||amt<=0){ toast('Enter valid amount'); return; }
+    if(!paid){ toast('Select payer'); return; }
+    if(shared.length===0){toast('Select at least 1');return;}
+  }
+
   isSaving=true;
   const saveBtn=document.getElementById('saveBtn');
   saveBtn.disabled=true; saveBtn.innerText='Saving...';
   const rate=currentTrip?.exchangeRate||1;
+  const curRate = expCur===currentTrip.currency ? rate : 1; // simplified
   try{
     let receiptToSave=receiptBase64;
     if(editingId && !receiptBase64){
@@ -746,7 +886,7 @@ window.saveExpense=async function(){
       receiptUrl=await uploadReceiptToStorage(currentTripId, tempId, receiptToSave);
     }
     const payload={
-      date,desc,category:selectedCategory,paidBy:paid,amount:amt,amountHKD:amt*rate,currency:currentTrip?.currency||'HKD',exchangeRate:rate,sharedWith:shared,receiptImage:receiptUrl||null,createdAt: editingId? (expenses.find(e=>e.id===editingId)?.createdAt||new Date().toISOString()) : new Date().toISOString(), updatedAt:new Date().toISOString()
+      date,desc,category:selectedCategory,paidBy:paid,amount:amt||0,amountHKD:(amt||0)* (expCur===currentTrip.currency?rate:1),currency:expCur,originalCurrency:expCur,exchangeRate:currentTrip?.exchangeRate||1,sharedWith:shared,receiptImage:receiptUrl||null,createdAt: editingId? (expenses.find(e=>e.id===editingId)?.createdAt||new Date().toISOString()) : new Date().toISOString(), updatedAt:new Date().toISOString()
     };
     if(fb.configValid && fb.db){
       if(editingId){
@@ -787,6 +927,7 @@ window.editExpense=function(id){
   document.getElementById('expDate').value=exp.date;
   document.getElementById('descInput').value=exp.desc;
   document.getElementById('amountInput').value=exp.amount;
+  document.getElementById('expCurrency').value=exp.currency||currentTrip.currency||'HKD';
   document.getElementById('paidBySelect').value=exp.paidBy;
   selectedCategory=exp.category;
   document.querySelectorAll('#categoryRow .chip').forEach(c=>c.classList.toggle('active',c.dataset.cat===selectedCategory));
@@ -828,28 +969,30 @@ function groupByDate(list){
 }
 
 window.resetPagination=function(){ currentPage=1; }
+window.filterPending=function(){
+  document.getElementById('filterCategory').value='Pending Update';
+  document.getElementById('searchInput').value='';
+  resetPagination();
+  renderExpenses();
+  toast('Showing pending only');
+}
 
 function renderPagination(totalItems){
   const container=document.getElementById('expensesPagination');
   const totalPages=Math.ceil(totalItems / itemsPerPage);
   if(totalPages<=1){ container.innerHTML=''; return; }
   let html=`<button class="page-btn" ${currentPage===1?'disabled':''} onclick="changePage(${currentPage-1})">‹</button>`;
-  // show max 5 pages
   let start=Math.max(1, currentPage-2);
   let end=Math.min(totalPages, start+4);
   if(end-start<4) start=Math.max(1, end-4);
   for(let i=start;i<=end;i++){
     html+=`<button class="page-btn ${i===currentPage?'active':''}" onclick="changePage(${i})">${i}</button>`;
   }
-  html+=`<span class="page-info">${currentPage}/${totalPages} • ${totalItems} items</span>`;
+  html+=`<span style="font-size:12px;color:#A8A29E;font-weight:600;padding:0 8px;">${currentPage}/${totalPages} • ${totalItems}</span>`;
   html+=`<button class="page-btn" ${currentPage===totalPages?'disabled':''} onclick="changePage(${currentPage+1})">›</button>`;
   container.innerHTML=html;
 }
-window.changePage=function(page){
-  currentPage=page;
-  renderExpenses();
-  window.scrollTo({top:0,behavior:'smooth'});
-}
+window.changePage=function(page){ currentPage=page; renderExpenses(); window.scrollTo({top:0,behavior:'smooth'}); }
 
 function renderExpenses(){
   const list=document.getElementById('expensesList');
@@ -858,8 +1001,7 @@ function renderExpenses(){
   let filtered=expenses.filter(e=>{ const ms=!search||e.desc.toLowerCase().includes(search)||e.paidBy.toLowerCase().includes(search); const mc=!filterCat||e.category===filterCat; return ms&&mc; });
   filteredExpenses=filtered;
   document.getElementById('expCountTop').innerText=`${filtered.length} • Date desc • Page ${currentPage}`;
-  if(filtered.length===0){list.innerHTML='<div class=empty>No expenses</div>';document.getElementById('expensesPagination').innerHTML='';return;}
-  // pagination - slice
+  if(filtered.length===0){list.innerHTML='<div class=empty>No expenses<br><small>Try filter pending</small></div>';document.getElementById('expensesPagination').innerHTML='';return;}
   const totalPages=Math.ceil(filtered.length / itemsPerPage);
   if(currentPage>totalPages) currentPage=totalPages;
   const startIdx=(currentPage-1)*itemsPerPage;
@@ -876,11 +1018,11 @@ function renderExpenses(){
     list.appendChild(header);
     const groupDiv=document.createElement('div');
     exps.forEach(e=>{
-      const div=document.createElement('div');div.className='expense'+(e.receiptImage?' has-receipt':'');
+      const div=document.createElement('div');div.className='expense'+(e.category==='Pending Update'?' pending':'')+(e.receiptImage?' has-receipt':'');
       div.onclick=()=>editExpense(e.id);
-      const shareText=e.sharedWith.length===friends.length?'All':e.sharedWith.join(', ');
-      const catColors={Food:'#FF7A1A',Transport:'#3B82F6',Hotel:'#8B5CF6',Activity:'#2ECC71',Other:'#FF3B82'};
-      div.innerHTML=`<div class="left-bar" style="background:${catColors[e.category]||'#111'}">${e.category[0]}</div><div class=exp-main><div class=exp-title>${e.desc}${e.receiptImage?' • 📎':''}</div><div class=exp-meta><span>${e.paidBy}</span><span>${e.category}</span><span>${shareText}</span></div></div><div class=exp-right><div class=exp-amt>${currentTrip.currency||'HKD'} ${e.amount.toFixed(0)}<small>HKD ${(e.amountHKD||e.amount).toFixed(0)}</small></div></div>`;
+      const shareText=e.sharedWith.length===0?'Pending':e.sharedWith.length===friends.length?'All':e.sharedWith.join(', ');
+      const catColors={Food:'#FF7A1A',Transport:'#3B82F6',Hotel:'#8B5CF6',Activity:'#2ECC71',Other:'#FF3B82','Pending Update':'#9CA3AF'};
+      div.innerHTML=`<div class="left-bar" style="background:${catColors[e.category]||'#111'}">${e.category==='Pending Update'?'!':e.category[0]}</div><div class=exp-main><div class=exp-title>${e.desc}${e.receiptImage?' • 📎':''}</div><div class=exp-meta><span>${e.paidBy||'No payer'}</span><span>${e.category}</span><span>${shareText}</span></div></div><div class=exp-right><div class=exp-amt>${e.currency||currentTrip.currency||'HKD'} ${e.amount.toFixed(0)}<small>HKD ${(e.amountHKD||e.amount).toFixed(0)}</small></div></div>`;
       groupDiv.appendChild(div);
     });
     list.appendChild(groupDiv);
@@ -891,8 +1033,10 @@ function renderExpenses(){
 function calcBal(){
   const bal={};friends.forEach(f=>bal[f]={paid:0,paidHKD:0,share:0,shareHKD:0,balance:0,balanceHKD:0,paidList:[],shareList:[]});
   expenses.forEach(ex=>{
+    if(ex.category==='Pending Update') return; // skip pending from balances
     const amtHKD=ex.amountHKD||ex.amount;
     if(bal[ex.paidBy]){bal[ex.paidBy].paid+=ex.amount; bal[ex.paidBy].paidHKD+=amtHKD; bal[ex.paidBy].paidList.push(ex);}
+    if(ex.sharedWith.length===0) return;
     const per=ex.amount/ex.sharedWith.length; const perHKD=amtHKD/ex.sharedWith.length;
     ex.sharedWith.forEach(n=>{if(bal[n]){bal[n].share+=per; bal[n].shareHKD+=perHKD; bal[n].shareList.push({...ex, per, perHKD});}});
   });
@@ -918,7 +1062,7 @@ function renderBalances(){
   const bal=calcBal();grid.innerHTML='';
   friends.forEach((f,idx)=>{
     const b=bal[f];const pos=b.balanceHKD>0.01;const neg=b.balanceHKD<-0.01;
-    const div=document.createElement('div');div.className='bal-card';
+    const div=document.createElement('div');div.className='bal-card '+(pos?'pos':neg?'neg':'zero');
     const bgColors=['#FFD93D','#2ECC71','#3B82F6','#FF3B82','#FF7A1A','#8B5CF6','#FFFFFF','#1A1A1A'];
     div.style.background=bgColors[idx%8];
     div.style.color=[0,6].includes(idx%8)?'#1A1A1A':'white';
@@ -926,7 +1070,7 @@ function renderBalances(){
     div.innerHTML=`<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><div style="width:32px;height:32px;border-radius:10px;background:${avatarColor(f)};display:grid;place-items:center;color:white;font-weight:800;font-size:11px;">${initials(f)}</div><div style="font-weight:800;font-size:13px;">${f}</div></div><div style="font-size:18px;font-weight:800;">HKD ${b.balanceHKD>0?'+':''}${b.balanceHKD.toFixed(0)}</div><div style="font-size:10px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;margin-top:4px;opacity:0.7;">${pos?'Gets back':neg?'Owes':'Settled'}</div><div style="font-size:11px;opacity:0.8;margin-top:8px;">Paid ${b.paid.toFixed(0)} • Share ${b.share.toFixed(0)}</div>`;
     grid.appendChild(div);
   });
-  const byCat={};expenses.forEach(e=>{byCat[e.category]=(byCat[e.category]||0)+(e.amountHKD||e.amount);});
+  const byCat={};expenses.forEach(e=>{if(e.category==='Pending Update') return; byCat[e.category]=(byCat[e.category]||0)+(e.amountHKD||e.amount);});
   breakdown.innerHTML=Object.entries(byCat).map(([cat,amt])=>{
     const pct=expenses.length?(amt/expenses.reduce((s,e)=>s+(e.amountHKD||e.amount),0)*100).toFixed(0):0;
     const catColors={Food:'#FF7A1A',Transport:'#3B82F6',Hotel:'#8B5CF6',Activity:'#2ECC71',Other:'#FF3B82'};
@@ -981,7 +1125,7 @@ function showWhoModal(){
     const div=document.createElement('div');
     div.style.cssText='display:flex;align-items:center;gap:12px;padding:14px;border:1.5px solid #F5E6D8;border-radius:14px;cursor:pointer;background:white;';
     div.innerHTML=`<div style="width:40px;height:40px;border-radius:12px;background:${avatarColor(f)};display:grid;place-items:center;color:white;font-weight:800;">${initials(f)}</div><div style="flex:1;font-weight:700;">${f}</div><div>→</div>`;
-    div.onclick=()=>{ myIdentity=f; localStorage.setItem(`trip_${currentTripId}_who`, f); document.getElementById('paidBySelect').value=f; saveMyTrips(); closeWhoModal(); toast(`You are ${f}`); };
+    div.onclick=()=>{ myIdentity=f; localStorage.setItem(`trip_${currentTripId}_who`, f); document.getElementById('paidBySelect').value=f; saveMyTrips(); closeWhoModal(); toast(`You are ${f} - remembered`); };
     list.appendChild(div);
   });
   document.getElementById('whoModal').classList.add('active');
@@ -1011,24 +1155,39 @@ window.copySettlement=function(){
   navigator.clipboard.writeText(text).then(()=>toast('Copied'));
 }
 
+let currentDetailPerson=null;
+let personCurrencyMode='HKD';
 window.openPersonModal=function(name){
+  currentDetailPerson=name;
+  personCurrencyMode='HKD';
+  document.getElementById('personCurrency').value='HKD';
+  renderPersonDetail();
+  document.getElementById('personModal').classList.add('active');
+}
+function renderPersonDetail(){
+  const name=currentDetailPerson;
+  if(!name) return;
   const bal=calcBal()[name];
   if(!bal) return;
+  const showHKD=personCurrencyMode==='HKD';
   document.getElementById('modalAvatar').style.background=avatarColor(name);
   document.getElementById('modalAvatar').innerText=initials(name);
   document.getElementById('modalName').innerText=name;
-  document.getElementById('modalBalance').innerText=`Balance HKD ${bal.balanceHKD.toFixed(2)} • Paid ${bal.paid.toFixed(0)} • Share ${bal.share.toFixed(0)}`;
+  document.getElementById('modalBalance').innerText=`Balance ${showHKD?`HKD ${bal.balanceHKD.toFixed(2)}`:`${currentTrip.currency} ${bal.balance.toFixed(2)}`} • Paid ${bal.paid.toFixed(0)} • Share ${bal.share.toFixed(0)}`;
   const overview=document.getElementById('personTab-overview');
-  overview.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;"><div style="background:#FFF8F0;padding:12px;border-radius:12px;border:1px solid #FFE4C0;"><div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:#A8A29E;font-weight:700;">Total paid</div><div style="font-size:20px;font-weight:800;margin-top:4px;">${currentTrip.currency} ${bal.paid.toFixed(0)}</div><div style="font-size:12px;color:#A8A29E;">HKD ${bal.paidHKD.toFixed(0)} • ${bal.paidList.length} expenses</div></div><div style="background:#F2F6FF;padding:12px;border-radius:12px;"><div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:#A8A29E;font-weight:700;">Total share</div><div style="font-size:20px;font-weight:800;margin-top:4px;">${currentTrip.currency} ${bal.share.toFixed(0)}</div><div style="font-size:12px;color:#A8A29E;">HKD ${bal.shareHKD.toFixed(0)} • ${bal.shareList.length} shared</div></div></div><div style="padding:12px;background:${bal.balanceHKD>0?'#E8F5EE':bal.balanceHKD<0?'#FEF0EF':'#F7F5F1'};border-radius:12px;text-align:center;"><div style="font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;opacity:0.7;">Net HKD</div><div style="font-size:24px;font-weight:800;margin-top:4px;">${bal.balanceHKD>0?'+':''}HKD ${bal.balanceHKD.toFixed(0)}</div><div style="font-size:12px;margin-top:2px;">${bal.balanceHKD>0?'Gets back':bal.balanceHKD<0?'Owes':'Settled'}</div></div>`;
+  overview.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;"><div style="background:#FFF8F0;padding:12px;border-radius:12px;border:1px solid #FFE4C0;"><div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:#A8A29E;font-weight:700;">Total paid</div><div style="font-size:20px;font-weight:800;margin-top:4px;">${showHKD?`HKD ${bal.paidHKD.toFixed(0)}`:`${currentTrip.currency} ${bal.paid.toFixed(0)}`}</div><div style="font-size:12px;color:#A8A29E;">${bal.paidList.length} expenses</div></div><div style="background:#F0F6FF;padding:12px;border-radius:12px;"><div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:#A8A29E;font-weight:700;">Total share</div><div style="font-size:20px;font-weight:800;margin-top:4px;">${showHKD?`HKD ${bal.shareHKD.toFixed(0)}`:`${currentTrip.currency} ${bal.share.toFixed(0)}`}</div><div style="font-size:12px;color:#A8A29E;">${bal.shareList.length} shared</div></div></div><div style="padding:12px;background:${bal.balanceHKD>0?'#E8F5EE':bal.balanceHKD<0?'#FEF0EF':'#F7F5F1'};border-radius:12px;text-align:center;"><div style="font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;opacity:0.7;">Net ${showHKD?'HKD':currentTrip.currency}</div><div style="font-size:24px;font-weight:800;margin-top:4px;">${showHKD?`${bal.balanceHKD>0?'+':''}HKD ${bal.balanceHKD.toFixed(0)}`:`${bal.balance>0?'+':''}${currentTrip.currency} ${bal.balance.toFixed(0)}`}</div><div style="font-size:12px;margin-top:2px;">${bal.balanceHKD>0?'Gets back':bal.balanceHKD<0?'Owes':'Settled'}</div></div>`;
   const paidTab=document.getElementById('personTab-paid');
-  paidTab.innerHTML=bal.paidList.length? bal.paidList.map(e=>`<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #F5E6D8;"><div><div style="font-weight:600;font-size:13px;">${e.desc}</div><div style="font-size:11px;color:#A8A29E;">${e.date} • Split ${e.sharedWith.length} ${e.receiptImage?'• 📎':''}</div></div><div style="text-align:right;"><div style="font-weight:700;">${currentTrip.currency} ${e.amount.toFixed(0)}</div><div style="font-size:11px;color:#A8A29E;">HKD ${(e.amountHKD||e.amount).toFixed(0)}</div></div></div>`).join('') : '<div style="color:#A8A29E;text-align:center;padding:20px;">No payments made</div>';
+  paidTab.innerHTML=bal.paidList.length? bal.paidList.map(e=>`<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #F5E6D8;"><div><div style="font-weight:600;font-size:13px;">${e.desc}</div><div style="font-size:11px;color:#A8A29E;">${e.date} • Split ${e.sharedWith.length} ${e.receiptImage?'• 📎':''}</div></div><div style="text-align:right;"><div style="font-weight:700;">${showHKD?`HKD ${(e.amountHKD||e.amount).toFixed(0)}`:`${currentTrip.currency} ${e.amount.toFixed(0)}`}</div></div></div>`).join('') : '<div style="color:#A8A29E;text-align:center;padding:20px;">No payments made</div>';
   const owesTab=document.getElementById('personTab-owes');
-  owesTab.innerHTML=bal.shareList.length? bal.shareList.map(e=>`<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #F5E6D8;"><div><div style="font-weight:600;font-size:13px;">${e.desc}</div><div style="font-size:11px;color:#A8A29E;">${e.date} • Paid by ${e.paidBy}</div></div><div style="text-align:right;"><div style="font-weight:700;">${currentTrip.currency} ${e.per.toFixed(0)}</div><div style="font-size:11px;color:#A8A29E;">HKD ${e.perHKD.toFixed(0)}</div></div></div>`).join('') : '<div style="color:#A8A29E;text-align:center;padding:20px;">No shared expenses</div>';
+  owesTab.innerHTML=bal.shareList.length? bal.shareList.map(e=>`<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #F5E6D8;"><div><div style="font-weight:600;font-size:13px;">${e.desc}</div><div style="font-size:11px;color:#A8A29E;">${e.date} • Paid by ${e.paidBy}</div></div><div style="text-align:right;"><div style="font-weight:700;">${showHKD?`HKD ${e.perHKD.toFixed(0)}`:`${currentTrip.currency} ${e.per.toFixed(0)}`}</div></div></div>`).join('') : '<div style="color:#A8A29E;text-align:center;padding:20px;">No shared expenses</div>';
   const settleTab=document.getElementById('personTab-settle');
   const allTrans=calcSettlement(calcBal());
   const myTrans=allTrans.filter(t=>t.from===name||t.to===name);
   settleTab.innerHTML=myTrans.length? myTrans.map(t=>`<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #F5E6D8;"><div style="flex:1;"><b>${t.from===name?`You pay ${t.to}`:`${t.from} pays you`}</b><div style="font-size:11px;color:#A8A29E;">${t.from} → ${t.to}</div></div><div style="background:#111;color:white;padding:6px 10px;border-radius:8px;font-weight:700;font-size:13px;">HKD ${t.amount.toFixed(0)}</div></div>`).join('') : '<div style="color:#A8A29E;text-align:center;padding:20px;">No settlement needed</div>';
-  document.getElementById('personModal').classList.add('active');
+}
+window.renderPersonCurrency=function(){
+  personCurrencyMode=document.getElementById('personCurrency').value;
+  renderPersonDetail();
 }
 window.closePersonModal=function(){document.getElementById('personModal').classList.remove('active');}
 window.switchPersonTab=function(tab){
@@ -1074,6 +1233,26 @@ window.saveTripSettings=async function(){
   }catch(e){toast('Error: '+e.message);}
 }
 
+window.saveTripPassword=async function(){
+  const fb=window._fb;
+  const newPass=document.getElementById('tripPassEdit').value.trim();
+  if(!newPass||newPass.length<3){toast('Password min 3');return;}
+  if(!confirm('Update trip password? Members will need new password to re-join.')) return;
+  try{
+    const pwHash=await hashPw(newPass);
+    if(fb.configValid && fb.db){
+      await fb.updateDoc(fb.doc(fb.db,'trips',currentTripId), {passwordHash:pwHash});
+    }else{
+      const trips=JSON.parse(localStorage.getItem('localTrips')||'{}');
+      if(trips[currentTripId]){ trips[currentTripId].passwordHash=pwHash; localStorage.setItem('localTrips',JSON.stringify(trips)); }
+    }
+    currentPassword=newPass;
+    localStorage.setItem(`trip_${currentTripId}_pw`, newPass);
+    toast('Password updated');
+    document.getElementById('tripPassEdit').value='';
+  }catch(e){toast('Error: '+e.message);}
+}
+
 window.fetchRate=async function(){
   const cur=document.getElementById('tripCurrencyEdit').value;
   if(cur==='HKD'){ document.getElementById('tripRateEdit').value=1; toast('HKD rate is 1'); return; }
@@ -1096,38 +1275,22 @@ window.deleteTrip=async function(){
   if(!currentTripId){ toast('No trip'); return; }
   const input=document.getElementById('deleteTripInput').value.trim();
   if(!input){ toast('Paste trip name to confirm'); document.getElementById('deleteTripInput').focus(); return; }
-  if(input!==currentTrip.name){
-    toast(`Name mismatch. Expected "${currentTrip.name}"`);
-    return;
-  }
+  if(input!==currentTrip.name){ toast(`Name mismatch. Expected "${currentTrip.name}"`); return; }
   if(!confirm(`Delete trip "${currentTrip.name}" (${currentTripId})?\n\nThis will delete ALL related data:\n- Trip info\n- All ${expenses.length} expenses\n- All receipts\n\nThis cannot be undone!`)){ return; }
   try{
     if(fb.configValid && fb.db){
-      // delete all expenses
       const q=fb.collection(fb.db,'trips',currentTripId,'expenses');
       const snap=await fb.getDocs(q);
       const deletePromises=[];
       snap.forEach(docSnap=>{
-        // try delete receipt from storage if URL
-        const data=docSnap.data();
-        if(data.receiptImage && data.receiptImage.includes('firebasestorage')){
-          try{
-            const url=new URL(data.receiptImage);
-            const path=decodeURIComponent(url.pathname.split('/o/')[1].split('?')[0]);
-            const sRef=fb.ref(fb.storage, path);
-            deletePromises.push(fb.deleteObject(sRef).catch(()=>{}));
-          }catch(e){}
+        if(docSnap.data().receiptImage && docSnap.data().receiptImage.includes('firebasestorage')){
+          try{ const url=new URL(docSnap.data().receiptImage); const path=decodeURIComponent(url.pathname.split('/o/')[1].split('?')[0]); const sRef=fb.ref(fb.storage, path); deletePromises.push(fb.deleteObject(sRef).catch(()=>{})); }catch(e){}
         }
         deletePromises.push(fb.deleteDoc(docSnap.ref));
       });
       await Promise.all(deletePromises);
       await fb.deleteDoc(fb.doc(fb.db,'trips',currentTripId));
-      // try delete folder receipts
-      try{
-        const folderRef=fb.ref(fb.storage, `trips/${currentTripId}/receipts`);
-        const listRes=await fb.listAll(folderRef);
-        await Promise.all(listRes.items.map(item=>fb.deleteObject(item).catch(()=>{})));
-      }catch(e){}
+      try{ const folderRef=fb.ref(fb.storage, `trips/${currentTripId}/receipts`); const listRes=await fb.listAll(folderRef); await Promise.all(listRes.items.map(item=>fb.deleteObject(item).catch(()=>{}))); }catch(e){}
     }else{
       const trips=JSON.parse(localStorage.getItem('localTrips')||'{}');
       delete trips[currentTripId];
@@ -1138,16 +1301,16 @@ window.deleteTrip=async function(){
     localStorage.setItem('myTrips',JSON.stringify(myTrips));
     localStorage.removeItem(`trip_${currentTripId}_pw`);
     localStorage.removeItem(`trip_${currentTripId}_who`);
-    toast(`Trip "${currentTrip.name}" deleted - all data removed`);
+    toast(`Trip "${currentTrip.name}" deleted`);
     showLobby();
-  }catch(e){ toast('Delete failed: '+e.message); console.error(e); }
+  }catch(e){ toast('Delete failed: '+e.message); }
 }
 
 window.deleteAllTrips=async function(){
   const fb=window._fb;
   const input=document.getElementById('deleteAllInput').value.trim();
-  if(input!=='DELETE ALL'){ toast('Type DELETE ALL to confirm'); return; }
-  if(!confirm('Delete ALL trips and ALL expenses? This cannot be undone!')) return;
+  if(input!=='DELETE ALL'){ toast('Type DELETE ALL'); return; }
+  if(!confirm('Delete ALL trips and ALL expenses?')) return;
   try{
     if(fb.configValid && fb.db){
       const tripsSnap=await fb.getDocs(fb.collection(fb.db,'trips'));
@@ -1156,11 +1319,8 @@ window.deleteAllTrips=async function(){
         for(const expDoc of expSnap.docs){ await fb.deleteDoc(expDoc.ref); }
         await fb.deleteDoc(tripDoc.ref);
       }
-    }else{
-      localStorage.removeItem('localTrips');
-    }
+    }else{ localStorage.removeItem('localTrips'); }
     localStorage.removeItem('myTrips');
-    // clear all trip pw
     Object.keys(localStorage).forEach(k=>{ if(k.startsWith('trip_')) localStorage.removeItem(k); });
     toast('All trips deleted');
     loadMyTrips();
@@ -1184,8 +1344,8 @@ setTimeout(()=>{
     list.innerHTML='';
     myTrips.forEach(t=>{
       const div=document.createElement('div');div.className='trip-card';
-      div.innerHTML=`<div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#FF7A1A,#FF3B82);display:grid;place-items:center;color:white;font-weight:800;">✈</div><div style="flex:1;"><div style="font-weight:800;">${t.name}</div><div style="font-size:12px;color:#A8A29E;">${t.id}</div></div><div>→</div>`;
-      div.onclick=()=>{document.getElementById('joinCode').value=t.id;document.getElementById('joinPass').value=localStorage.getItem(`trip_${t.id}_pw`)||'';joinTrip();};
+      div.innerHTML=`<div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#0F2E6E,#1A5CFF);display:grid;place-items:center;color:white;font-weight:800;">✈</div><div style="flex:1;"><div style="font-weight:800;">${t.name}</div><div style="font-size:12px;color:#8A9BB5;">${t.id}</div></div><div>→</div>`;
+      div.onclick=()=>{document.getElementById('joinCode').value=t.id;const savedPw=localStorage.getItem(`trip_${t.id}_pw`); if(savedPw) document.getElementById('joinPass').value=savedPw;joinTrip();};
       list.appendChild(div);
     });
   }
@@ -1201,8 +1361,8 @@ window.addEventListener('fb-ready', ()=>{
   const fb=window._fb;
   const status=document.getElementById('fbStatus');
   if(status){
-    if(fb.configValid){ status.innerText='Live sync enabled • Firebase connected • Receipts in Storage (free 5GB)'; status.style.background='rgba(255,255,255,0.9)'; }
-    else{ status.innerText='Local mode • Works offline • No config needed • Add firebase-config.js for live sync'; }
+    if(fb.configValid){ status.innerText='Live sync enabled • Firebase connected'; status.style.background='white'; }
+    else{ status.innerText='Local mode • Works offline • No config needed'; }
   }
 });
 </script>
