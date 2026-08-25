@@ -4,12 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>TripSplit</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="firebase-config.js"></script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, doc, setDoc, getDoc, getDocs, collection, addDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject, listAll } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 const firebaseConfig = window.FIREBASE_CONFIG && window.FIREBASE_CONFIG.apiKey && !window.FIREBASE_CONFIG.apiKey.includes('YOUR_API_KEY') && !window.FIREBASE_CONFIG.apiKey.includes('Demo-Replace') ? window.FIREBASE_CONFIG : null;
 let app, db, storage;
 let configValid = !!firebaseConfig;
@@ -22,36 +23,49 @@ try{
     storage = getStorage(app);
     enableIndexedDbPersistence(db).catch(()=>{});
   }
-}catch(e){ console.error(e); configValid=false; }
-window._fb = { db, storage, doc, setDoc, getDoc, getDocs, collection, addDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, ref, uploadBytes, getDownloadURL, configValid };
+}catch(e){ configValid=false; }
+window._fb = { db, storage, doc, setDoc, getDoc, getDocs, collection, addDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, ref, uploadBytes, getDownloadURL, deleteObject, listAll, configValid };
 window.dispatchEvent(new Event('fb-ready'));
 </script>
 <style>
 :root{
-  --bg:#F2F6FF;--paper:#FFFFFF;--ink:#0F1B2E;--muted:#8A9BB5;--line:#E6EEFB;
-  --blue:#1A5CFF;--blue-dark:#0F2E6E;--blue-light:#E8EFFF;--blue-grad:linear-gradient(135deg,#0F2E6E 0%,#1A5CFF 100%);
-  --orange:#FF7A1A;--pink:#FF3B82;--yellow:#FFC93C;--green:#12C48B;--violet:#7C3AED;
-  --r:16px;--r-lg:24px;--r-xl:32px;--shadow:0 12px 32px rgba(15,46,110,0.08);--shadow-strong:0 20px 50px rgba(15,46,110,0.16);
+  --bg:#FFF7ED;--paper:#FFFFFF;--ink:#171717;--muted:#A8A29E;--line:#F5E6D3;
+  --orange:#FF7A1A;--pink:#FF3B82;--yellow:#FFC93C;--green:#2ECC71;--blue:#3B82F6;--violet:#8B5CF6;--brown:#2B1E16;
+  --r:18px;--r-lg:24px;--r-xl:28px;--shadow:0 10px 30px rgba(23,23,23,0.06);--shadow-strong:0 18px 40px rgba(23,23,23,0.14);
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);padding-bottom:96px;}
-/* Lobby - travel app style: blue gradient */
-.lobby-bg{min-height:100vh;background:var(--blue-grad);padding:0 0 40px;position:relative;overflow:hidden;}
-.lobby-bg::before{content:'';position:absolute;top:-120px;right:-80px;width:320px;height:320px;background:radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);border-radius:50%;}
-.lobby-bg::after{content:'';position:absolute;bottom:-100px;left:-60px;width:280px;height:280px;background:radial-gradient(circle, rgba(255,201,60,0.18) 0%, transparent 70%);border-radius:50%;}
-.lobby-header{text-align:center;padding:48px 20px 20px;position:relative;z-index:1;color:white;}
-.lobby-header .logo{width:64px;height:64px;border-radius:20px;background:white;color:var(--blue-dark);display:grid;place-items:center;font-weight:900;font-size:24px;margin:0 auto;box-shadow:0 12px 24px rgba(0,0,0,0.15);}
-.lobby-header h1{font-size:28px;font-weight:900;letter-spacing:-0.03em;margin-top:16px;}
-.lobby-header p{font-size:13px;opacity:0.8;margin-top:6px;font-weight:500;}
-.container{max-width:760px;margin:0 auto;padding:0 16px;position:relative;z-index:1;}
-.card{background:var(--paper);border-radius:var(--r-lg);box-shadow:var(--shadow);padding:18px;margin-top:14px;border:1px solid rgba(255,255,255,0.6);}
-.card-dark{background:var(--ink);color:white;border:none;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);padding-bottom:96px;}
+h1,h2,h3{font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:-0.02em;}
+.topbar{position:sticky;top:0;z-index:20;padding:10px 12px 0;}
+.topbar-inner{max-width:760px;margin:0 auto;background:white;border:1px solid var(--line);border-radius:20px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow);}
+.brand{display:flex;align-items:center;gap:10px;}
+.mark{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--orange),var(--pink));color:white;display:grid;place-items:center;font-weight:800;font-size:16px;box-shadow:0 8px 20px rgba(255,107,43,0.3);}
+.brand h1{font-size:15px;font-weight:800;}
+.brand p{font-size:11px;color:var(--muted);font-weight:600;}
+.container{max-width:760px;margin:0 auto;padding:0 12px;}
+.tabs{position:sticky;top:62px;z-index:15;display:flex;gap:6px;padding:5px;background:white;border:1px solid var(--line);border-radius:999px;box-shadow:var(--shadow);width:fit-content;margin:14px auto 0;}
+.tab{padding:9px 18px;border-radius:999px;border:none;background:transparent;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;transition:0.18s;}
+.tab.active{background:var(--ink);color:white;box-shadow:0 6px 18px rgba(23,23,23,0.18);}
+.tab-panel{display:none;animation:fadeIn 0.22s ease;}
+.tab-panel.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow);padding:18px;margin-top:14px;}
 .card-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
-.card-title b{font-size:15px;font-weight:800;letter-spacing:-0.02em;}
-.card-title span{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;}
-.input{width:100%;padding:13px 14px;border:1.5px solid var(--line);border-radius:12px;background:#FBFDFF;font-size:15px;font-weight:500;outline:none;transition:0.15s;}
-.input:focus{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-light);}
-.input.big{font-size:24px;font-weight:800;padding:16px 14px 16px 54px;}
+.card-title b{font-size:14px;font-weight:800;}
+.card-title span{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;}
+.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;}
+.hero-block{border-radius:var(--r-lg);padding:16px;min-height:96px;position:relative;overflow:hidden;border:1px solid var(--line);}
+.hero-block.dark{background:var(--ink);color:white;border-color:var(--ink);}
+.hero-block.yellow{background:var(--yellow);color:var(--ink);}
+.hero-block.green{background:var(--green);color:white;}
+.hero-block.white{background:white;}
+.hero-block label{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;opacity:0.7;font-weight:800;display:block;}
+.hero-block .val{font-size:22px;font-weight:800;margin-top:6px;letter-spacing:-0.02em;}
+.hero-block .sub{font-size:11px;opacity:0.8;margin-top:4px;font-weight:500;}
+.input{width:100%;padding:13px 14px;border:1.5px solid var(--line);border-radius:12px;background:#FFFEFB;font-size:15px;font-weight:500;outline:none;transition:0.15s;}
+.input:focus{border-color:var(--ink);box-shadow:0 0 0 3px #FFF0D9;}
+.input.big{font-size:24px;font-weight:800;padding:16px 14px 16px 54px;font-family:'Plus Jakarta Sans';}
+.input.invalid{border-color:var(--pink);background:#FFF0F3;}
 .amount-wrap{position:relative;}
 .amount-wrap::before{content:attr(data-cur);position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:800;color:var(--muted);}
 .form-group{margin-bottom:14px;}
@@ -60,72 +74,52 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Ar
 .form-row .form-group{flex:1;}
 .chips{display:flex;gap:8px;flex-wrap:wrap;}
 .chip{padding:9px 14px;border-radius:999px;border:1.5px solid var(--line);background:white;font-size:13px;font-weight:700;cursor:pointer;transition:0.15s;}
-.chip.active{background:var(--ink);color:white;border-color:var(--ink);}
-.trip-card{display:flex;gap:12px;padding:14px;border-radius:16px;background:white;border:1px solid var(--line);margin-bottom:10px;cursor:pointer;box-shadow:var(--shadow);transition:0.15s;}
-.trip-card:hover{transform:translateY(-1px);box-shadow:var(--shadow-strong);}
-.btn{border:none;border-radius:14px;padding:13px 16px;font-weight:800;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:0.15s;}
-.btn:active{transform:scale(0.98);}
-.btn:disabled{opacity:0.5;pointer-events:none;}
-.btn-primary{background:var(--ink);color:white;width:100%;box-shadow:0 12px 24px rgba(15,27,46,0.18);}
-.btn-blue{background:var(--blue);color:white;width:100%;box-shadow:0 12px 24px rgba(26,92,255,0.25);}
-.btn-soft{background:var(--blue-light);color:var(--blue-dark);border:1px solid #D0DDFF;}
-.btn-ghost{background:white;border:1px solid var(--line);color:var(--ink);}
-.btn-sm{padding:8px 12px;font-size:12px;border-radius:10px;}
-.btn-danger{background:#FFF1F2;border:1px solid #FECDD3;color:#BE123C;}
-/* Trip view - travel app style */
-.topbar{position:sticky;top:0;z-index:20;padding:10px 12px 0;background:var(--bg);}
-.topbar-inner{max-width:760px;margin:0 auto;background:white;border:1px solid var(--line);border-radius:20px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow);}
-.brand{display:flex;align-items:center;gap:10px;}
-.back-btn{width:36px;height:36px;border-radius:12px;border:1px solid var(--line);background:white;display:grid;place-items:center;cursor:pointer;font-size:16px;font-weight:700;}
-.mark{width:36px;height:36px;border-radius:12px;background:var(--blue-grad);color:white;display:grid;place-items:center;font-weight:800;font-size:14px;}
-.brand h1{font-size:14px;font-weight:800;letter-spacing:-0.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px;}
-.brand p{font-size:11px;color:var(--muted);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px;}
-.page-header{max-width:760px;margin:0 auto;padding:20px 16px 8px;display:flex;align-items:center;gap:12px;}
-.page-header .back{width:40px;height:40px;border-radius:14px;background:white;border:1px solid var(--line);display:grid;place-items:center;cursor:pointer;box-shadow:var(--shadow);}
-.page-header h2{font-size:22px;font-weight:800;letter-spacing:-0.03em;}
-.page-header p{font-size:12px;color:var(--muted);font-weight:500;margin-top:2px;}
-.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;}
-.hero-block{border-radius:var(--r-lg);padding:16px;min-height:96px;position:relative;overflow:hidden;border:1px solid var(--line);}
-.hero-block.dark{background:var(--ink);color:white;border-color:var(--ink);}
-.hero-block.blue{background:var(--blue);color:white;border-color:var(--blue);}
-.hero-block.yellow{background:var(--yellow);color:var(--ink);border-color:#F5C842;}
-.hero-block.green{background:var(--green);color:white;border-color:#0FB67A;}
-.hero-block.white{background:white;}
-.hero-block label{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;opacity:0.7;font-weight:800;display:block;}
-.hero-block .val{font-size:22px;font-weight:800;margin-top:6px;letter-spacing:-0.02em;line-height:1;}
-.hero-block .sub{font-size:11px;opacity:0.8;margin-top:4px;font-weight:500;}
-.date-strip{display:flex;gap:8px;overflow-x:auto;padding:6px 2px 10px;scrollbar-width:none;}
+.chip.active{color:white;border-color:transparent;}
+.chip[data-cat="Food"].active{background:var(--orange);}
+.chip[data-cat="Transport"].active{background:var(--blue);}
+.chip[data-cat="Hotel"].active{background:var(--violet);}
+.chip[data-cat="Activity"].active{background:var(--green);}
+.chip[data-cat="Other"].active{background:var(--pink);}
+.date-strip{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:none;}
 .date-strip::-webkit-scrollbar{display:none;}
-.date-card{min-width:64px;border-radius:14px;padding:10px 6px;text-align:center;background:white;border:1.5px solid var(--line);cursor:pointer;flex-shrink:0;transition:0.18s;}
+.date-card{min-width:68px;border:1.5px solid var(--line);border-radius:14px;padding:10px 6px;text-align:center;background:white;cursor:pointer;transition:0.18s;flex-shrink:0;position:relative;}
 .date-card.active{background:var(--ink);color:white;border-color:var(--ink);transform:translateY(-1px);box-shadow:0 8px 20px rgba(23,23,23,0.15);}
-.date-card.today{border-color:var(--blue);box-shadow:0 0 0 2px var(--blue-light);}
-.date-card.has-exp::after{content:'';display:block;width:4px;height:4px;border-radius:50%;background:var(--orange);margin:6px auto 0;}
+.date-card.today{border-color:var(--orange);box-shadow:0 0 0 2px #FFE4C0;}
+.date-card.has-exp::after{content:'';position:absolute;bottom:0;left:8px;right:8px;height:3px;border-radius:999px;background:var(--orange);}
 .date-card .dow{font-size:9px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;opacity:0.6;}
 .date-card .day{font-size:18px;font-weight:800;margin-top:2px;}
 .date-card .mon{font-size:10px;font-weight:600;opacity:0.7;}
 .person-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .person{border:1.5px solid var(--line);border-radius:16px;padding:12px;display:flex;align-items:center;gap:10px;cursor:pointer;background:white;transition:0.18s;}
-.person.selected{border-color:var(--ink);background:#F0F4FF;box-shadow:0 0 0 3px var(--blue-light);}
+.person.selected{border-color:var(--ink);background:#FFF8F0;box-shadow:0 0 0 3px #FFE9C8;}
 .person .av{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;color:white;font-weight:800;font-size:12px;flex-shrink:0;}
 .person .check{margin-left:auto;width:20px;height:20px;border-radius:8px;border:1.5px solid var(--line);display:grid;place-items:center;font-size:11px;background:white;}
 .person.selected .check{background:var(--ink);border-color:var(--ink);color:white;}
+.btn{border:none;border-radius:14px;padding:13px 16px;font-weight:800;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:0.15s;}
+.btn:active{transform:scale(0.98);}
+.btn:disabled{opacity:0.5;pointer-events:none;}
+.btn-primary{background:var(--ink);color:white;width:100%;box-shadow:0 12px 24px rgba(23,23,23,0.18);}
+.btn-soft{background:#FFF1D6;border:1px solid #FFE4B8;color:var(--ink);}
+.btn-ghost{background:white;border:1px solid var(--line);color:var(--ink);}
+.btn-sm{padding:8px 12px;font-size:12px;border-radius:10px;}
+.btn-danger{background:#FFF1F2;border:1px solid #FECDD3;color:#BE123C;}
 .expense-group{margin-bottom:18px;}
-.expense-group-head{display:flex;align-items:center;justify-content:space-between;padding:10px 4px 8px;position:sticky;top:64px;background:var(--bg);z-index:5;margin-bottom:8px;}
-.expense-group-head b{font-size:12px;font-weight:800;background:var(--ink);color:white;padding:6px 12px;border-radius:999px;letter-spacing:0.02em;}
+.expense-group-head{display:flex;align-items:baseline;justify-content:space-between;padding:10px 4px 8px;position:sticky;top:62px;background:var(--bg);z-index:5;border-bottom:1px solid var(--line);margin-bottom:8px;}
+.expense-group-head b{font-size:12px;font-weight:800;background:var(--ink);color:white;padding:5px 12px;border-radius:999px;}
 .expense-group-head span{font-size:11px;font-weight:700;color:var(--muted);background:white;border:1px solid var(--line);padding:4px 10px;border-radius:999px;}
 .expense{display:flex;gap:0;border-radius:16px;border:1px solid var(--line);background:white;overflow:hidden;margin-bottom:10px;cursor:pointer;box-shadow:var(--shadow);transition:0.18s;}
-.expense:hover{transform:translateY(-1px);box-shadow:var(--shadow-strong);}
+.expense:hover{transform:translateY(-1px);box-shadow:0 18px 40px rgba(23,23,23,0.12);}
 .expense .left-bar{width:52px;display:grid;place-items:center;flex-shrink:0;color:white;font-weight:800;font-size:13px;}
 .exp-main{flex:1;padding:11px 12px;min-width:0;}
 .exp-title{font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .exp-meta{font-size:11px;color:var(--muted);margin-top:3px;display:flex;gap:5px;flex-wrap:wrap;font-weight:600;}
-.exp-meta span{background:#F8FAFF;border:1px solid var(--line);padding:2px 7px;border-radius:999px;}
+.exp-meta span{background:#FFF8F0;border:1px solid var(--line);padding:2px 7px;border-radius:999px;}
 .exp-right{padding:11px 12px;text-align:right;flex-shrink:0;display:flex;flex-direction:column;justify-content:center;gap:2px;border-left:1px solid var(--line);min-width:88px;}
 .exp-amt{font-weight:800;font-size:13px;}
 .exp-amt small{display:block;font-size:10px;color:var(--muted);}
 .bal-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.bal-card{border-radius:18px;padding:14px;cursor:pointer;transition:0.18s;position:relative;overflow:hidden;min-height:100px;border:1px solid var(--line);background:white;}
-.bal-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-strong);}
+.bal-card{border-radius:18px;padding:14px;cursor:pointer;transition:0.18s;position:relative;overflow:hidden;min-height:100px;border:1px solid var(--line);}
+.bal-card:hover{transform:translateY(-2px);box-shadow:0 18px 40px rgba(23,23,23,0.12);}
 .bal-card.color-0{background:#FFD93D;color:#1A1A1A;}
 .bal-card.color-1{background:#2ECC71;color:white;}
 .bal-card.color-2{background:#3B82F6;color:white;}
@@ -139,65 +133,74 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Ar
 .settle-avatars .av{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;color:white;font-weight:800;font-size:11px;border:2px solid white;margin-left:-6px;}
 .settle-avatars .av:first-child{margin-left:0;}
 .settle-amt{margin-left:auto;background:var(--ink);color:white;padding:7px 12px;border-radius:10px;font-weight:800;font-size:13px;text-align:right;}
-.bottom-nav{position:fixed;bottom:12px;left:12px;right:12px;z-index:30;max-width:760px;margin:0 auto;background:var(--ink);border-radius:22px;padding:6px;display:flex;gap:6px;box-shadow:var(--shadow-strong);}
-.bottom-nav .nav-item{flex:1;justify-content:center;flex-direction:column;gap:3px;padding:10px 6px;font-size:10px;border-radius:14px;color:rgba(255,255,255,0.6);background:transparent;border:none;font-weight:700;cursor:pointer;display:flex;align-items:center;}
-.bottom-nav .nav-item.active{background:white;color:var(--ink);}
-@media(min-width:760px){.bottom-nav{left:50%;right:auto;transform:translateX(-50%);width:100%;}}
+.bottom-tabs{position:fixed;bottom:12px;left:12px;right:12px;z-index:30;max-width:760px;margin:0 auto;background:var(--ink);border-radius:22px;padding:6px;display:flex;gap:6px;box-shadow:0 20px 50px rgba(23,23,23,0.2);}
+.bottom-tabs .nav-item{flex:1;justify-content:center;flex-direction:column;gap:3px;padding:10px 6px;font-size:10px;border-radius:14px;color:rgba(255,255,255,0.6);background:transparent;border:none;font-weight:700;cursor:pointer;display:flex;align-items:center;}
+.bottom-tabs .nav-item.active{background:white;color:var(--ink);}
+@media(min-width:720px){.bottom-tabs{display:none;}.tabs{display:flex;}}@media(max-width:719px){.tabs{display:none;}}
 .empty{text-align:center;padding:32px 20px;color:var(--muted);}
-.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--ink);color:white;padding:11px 16px;border-radius:999px;font-size:13px;font-weight:700;z-index:100;opacity:0;transition:0.25s;pointer-events:none;display:flex;gap:8px;align-items:center;box-shadow:var(--shadow-strong);}
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--ink);color:white;padding:11px 16px;border-radius:999px;font-size:13px;font-weight:700;z-index:100;opacity:0;transition:0.25s;pointer-events:none;display:flex;gap:8px;align-items:center;box-shadow:0 20px 50px rgba(23,23,23,0.2);}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 .toast.undo{pointer-events:auto;cursor:pointer;}
-.modal{position:fixed;inset:0;z-index:60;background:rgba(15,27,46,0.45);backdrop-filter:blur(10px);display:none;align-items:flex-end;justify-content:center;padding:0 0 env(safe-area-inset-bottom);}
+.modal{position:fixed;inset:0;z-index:60;background:rgba(23,23,23,0.45);backdrop-filter:blur(10px);display:none;align-items:flex-end;justify-content:center;padding:0 0 env(safe-area-inset-bottom);}
 .modal.active{display:flex;}
 .modal-card{background:white;border-radius:24px 24px 0 0;width:100%;max-width:760px;max-height:88vh;overflow:auto;animation:slideUp 0.28s ease;}
 @keyframes slideUp{from{transform:translateY(24px);opacity:0;}to{transform:translateY(0);opacity:1;}}
 .modal-head{position:sticky;top:0;background:white;padding:18px 18px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;z-index:2;}
-.upload-area{border:1.5px dashed var(--line);border-radius:12px;padding:14px;text-align:center;background:#FBFDFF;cursor:pointer;}
+.trip-card{display:flex;gap:12px;padding:14px;border-radius:16px;background:white;border:1px solid var(--line);margin-bottom:10px;cursor:pointer;box-shadow:var(--shadow);}
+.upload-area{border:1.5px dashed var(--line);border-radius:12px;padding:14px;text-align:center;background:#FFFEFB;cursor:pointer;}
 .receipt-preview{width:100%;border-radius:12px;border:1px solid var(--line);margin-top:8px;max-height:180px;object-fit:cover;display:none;}
-.chips{display:flex;gap:8px;flex-wrap:wrap;}
-.chip{padding:9px 14px;border-radius:999px;border:1.5px solid var(--line);background:white;font-size:13px;font-weight:700;cursor:pointer;}
-.chip.active{background:var(--ink);color:white;border-color:var(--ink);}
+.pagination{display:flex;gap:8px;justify-content:center;align-items:center;padding:16px 0 8px;flex-wrap:wrap;}
+.page-btn{min-width:36px;height:36px;border-radius:10px;border:1px solid var(--line);background:white;display:grid;place-items:center;font-weight:700;font-size:13px;cursor:pointer;transition:0.15s;}
+.page-btn.active{background:var(--ink);color:white;border-color:var(--ink);box-shadow:0 6px 16px rgba(23,23,23,0.15);}
+.page-btn:disabled{opacity:0.4;pointer-events:none;}
+.page-info{font-size:12px;color:var(--muted);font-weight:600;padding:0 8px;}
 </style>
 </head>
 <body>
-<!-- LOBBY - Travel app blue gradient like reference -->
-<div id="lobbyView" class="lobby-bg">
-  <div class="lobby-header">
-    <div class="logo">✈</div>
-    <h1>TripSplit</h1>
-    <p>Find your trip • Private • Colorful • Receipts</p>
-    <div id="fbStatus" style="font-size:11px;margin-top:10px;padding:6px 12px;border-radius:999px;display:inline-block;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.2);">Checking...</div>
+<div class="topbar" id="topbar" style="display:none;">
+  <div class="topbar-inner">
+    <div class="brand"><div class="mark" id="tripMark">T</div><div><h1 id="tripName">Trip</h1><p id="tripMeta">CODE • 0 members</p></div></div>
+    <div style="display:flex;gap:8px;"><button class="btn btn-ghost btn-sm" onclick="showLobby()">Trips</button><button class="btn btn-ghost btn-sm" onclick="exportExcel()">Export</button></div>
+  </div>
+</div>
+
+<div id="lobbyView">
+  <div style="text-align:center;padding:36px 20px 12px;">
+    <div style="width:64px;height:64px;border-radius:20px;background:linear-gradient(135deg,#FF7A1A 0%,#FF3B82 100%);display:grid;place-items:center;color:white;font-weight:900;font-size:24px;margin:0 auto;box-shadow:0 16px 32px rgba(255,107,43,0.35);">S</div>
+    <h1 style="font-family:'Plus Jakarta Sans';font-size:30px;font-weight:900;letter-spacing:-0.04em;margin-top:14px;">TripSplit</h1>
+    <p style="color:var(--muted);font-size:13px;margin-top:6px;font-weight:600;">Private • Colorful • Receipts • Multi-currency</p>
+    <div id="fbStatus" style="font-size:11px;margin-top:10px;padding:6px 12px;border-radius:999px;display:inline-block;background:white;border:1px solid var(--line);">Checking storage...</div>
   </div>
   <div class="container">
-    <div class="card" style="border:none;">
-      <div class="card-title"><b>Join trip</b><span>Code + password</span></div>
+    <div class="card" style="border:2px solid var(--ink);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><b style="font-size:15px;font-weight:800;">Join trip</b><span style="font-size:11px;background:var(--ink);color:white;padding:4px 10px;border-radius:999px;">CODE + PASSWORD</span></div>
       <div style="display:flex;gap:10px;">
-        <input id="joinCode" class="input" placeholder="BK2026" style="text-transform:uppercase;font-weight:800;flex:1;">
-        <input id="joinPass" class="input" type="password" placeholder="Password" style="flex:1;">
+        <div style="flex:1;"><input id="joinCode" class="input" placeholder="BK2026" style="text-transform:uppercase;font-weight:800;"></div>
+        <div style="flex:1;"><input id="joinPass" class="input" type="password" placeholder="Password"></div>
       </div>
-      <button class="btn btn-blue" style="margin-top:12px;" onclick="joinTrip()">Join trip</button>
+      <button class="btn btn-primary" style="margin-top:12px;" onclick="joinTrip()">Join trip</button>
     </div>
 
     <div class="card">
-      <div class="card-title"><b>My trips</b><span id="myTripsCount">0</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><b style="font-size:15px;font-weight:800;">My trips</b><span id="myTripsCount" style="font-size:11px;color:var(--muted);font-weight:700;">0</span></div>
       <div id="myTripsList"><div class="empty">No trips yet</div></div>
     </div>
 
     <div id="createTripSection" style="display:none;">
-      <div class="card" style="border:1.5px solid var(--blue);">
-        <div class="card-title"><b>Create trip</b><span style="background:var(--blue);color:white;padding:4px 10px;border-radius:999px;">ADMIN</span></div>
+      <div class="card" style="border:1.5px solid var(--orange);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><b style="font-size:15px;font-weight:800;">Create trip</b><span style="font-size:11px;background:var(--orange);color:white;padding:4px 10px;border-radius:999px;">ADMIN</span></div>
         <div style="display:flex;flex-direction:column;gap:12px;">
           <input id="newTripName" class="input" placeholder="Trip name, e.g., Bangkok December">
           <div style="display:flex;gap:10px;">
             <input id="newTripCode" class="input" placeholder="Code auto" maxlength="12" style="text-transform:uppercase;flex:1;" readonly>
-            <input id="newTripPass" class="input" type="password" placeholder="Password" style="flex:1;">
+            <input id="newTripPass" class="input" type="password" placeholder="Password for members" style="flex:1;">
           </div>
           <div style="display:flex;gap:10px;">
             <input id="newTripStart" class="input" type="date" style="flex:1;">
             <input id="newTripEnd" class="input" type="date" style="flex:1;">
           </div>
           <div style="display:flex;gap:10px;">
-            <select id="newTripCurrency" class="input" style="flex:1;"><option value="HKD">HKD</option><option value="THB">THB</option><option value="JPY">JPY</option><option value="USD">USD</option><option value="EUR">EUR</option><option value="CNY">CNY</option><option value="TWD">TWD</option><option value="KRW">KRW</option><option value="SGD">SGD</option><option value="MYR">MYR</option></select>
+            <select id="newTripCurrency" class="input" style="flex:1;"><option value="HKD">HKD</option><option value="THB">THB - Thai Baht</option><option value="JPY">JPY - Yen</option><option value="USD">USD</option><option value="EUR">EUR</option><option value="CNY">CNY</option><option value="TWD">TWD</option><option value="KRW">KRW</option><option value="SGD">SGD</option><option value="MYR">MYR</option></select>
             <input id="newTripRate" class="input" type="number" step="0.0001" placeholder="Rate to HKD" style="flex:1;">
           </div>
           <input id="newTripFriends" class="input" placeholder="Members: Alice, Bob, Charlie">
@@ -206,42 +209,41 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Ar
       </div>
     </div>
 
-    <div style="background:rgba(255,255,255,0.6);backdrop-filter:blur(8px);border:1px dashed rgba(255,255,255,0.6);border-radius:14px;padding:12px;text-align:center;margin-top:12px;" id="adminGate">
-      <a onclick="unlockCreate()" style="color:white;font-weight:800;font-size:12px;cursor:pointer;text-decoration:underline;">Admin: Create trip</a>
-      <div style="font-size:10px;color:rgba(255,255,255,0.7);margin-top:4px;">Only authorized can create • Join open</div>
+    <div style="background:white;border:1px dashed var(--line);border-radius:14px;padding:12px;text-align:center;margin-top:12px;" id="adminGate">
+      <a onclick="unlockCreate()" style="color:var(--orange);font-weight:800;font-size:12px;cursor:pointer;text-decoration:underline;">Admin: Create trip</a>
+      <div style="font-size:10px;color:var(--muted);margin-top:4px;">Only authorized can create • ?admin=1 to auto-unlock</div>
+    </div>
+
+    <div class="card" id="adminDeleteAllCard" style="display:none;border:1.5px solid #FECDD3;background:#FFF1F2;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;"><b style="font-size:13px;color:#BE123C;">Admin: Delete All Trips</b><span style="font-size:10px;background:#BE123C;color:white;padding:3px 8px;border-radius:999px;">DANGER</span></div>
+      <div style="font-size:12px;color:#9F1239;margin-bottom:10px;">This will delete <b>all trips and all expenses</b> in database. Type <b>DELETE ALL</b> to confirm.</div>
+      <div style="display:flex;gap:8px;"><input id="deleteAllInput" class="input" placeholder="Type DELETE ALL"><button class="btn btn-danger btn-sm" onclick="deleteAllTrips()">Delete all</button></div>
     </div>
   </div>
 </div>
 
-<!-- TRIP VIEW - Travel app layout -->
 <div id="tripView" style="display:none;">
-  <div class="topbar">
-    <div class="topbar-inner">
-      <div class="brand"><button class="back-btn" onclick="showLobby()">‹</button><div class="mark" id="tripMark">T</div><div><h1 id="tripName">Trip</h1><p id="tripMeta">CODE • 0 members</p></div></div>
-      <div style="display:flex;gap:8px;"><button class="icon-btn" onclick="openTripSettings()">⚙</button><button class="icon-btn" onclick="exportExcel()">↗</button></div>
-    </div>
-  </div>
-
   <div class="container">
-    <!-- Page header with back - like reference image -->
-    <div class="page-header" id="pageHeader" style="display:none;">
-      <button class="back" onclick="goBack()">‹</button>
-      <div><h2 id="pageTitle">Expenses</h2><p id="pageSubtitle">Date desc • All entries</p></div>
-    </div>
-
-    <div class="hero-grid" id="heroGrid">
+    <div class="hero-grid">
       <div class="hero-block dark"><label>Total spent</label><div class="val" id="heroTotal">HKD 0</div><div class="sub" id="heroAvg">—</div></div>
       <div class="hero-block yellow"><label>Entries</label><div class="val" id="heroCount">0</div><div class="sub" id="heroRange">—</div></div>
       <div class="hero-block white"><label>Currency</label><div class="val" id="heroCurrency" style="font-size:18px;">HKD</div><div class="sub" id="heroRate">Rate 1</div></div>
       <div class="hero-block green"><label>Members</label><div class="val" id="heroMembers">0</div><div class="sub" id="heroMembersList">—</div></div>
     </div>
 
-    <!-- ADD PAGE -->
+    <div class="tabs" id="topTabs" style="display:none;">
+      <button class="tab active" data-tab="add" onclick="switchTab('add')">New</button>
+      <button class="tab" data-tab="expenses" onclick="switchTab('expenses')">Expenses</button>
+      <button class="tab" data-tab="balances" onclick="switchTab('balances')">Balances</button>
+      <button class="tab" data-tab="settle" onclick="switchTab('settle')">Settlement</button>
+      <button class="tab" data-tab="settings" onclick="switchTab('settings')">Settings</button>
+    </div>
+
     <div class="tab-panel active" id="panel-add">
       <div class="card">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><b style="font-size:15px;font-weight:800;">New expense</b><span id="editBadge" style="display:none;background:var(--yellow);color:var(--ink);padding:4px 10px;border-radius:999px;font-size:10px;font-weight:800;">EDITING</span></div>
         <div style="margin-bottom:14px;">
-          <label style="font-size:11px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px;">Date — trip dates</label>
+          <label style="font-size:11px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px;">Date — trip dates (tap card)</label>
           <div class="date-strip" id="dateStrip"></div>
           <input id="expDate" type="date" class="input" style="margin-top:10px;">
         </div>
@@ -256,10 +258,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Ar
         </div>
         <div class="form-group">
           <label>Receipt — free</label>
-          <div class="upload-area" onclick="document.getElementById('receiptInput').click()">
-            <div style="font-size:13px;font-weight:700;">📎 Upload receipt / Take photo</div>
-            <div style="font-size:11px;color:var(--muted);margin-top:4px;">Compressed &lt;500KB, stored free</div>
-          </div>
+          <div class="upload-area" onclick="document.getElementById('receiptInput').click()"><div style="font-size:13px;font-weight:700;">📎 Upload receipt / Take photo</div><div style="font-size:11px;color:var(--muted);margin-top:4px;">Compressed &lt;500KB, stored free</div></div>
           <input id="receiptInput" type="file" accept="image/*" capture="environment" style="display:none;" onchange="handleReceipt(this)">
           <img id="receiptPreview" class="receipt-preview">
           <div style="display:flex;gap:8px;margin-top:8px;"><button class="btn btn-ghost btn-sm" style="display:none;" id="removeReceiptBtn" onclick="removeReceipt()">Remove</button><button class="btn btn-ghost btn-sm" style="display:none;" id="viewReceiptBtn" onclick="viewReceipt()">View</button></div>
@@ -274,28 +273,25 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Ar
       </div>
     </div>
 
-    <!-- EXPENSES PAGE - with back -->
     <div class="tab-panel" id="panel-expenses">
       <div class="card">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><b style="font-size:15px;font-weight:800;">Expenses</b><span id="expCountTop" style="font-size:11px;color:var(--muted);font-weight:700;">Date desc</span></div>
-        <div style="display:flex;gap:8px;margin-bottom:12px;"><input id="searchInput" class="input" placeholder="Search" oninput="renderExpenses()" style="flex:1;"><select id="filterCategory" class="input" style="width:110px;" onchange="renderExpenses()"><option value="">All</option><option>Food</option><option>Transport</option><option>Hotel</option><option>Activity</option><option>Other</option></select></div>
+        <div style="display:flex;gap:8px;margin-bottom:12px;"><input id="searchInput" class="input" placeholder="Search" oninput="resetPagination();renderExpenses()" style="flex:1;"><select id="filterCategory" class="input" style="width:110px;" onchange="resetPagination();renderExpenses()"><option value="">All</option><option>Food</option><option>Transport</option><option>Hotel</option><option>Activity</option><option>Other</option></select></div>
         <div id="expensesList"></div>
+        <div class="pagination" id="expensesPagination"></div>
       </div>
     </div>
 
-    <!-- BALANCES PAGE -->
     <div class="tab-panel" id="panel-balances">
       <div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><b style="font-size:15px;font-weight:800;">Balances</b><span style="font-size:11px;color:var(--muted);">Tap for detail</span></div><div class="bal-grid" id="balancesGrid"></div></div>
       <div class="card"><div style="font-size:13px;font-weight:800;margin-bottom:12px;">By category</div><div id="breakdownList"></div></div>
     </div>
 
-    <!-- SETTLEMENT PAGE -->
     <div class="tab-panel" id="panel-settle">
-      <div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><b style="font-size:15px;font-weight:800;">Settlement</b><span id="settleCount" style="background:var(--ink);color:white;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700;">0</span></div><div id="settlementList"></div><div id="settleSummary" style="margin-top:12px;padding:12px;background:#FFF8F0;border-radius:12px;border:1px dashed var(--line);font-size:13px;text-align:center;color:var(--muted);"></div><div style="font-size:11px;color:var(--muted);margin-top:8px;text-align:center;">Settle default HKD</div></div>
+      <div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><b style="font-size:15px;font-weight:800;">Settlement</b><span id="settleCount" style="background:var(--ink);color:white;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700;">0</span></div><div id="settlementList"></div><div id="settleSummary" style="margin-top:12px;padding:12px;background:#FFFBF2;border-radius:12px;border:1px dashed var(--line);font-size:13px;text-align:center;color:var(--muted);"></div></div>
       <div class="card"><div style="display:flex;gap:10px;"><button class="btn btn-ghost" style="flex:1;" onclick="copySettlement()">Copy</button><button class="btn btn-primary" style="flex:1;" onclick="exportExcel()">Export Excel</button></div></div>
     </div>
 
-    <!-- SETTINGS PAGE - with delete trip -->
     <div class="tab-panel" id="panel-settings">
       <div class="card">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><b style="font-size:15px;font-weight:800;">Trip settings</b><span style="font-size:11px;color:var(--muted);">Editable</span></div>
@@ -317,9 +313,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Ar
         </div>
       </div>
       <div class="card" style="border:1.5px solid #FECDD3;background:#FFF1F2;">
-        <div style="font-size:13px;font-weight:800;color:#BE123C;margin-bottom:8px;">Danger zone</div>
-        <div style="font-size:12px;color:#9F1239;margin-bottom:12px;line-height:1.5;">Delete trip will delete <b>all related data</b>: trip info + all expenses + receipts. This cannot be undone.</div>
-        <button class="btn btn-danger" style="width:100%;" onclick="deleteTrip()">🗑️ Delete trip and all data</button>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;"><b style="font-size:13px;color:#BE123C;">Delete trip</b><span style="font-size:10px;background:#BE123C;color:white;padding:3px 8px;border-radius:999px;">ADMIN</span></div>
+        <div style="font-size:12px;color:#9F1239;margin-bottom:10px;line-height:1.5;">Delete <b>all related data</b>: trip + <span id="deleteCount">0</span> expenses + receipts. Copy trip name to confirm.</div>
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;background:white;border:1px solid #FECDD3;padding:8px 12px;border-radius:10px;">
+          <div style="font-size:11px;color:#9F1239;font-weight:700;">Trip name:</div>
+          <div id="deleteTripNameDisplay" style="font-weight:800;flex:1;user-select:all;"></div>
+          <button class="btn btn-ghost btn-sm" onclick="copyTripName()">Copy</button>
+        </div>
+        <div style="display:flex;gap:8px;"><input id="deleteTripInput" class="input" placeholder="Paste trip name to confirm"><button class="btn btn-danger btn-sm" onclick="deleteTrip()">Delete trip</button></div>
       </div>
     </div>
   </div>
@@ -378,10 +379,10 @@ function fmtMon(d){ const dt=new Date(d); return dt.toLocaleDateString('en-GB',{
 function fmtDayNum(d){ const dt=new Date(d); return dt.getDate(); }
 
 let currentTrip=null, currentTripId=null, currentPassword=null;
-let friends=[], expenses=[], selectedCategory='Food', splitSel={}, editingId=null;
+let friends=[], expenses=[], filteredExpenses=[], selectedCategory='Food', splitSel={}, editingId=null;
 let receiptBase64=null, myIdentity=null, unsubscribeExpenses=null;
 let isSaving=false;
-let navHistory=[];
+let currentPage=1, itemsPerPage=10;
 
 async function hashPw(pw){ const enc=new TextEncoder().encode(pw); const buf=await crypto.subtle.digest('SHA-256',enc); return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join(''); }
 
@@ -391,12 +392,17 @@ function checkAdminFromUrl(){
     document.getElementById('createTripSection').style.display='block';
     const gate=document.getElementById('adminGate');
     if(gate) gate.style.display='none';
+    document.getElementById('adminDeleteAllCard').style.display='block';
   }
 }
 window.unlockCreate=function(){
   const pw=prompt('Admin password to create trip:');
-  if(pw===window.ADMIN_CREATE_PASSWORD){ document.getElementById('createTripSection').style.display='block'; document.getElementById('adminGate').style.display='none'; toast('Admin unlocked'); }
-  else if(pw!==null){ toast('Wrong admin password'); }
+  if(pw===window.ADMIN_CREATE_PASSWORD){
+    document.getElementById('createTripSection').style.display='block';
+    document.getElementById('adminGate').style.display='none';
+    document.getElementById('adminDeleteAllCard').style.display='block';
+    toast('Admin unlocked');
+  }else if(pw!==null){ toast('Wrong admin password'); }
 }
 
 function saveMyTrips(){
@@ -413,7 +419,7 @@ function loadMyTrips(){
   list.innerHTML='';
   myTrips.forEach(t=>{
     const div=document.createElement('div');div.className='trip-card';
-    div.innerHTML=`<div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#0F2E6E,#1A5CFF);display:grid;place-items:center;color:white;font-weight:800;">✈</div><div style="flex:1;"><div style="font-weight:800;">${t.name}</div><div style="font-size:12px;color:#8A9BB5;">${t.id}</div></div><div>→</div>`;
+    div.innerHTML=`<div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#FF7A1A,#FF3B82);display:grid;place-items:center;color:white;font-weight:800;">✈</div><div style="flex:1;"><div style="font-weight:800;">${t.name}</div><div style="font-size:12px;color:#A8A29E;">${t.id}</div></div><div>→</div>`;
     div.onclick=()=>{document.getElementById('joinCode').value=t.id;document.getElementById('joinPass').value=localStorage.getItem(`trip_${t.id}_pw`)||'';joinTrip();};
     list.appendChild(div);
   });
@@ -500,11 +506,8 @@ function showLobby(){
   document.getElementById('tripView').style.display='none';
   document.getElementById('topbar').style.display='none';
   document.getElementById('bottomTabs').style.display='none';
-  document.getElementById('pageHeader').style.display='none';
-  document.getElementById('heroGrid').style.display='none';
   if(unsubscribeExpenses){unsubscribeExpenses();unsubscribeExpenses=null;}
   currentTrip=null;currentTripId=null;
-  navHistory=[];
   loadMyTrips();
 }
 window.showLobby=showLobby;
@@ -514,45 +517,20 @@ function showTripView(){
   document.getElementById('tripView').style.display='block';
   document.getElementById('topbar').style.display='block';
   document.getElementById('bottomTabs').style.display='flex';
-  document.getElementById('pageHeader').style.display='none';
-  document.getElementById('heroGrid').style.display='grid';
   document.getElementById('tripName').innerText=currentTrip.name;
   document.getElementById('tripMark').innerText=currentTrip.name[0].toUpperCase();
   document.getElementById('tripMeta').innerText=`${currentTripId} • ${currentTrip.startDate||''}→${currentTrip.endDate||''} • ${currentTrip.currency||'HKD'}→HKD ${currentTrip.exchangeRate||1}`;
   document.getElementById('expDate').valueAsDate=new Date();
   renderFriends();renderDateStrip();renderSplit();
   switchTab('add', true);
+  resetPagination();
 }
 
 window.switchTab=function(tab, noHistory=false){
-  const titles={add:['New expense','Tap to add'],expenses:['Expenses','Date desc • Newest first'],balances:['Balances','Tap name for detail'],settle:['Settlement','Minimal transfers • HKD'],settings:['Trip settings','Edit dates, currency, delete trip']};
-  const currentActive=document.querySelector('.tab-panel.active')?.id?.replace('panel-','');
-  if(!noHistory && currentActive && currentActive!==tab){ navHistory.push(currentActive); }
   document.querySelectorAll('.tab').forEach(el=>el.classList.toggle('active', el.dataset.tab===tab));
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active', p.id==='panel-'+tab));
-  // page header with back
-  const header=document.getElementById('pageHeader');
-  const hero=document.getElementById('heroGrid');
-  if(tab==='add'){
-    header.style.display='none';
-    hero.style.display='grid';
-  }else{
-    header.style.display='flex';
-    hero.style.display='none';
-    document.getElementById('pageTitle').innerText=titles[tab][0];
-    document.getElementById('pageSubtitle').innerText=titles[tab][1];
-  }
   window.scrollTo({top:0,behavior:'smooth'});
 }
-window.goBack=function(){
-  if(navHistory.length>0){
-    const prev=navHistory.pop();
-    switchTab(prev, true);
-  }else{
-    switchTab('add', true);
-  }
-}
-window.openTripSettings=function(){ switchTab('settings'); }
 
 function getTripDates(){
   const dates=new Set();
@@ -708,6 +686,7 @@ function listenExpenses(){
         expenses=[];
         snap.forEach(doc=>{expenses.push({id:doc.id, ...doc.data()});});
         expenses.sort((a,b)=> (b.date||'').localeCompare(a.date||'') || (b.createdAt||'').localeCompare(a.createdAt||''));
+        resetPagination();
         renderAll();
       }, ()=>{
         const q2=fb.query(fb.collection(fb.db,'trips',currentTripId,'expenses'), fb.orderBy('createdAt','desc'));
@@ -715,6 +694,7 @@ function listenExpenses(){
           expenses=[];
           snap.forEach(doc=>{expenses.push({id:doc.id, ...doc.data()});});
           expenses.sort((a,b)=> (b.date||'').localeCompare(a.date||''));
+          resetPagination();
           renderAll();
         });
       });
@@ -724,6 +704,7 @@ function listenExpenses(){
         expenses=[];
         snap.forEach(doc=>{expenses.push({id:doc.id, ...doc.data()});});
         expenses.sort((a,b)=> (b.date||'').localeCompare(a.date||''));
+        resetPagination();
         renderAll();
       });
     }
@@ -732,6 +713,7 @@ function listenExpenses(){
     const trip=trips[currentTripId];
     expenses=trip?.expenses||[];
     expenses.sort((a,b)=> (b.date||'').localeCompare(a.date||''));
+    resetPagination();
     renderAll();
   }
 }
@@ -789,6 +771,7 @@ window.saveExpense=async function(){
       localStorage.setItem('localTrips',JSON.stringify(trips));
       expenses=trips[currentTripId].expenses;
       expenses.sort((a,b)=> (b.date||'').localeCompare(a.date||''));
+      resetPagination();
       renderAll();
       toast('Added');
     }
@@ -828,11 +811,11 @@ window.delExp=async function(id){
       await fb.deleteDoc(fb.doc(fb.db,'trips',currentTripId,'expenses',id));
     }else{
       const trips=JSON.parse(localStorage.getItem('localTrips')||'{}');
-      if(trips[currentTripId]){ trips[currentTripId].expenses=trips[currentTripId].expenses.filter(e=>e.id!==id); localStorage.setItem('localTrips',JSON.stringify(trips)); expenses=trips[currentTripId].expenses; renderAll(); }
+      if(trips[currentTripId]){ trips[currentTripId].expenses=trips[currentTripId].expenses.filter(e=>e.id!==id); localStorage.setItem('localTrips',JSON.stringify(trips)); expenses=trips[currentTripId].expenses; resetPagination(); renderAll(); }
     }
     toast(`Deleted ${exp.desc}`, ()=>{
       if(fb.configValid && fb.db){ fb.addDoc(fb.collection(fb.db,'trips',currentTripId,'expenses'), {...exp, id:undefined, createdAt:new Date().toISOString()}); }
-      else{ const trips=JSON.parse(localStorage.getItem('localTrips')||'{}'); trips[currentTripId].expenses.unshift(exp); localStorage.setItem('localTrips',JSON.stringify(trips)); expenses=trips[currentTripId].expenses; renderAll(); }
+      else{ const trips=JSON.parse(localStorage.getItem('localTrips')||'{}'); trips[currentTripId].expenses.unshift(exp); localStorage.setItem('localTrips',JSON.stringify(trips)); expenses=trips[currentTripId].expenses; resetPagination(); renderAll(); }
       toast('Restored');
     });
   }catch(e){toast('Error');}
@@ -844,14 +827,44 @@ function groupByDate(list){
   return Object.entries(groups).sort((a,b)=> b[0].localeCompare(a[0]));
 }
 
+window.resetPagination=function(){ currentPage=1; }
+
+function renderPagination(totalItems){
+  const container=document.getElementById('expensesPagination');
+  const totalPages=Math.ceil(totalItems / itemsPerPage);
+  if(totalPages<=1){ container.innerHTML=''; return; }
+  let html=`<button class="page-btn" ${currentPage===1?'disabled':''} onclick="changePage(${currentPage-1})">‹</button>`;
+  // show max 5 pages
+  let start=Math.max(1, currentPage-2);
+  let end=Math.min(totalPages, start+4);
+  if(end-start<4) start=Math.max(1, end-4);
+  for(let i=start;i<=end;i++){
+    html+=`<button class="page-btn ${i===currentPage?'active':''}" onclick="changePage(${i})">${i}</button>`;
+  }
+  html+=`<span class="page-info">${currentPage}/${totalPages} • ${totalItems} items</span>`;
+  html+=`<button class="page-btn" ${currentPage===totalPages?'disabled':''} onclick="changePage(${currentPage+1})">›</button>`;
+  container.innerHTML=html;
+}
+window.changePage=function(page){
+  currentPage=page;
+  renderExpenses();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
 function renderExpenses(){
   const list=document.getElementById('expensesList');
   const search=(document.getElementById('searchInput')?.value||'').toLowerCase();
   const filterCat=document.getElementById('filterCategory')?.value||'';
   let filtered=expenses.filter(e=>{ const ms=!search||e.desc.toLowerCase().includes(search)||e.paidBy.toLowerCase().includes(search); const mc=!filterCat||e.category===filterCat; return ms&&mc; });
-  document.getElementById('expCountTop').innerText=`${filtered.length} • Date desc • HKD ${filtered.reduce((s,e)=>s+(e.amountHKD||e.amount),0).toFixed(0)}`;
-  if(filtered.length===0){list.innerHTML='<div class=empty>No expenses</div>';return;}
-  const grouped=groupByDate(filtered);
+  filteredExpenses=filtered;
+  document.getElementById('expCountTop').innerText=`${filtered.length} • Date desc • Page ${currentPage}`;
+  if(filtered.length===0){list.innerHTML='<div class=empty>No expenses</div>';document.getElementById('expensesPagination').innerHTML='';return;}
+  // pagination - slice
+  const totalPages=Math.ceil(filtered.length / itemsPerPage);
+  if(currentPage>totalPages) currentPage=totalPages;
+  const startIdx=(currentPage-1)*itemsPerPage;
+  const paginated=filtered.slice(startIdx, startIdx+itemsPerPage);
+  const grouped=groupByDate(paginated);
   list.innerHTML='';
   grouped.forEach(([date, exps])=>{
     const total=exps.reduce((s,e)=>s+(e.amountHKD||e.amount),0);
@@ -872,6 +885,7 @@ function renderExpenses(){
     });
     list.appendChild(groupDiv);
   });
+  renderPagination(filtered.length);
 }
 
 function calcBal(){
@@ -916,8 +930,8 @@ function renderBalances(){
   breakdown.innerHTML=Object.entries(byCat).map(([cat,amt])=>{
     const pct=expenses.length?(amt/expenses.reduce((s,e)=>s+(e.amountHKD||e.amount),0)*100).toFixed(0):0;
     const catColors={Food:'#FF7A1A',Transport:'#3B82F6',Hotel:'#8B5CF6',Activity:'#2ECC71',Other:'#FF3B82'};
-    return `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #E6EEFB;"><div style="display:flex;gap:10px;align-items:center;"><div style="width:36px;height:36px;border-radius:10px;background:${catColors[cat]||'#111'};display:grid;place-items:center;color:white;font-weight:800;">${cat[0]}</div><div><div style="font-weight:700;font-size:13px;">${cat}</div><div style="font-size:11px;color:#8A9BB5;">${pct}%</div></div></div><div style="font-weight:800;">HKD ${amt.toFixed(0)}</div></div>`;
-  }).join('')||'<div style="color:#8A9BB5;font-size:13px;text-align:center;padding:12px;">No data</div>';
+    return `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #F5E6D8;"><div style="display:flex;gap:10px;align-items:center;"><div style="width:36px;height:36px;border-radius:10px;background:${catColors[cat]||'#111'};display:grid;place-items:center;color:white;font-weight:800;">${cat[0]}</div><div><div style="font-weight:700;font-size:13px;">${cat}</div><div style="font-size:11px;color:#A8A29E;">${pct}%</div></div></div><div style="font-weight:800;">HKD ${amt.toFixed(0)}</div></div>`;
+  }).join('')||'<div style="color:#A8A29E;font-size:13px;text-align:center;padding:12px;">No data</div>';
 }
 
 function renderSettlement(){
@@ -927,7 +941,7 @@ function renderSettlement(){
   if(trans.length===0){list.innerHTML='<div class=empty>All settled</div>';summary.innerText='No payments needed • Settle HKD';return;}
   list.innerHTML='';trans.forEach(t=>{
     const div=document.createElement('div');div.className='settle-row';
-    div.innerHTML=`<div class=settle-avatars><div class=av style="background:${avatarColor(t.from)}">${initials(t.from)}</div><div class=av style="background:${avatarColor(t.to)}">${initials(t.to)}</div></div><div style="flex:1;"><b>${t.from} → ${t.to}</b><div style="font-size:12px;color:#8A9BB5;">${t.from} pays ${t.to} in HKD</div></div><div class=settle-amt>HKD ${t.amount.toFixed(0)}<small>HKD</small></div>`;
+    div.innerHTML=`<div class=settle-avatars><div class=av style="background:${avatarColor(t.from)}">${initials(t.from)}</div><div class=av style="background:${avatarColor(t.to)}">${initials(t.to)}</div></div><div style="flex:1;"><b>${t.from} → ${t.to}</b><div style="font-size:12px;color:#A8A29E;">${t.from} pays ${t.to} in HKD</div></div><div class=settle-amt>HKD ${t.amount.toFixed(0)}<small>HKD</small></div>`;
     list.appendChild(div);
   });
   const total=trans.reduce((s,t)=>s+t.amount,0);
@@ -948,7 +962,6 @@ function renderAll(){
   }
   document.getElementById('heroMembers').innerText=friends.length;
   document.getElementById('heroMembersList').innerText=friends.join(', ');
-  // fill settings form
   if(currentTrip){
     document.getElementById('tripNameEdit').value=currentTrip.name||'';
     document.getElementById('tripStartEdit').value=currentTrip.startDate||'';
@@ -956,6 +969,8 @@ function renderAll(){
     document.getElementById('tripCurrencyEdit').value=currentTrip.currency||'HKD';
     document.getElementById('tripRateEdit').value=currentTrip.exchangeRate||1;
     document.getElementById('tripFriendsEdit').value=(currentTrip.friends||[]).join(', ');
+    document.getElementById('deleteTripNameDisplay').innerText=currentTrip.name||'';
+    document.getElementById('deleteCount').innerText=expenses.length;
   }
 }
 
@@ -964,7 +979,7 @@ function showWhoModal(){
   list.innerHTML='';
   friends.forEach(f=>{
     const div=document.createElement('div');
-    div.style.cssText='display:flex;align-items:center;gap:12px;padding:14px;border:1.5px solid #E6EEFB;border-radius:14px;cursor:pointer;background:white;';
+    div.style.cssText='display:flex;align-items:center;gap:12px;padding:14px;border:1.5px solid #F5E6D8;border-radius:14px;cursor:pointer;background:white;';
     div.innerHTML=`<div style="width:40px;height:40px;border-radius:12px;background:${avatarColor(f)};display:grid;place-items:center;color:white;font-weight:800;">${initials(f)}</div><div style="flex:1;font-weight:700;">${f}</div><div>→</div>`;
     div.onclick=()=>{ myIdentity=f; localStorage.setItem(`trip_${currentTripId}_who`, f); document.getElementById('paidBySelect').value=f; saveMyTrips(); closeWhoModal(); toast(`You are ${f}`); };
     list.appendChild(div);
@@ -1006,13 +1021,13 @@ window.openPersonModal=function(name){
   const overview=document.getElementById('personTab-overview');
   overview.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;"><div style="background:#FFF8F0;padding:12px;border-radius:12px;border:1px solid #FFE4C0;"><div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:#A8A29E;font-weight:700;">Total paid</div><div style="font-size:20px;font-weight:800;margin-top:4px;">${currentTrip.currency} ${bal.paid.toFixed(0)}</div><div style="font-size:12px;color:#A8A29E;">HKD ${bal.paidHKD.toFixed(0)} • ${bal.paidList.length} expenses</div></div><div style="background:#F2F6FF;padding:12px;border-radius:12px;"><div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:#A8A29E;font-weight:700;">Total share</div><div style="font-size:20px;font-weight:800;margin-top:4px;">${currentTrip.currency} ${bal.share.toFixed(0)}</div><div style="font-size:12px;color:#A8A29E;">HKD ${bal.shareHKD.toFixed(0)} • ${bal.shareList.length} shared</div></div></div><div style="padding:12px;background:${bal.balanceHKD>0?'#E8F5EE':bal.balanceHKD<0?'#FEF0EF':'#F7F5F1'};border-radius:12px;text-align:center;"><div style="font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;opacity:0.7;">Net HKD</div><div style="font-size:24px;font-weight:800;margin-top:4px;">${bal.balanceHKD>0?'+':''}HKD ${bal.balanceHKD.toFixed(0)}</div><div style="font-size:12px;margin-top:2px;">${bal.balanceHKD>0?'Gets back':bal.balanceHKD<0?'Owes':'Settled'}</div></div>`;
   const paidTab=document.getElementById('personTab-paid');
-  paidTab.innerHTML=bal.paidList.length? bal.paidList.map(e=>`<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #E6EEFB;"><div><div style="font-weight:600;font-size:13px;">${e.desc}</div><div style="font-size:11px;color:#A8A29E;">${e.date} • Split ${e.sharedWith.length} ${e.receiptImage?'• 📎':''}</div></div><div style="text-align:right;"><div style="font-weight:700;">${currentTrip.currency} ${e.amount.toFixed(0)}</div><div style="font-size:11px;color:#A8A29E;">HKD ${(e.amountHKD||e.amount).toFixed(0)}</div></div></div>`).join('') : '<div style="color:#A8A29E;text-align:center;padding:20px;">No payments made</div>';
+  paidTab.innerHTML=bal.paidList.length? bal.paidList.map(e=>`<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #F5E6D8;"><div><div style="font-weight:600;font-size:13px;">${e.desc}</div><div style="font-size:11px;color:#A8A29E;">${e.date} • Split ${e.sharedWith.length} ${e.receiptImage?'• 📎':''}</div></div><div style="text-align:right;"><div style="font-weight:700;">${currentTrip.currency} ${e.amount.toFixed(0)}</div><div style="font-size:11px;color:#A8A29E;">HKD ${(e.amountHKD||e.amount).toFixed(0)}</div></div></div>`).join('') : '<div style="color:#A8A29E;text-align:center;padding:20px;">No payments made</div>';
   const owesTab=document.getElementById('personTab-owes');
-  owesTab.innerHTML=bal.shareList.length? bal.shareList.map(e=>`<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #E6EEFB;"><div><div style="font-weight:600;font-size:13px;">${e.desc}</div><div style="font-size:11px;color:#A8A29E;">${e.date} • Paid by ${e.paidBy}</div></div><div style="text-align:right;"><div style="font-weight:700;">${currentTrip.currency} ${e.per.toFixed(0)}</div><div style="font-size:11px;color:#A8A29E;">HKD ${e.perHKD.toFixed(0)}</div></div></div>`).join('') : '<div style="color:#A8A29E;text-align:center;padding:20px;">No shared expenses</div>';
+  owesTab.innerHTML=bal.shareList.length? bal.shareList.map(e=>`<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #F5E6D8;"><div><div style="font-weight:600;font-size:13px;">${e.desc}</div><div style="font-size:11px;color:#A8A29E;">${e.date} • Paid by ${e.paidBy}</div></div><div style="text-align:right;"><div style="font-weight:700;">${currentTrip.currency} ${e.per.toFixed(0)}</div><div style="font-size:11px;color:#A8A29E;">HKD ${e.perHKD.toFixed(0)}</div></div></div>`).join('') : '<div style="color:#A8A29E;text-align:center;padding:20px;">No shared expenses</div>';
   const settleTab=document.getElementById('personTab-settle');
   const allTrans=calcSettlement(calcBal());
   const myTrans=allTrans.filter(t=>t.from===name||t.to===name);
-  settleTab.innerHTML=myTrans.length? myTrans.map(t=>`<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #E6EEFB;"><div style="flex:1;"><b>${t.from===name?`You pay ${t.to}`:`${t.from} pays you`}</b><div style="font-size:11px;color:#A8A29E;">${t.from} → ${t.to}</div></div><div style="background:#111;color:white;padding:6px 10px;border-radius:8px;font-weight:700;font-size:13px;">HKD ${t.amount.toFixed(0)}</div></div>`).join('') : '<div style="color:#A8A29E;text-align:center;padding:20px;">No settlement needed</div>';
+  settleTab.innerHTML=myTrans.length? myTrans.map(t=>`<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #F5E6D8;"><div style="flex:1;"><b>${t.from===name?`You pay ${t.to}`:`${t.from} pays you`}</b><div style="font-size:11px;color:#A8A29E;">${t.from} → ${t.to}</div></div><div style="background:#111;color:white;padding:6px 10px;border-radius:8px;font-weight:700;font-size:13px;">HKD ${t.amount.toFixed(0)}</div></div>`).join('') : '<div style="color:#A8A29E;text-align:center;padding:20px;">No settlement needed</div>';
   document.getElementById('personModal').classList.add('active');
 }
 window.closePersonModal=function(){document.getElementById('personModal').classList.remove('active');}
@@ -1035,7 +1050,6 @@ window.saveTripSettings=async function(){
   try{
     if(fb.configValid && fb.db){
       await fb.updateDoc(fb.doc(fb.db,'trips',currentTripId), {name, startDate:start, endDate:end, currency:cur, exchangeRate:rate, friends:friendsArr});
-      // recalc HKD for all expenses
       for(let ex of expenses){
         const newHKD=ex.amount * rate;
         await fb.updateDoc(fb.doc(fb.db,'trips',currentTripId,'expenses',ex.id), {amountHKD:newHKD, exchangeRate:rate, currency:cur});
@@ -1072,45 +1086,95 @@ window.fetchRate=async function(){
   }catch(e){ toast('Failed, enter manually'); }
 }
 
+window.copyTripName=function(){
+  const name=currentTrip?.name||'';
+  navigator.clipboard.writeText(name).then(()=>toast(`Copied "${name}" - paste to confirm delete`));
+}
+
 window.deleteTrip=async function(){
   const fb=window._fb;
   if(!currentTripId){ toast('No trip'); return; }
+  const input=document.getElementById('deleteTripInput').value.trim();
+  if(!input){ toast('Paste trip name to confirm'); document.getElementById('deleteTripInput').focus(); return; }
+  if(input!==currentTrip.name){
+    toast(`Name mismatch. Expected "${currentTrip.name}"`);
+    return;
+  }
   if(!confirm(`Delete trip "${currentTrip.name}" (${currentTripId})?\n\nThis will delete ALL related data:\n- Trip info\n- All ${expenses.length} expenses\n- All receipts\n\nThis cannot be undone!`)){ return; }
-  const confirmCode=prompt(`Type trip code ${currentTripId} to confirm DELETE:`);
-  if(confirmCode!==currentTripId){ toast('Code mismatch, cancelled'); return; }
   try{
     if(fb.configValid && fb.db){
-      // delete all expenses subcollection
+      // delete all expenses
       const q=fb.collection(fb.db,'trips',currentTripId,'expenses');
       const snap=await fb.getDocs(q);
       const deletePromises=[];
-      snap.forEach(docSnap=>{ deletePromises.push(fb.deleteDoc(docSnap.ref)); });
+      snap.forEach(docSnap=>{
+        // try delete receipt from storage if URL
+        const data=docSnap.data();
+        if(data.receiptImage && data.receiptImage.includes('firebasestorage')){
+          try{
+            const url=new URL(data.receiptImage);
+            const path=decodeURIComponent(url.pathname.split('/o/')[1].split('?')[0]);
+            const sRef=fb.ref(fb.storage, path);
+            deletePromises.push(fb.deleteObject(sRef).catch(()=>{}));
+          }catch(e){}
+        }
+        deletePromises.push(fb.deleteDoc(docSnap.ref));
+      });
       await Promise.all(deletePromises);
-      // delete trip doc
       await fb.deleteDoc(fb.doc(fb.db,'trips',currentTripId));
+      // try delete folder receipts
+      try{
+        const folderRef=fb.ref(fb.storage, `trips/${currentTripId}/receipts`);
+        const listRes=await fb.listAll(folderRef);
+        await Promise.all(listRes.items.map(item=>fb.deleteObject(item).catch(()=>{})));
+      }catch(e){}
     }else{
       const trips=JSON.parse(localStorage.getItem('localTrips')||'{}');
       delete trips[currentTripId];
       localStorage.setItem('localTrips',JSON.stringify(trips));
     }
-    // clean localStorage
     let myTrips=JSON.parse(localStorage.getItem('myTrips')||'[]');
     myTrips=myTrips.filter(t=>t.id!==currentTripId);
     localStorage.setItem('myTrips',JSON.stringify(myTrips));
     localStorage.removeItem(`trip_${currentTripId}_pw`);
     localStorage.removeItem(`trip_${currentTripId}_who`);
-    toast(`Trip ${currentTripId} deleted - all data removed`);
+    toast(`Trip "${currentTrip.name}" deleted - all data removed`);
     showLobby();
   }catch(e){ toast('Delete failed: '+e.message); console.error(e); }
 }
 
-// init
+window.deleteAllTrips=async function(){
+  const fb=window._fb;
+  const input=document.getElementById('deleteAllInput').value.trim();
+  if(input!=='DELETE ALL'){ toast('Type DELETE ALL to confirm'); return; }
+  if(!confirm('Delete ALL trips and ALL expenses? This cannot be undone!')) return;
+  try{
+    if(fb.configValid && fb.db){
+      const tripsSnap=await fb.getDocs(fb.collection(fb.db,'trips'));
+      for(const tripDoc of tripsSnap.docs){
+        const expSnap=await fb.getDocs(fb.collection(fb.db,'trips',tripDoc.id,'expenses'));
+        for(const expDoc of expSnap.docs){ await fb.deleteDoc(expDoc.ref); }
+        await fb.deleteDoc(tripDoc.ref);
+      }
+    }else{
+      localStorage.removeItem('localTrips');
+    }
+    localStorage.removeItem('myTrips');
+    // clear all trip pw
+    Object.keys(localStorage).forEach(k=>{ if(k.startsWith('trip_')) localStorage.removeItem(k); });
+    toast('All trips deleted');
+    loadMyTrips();
+    document.getElementById('deleteAllInput').value='';
+  }catch(e){ toast('Failed: '+e.message); }
+}
+
 setTimeout(()=>{
   const params=new URLSearchParams(window.location.search);
   if(params.get('admin')==='1' || params.get('admin')===window.ADMIN_CREATE_PASSWORD){
     document.getElementById('createTripSection').style.display='block';
     const gate=document.getElementById('adminGate');
     if(gate) gate.style.display='none';
+    document.getElementById('adminDeleteAllCard').style.display='block';
   }
   const myTrips=JSON.parse(localStorage.getItem('myTrips')||'[]');
   document.getElementById('myTripsCount').innerText=myTrips.length;
@@ -1120,7 +1184,7 @@ setTimeout(()=>{
     list.innerHTML='';
     myTrips.forEach(t=>{
       const div=document.createElement('div');div.className='trip-card';
-      div.innerHTML=`<div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#0F2E6E,#1A5CFF);display:grid;place-items:center;color:white;font-weight:800;">✈</div><div style="flex:1;"><div style="font-weight:800;">${t.name}</div><div style="font-size:12px;color:#8A9BB5;">${t.id}</div></div><div>→</div>`;
+      div.innerHTML=`<div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#FF7A1A,#FF3B82);display:grid;place-items:center;color:white;font-weight:800;">✈</div><div style="flex:1;"><div style="font-weight:800;">${t.name}</div><div style="font-size:12px;color:#A8A29E;">${t.id}</div></div><div>→</div>`;
       div.onclick=()=>{document.getElementById('joinCode').value=t.id;document.getElementById('joinPass').value=localStorage.getItem(`trip_${t.id}_pw`)||'';joinTrip();};
       list.appendChild(div);
     });
@@ -1137,7 +1201,7 @@ window.addEventListener('fb-ready', ()=>{
   const fb=window._fb;
   const status=document.getElementById('fbStatus');
   if(status){
-    if(fb.configValid){ status.innerText='Live sync enabled • Firebase connected'; status.style.background='rgba(255,255,255,0.9)'; }
+    if(fb.configValid){ status.innerText='Live sync enabled • Firebase connected • Receipts in Storage (free 5GB)'; status.style.background='rgba(255,255,255,0.9)'; }
     else{ status.innerText='Local mode • Works offline • No config needed • Add firebase-config.js for live sync'; }
   }
 });
