@@ -554,7 +554,7 @@ button{cursor:pointer;border:none;background:none}
         <span id="desc-counter" style="font-size:11px;color:var(--gray)">0/80</span>
       </div>
       <input type="text" id="exp-desc" class="form-input" placeholder="What was this expense? (optional if photo)" maxlength="80"
-        oninput="document.getElementById('desc-counter').textContent=this.value.length+'/80'">
+        oninput="onDescInput(this)">
     </div>
     <div class="form-group">
       <label class="form-label">Amount</label>
@@ -751,6 +751,13 @@ button{cursor:pointer;border:none;background:none}
         <label class="form-label">Members (comma separated, max 8)</label>
         <input type="text" id="s-members" class="form-input">
       </div>
+      <div class="form-group mt-12">
+        <label class="form-label">You are</label>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span id="s-identity-display" style="flex:1;font-size:14px;font-weight:700">—</span>
+          <button class="btn btn-outline btn-sm" style="padding:5px 12px;font-size:12px" onclick="showWhoModal()">Change</button>
+        </div>
+      </div>
       <button class="btn btn-primary mt-8" onclick="saveTripSettings()">Save Changes</button>
     </div>
     <div class="settings-block">
@@ -811,6 +818,7 @@ let expenses=[],expensesUnsub=null;
 let editingExpenseId=null,receiptDataURL=null;
 let selectedDate=null,selectedCategory='Other';
 let pendingFilterActive=false,selectMode=false,selectedForBulk=new Set();
+let chipDescActive=false;
 let currentExpPage=1,saveBusy=false,personSheetName=null,isAdminMode=false;
 const EXP_PER_PAGE=10;
 
@@ -821,10 +829,12 @@ async function idbSave(id,data){try{const d=await openIDB();return new Promise((
 async function idbGet(id){try{const d=await openIDB();return new Promise(res=>{const r=d.transaction('receipts','readonly').objectStore('receipts').get(id);r.onsuccess=e=>res(e.target.result?.data||null);r.onerror=()=>res(null);});}catch(e){return null;}}
 async function idbDel(id){try{const d=await openIDB();return new Promise(res=>{const tx=d.transaction('receipts','readwrite');tx.objectStore('receipts').delete(id);tx.oncomplete=()=>res();tx.onerror=()=>res();});}catch(e){}}
 async function idbDelTrip(code){try{const d=await openIDB();return new Promise(res=>{const tx=d.transaction('receipts','readwrite');const s=tx.objectStore('receipts');const r=s.openCursor();r.onsuccess=e=>{const c=e.target.result;if(c){if(String(c.key).startsWith(code+'_'))c.delete();c.continue();}};tx.oncomplete=()=>res();tx.onerror=()=>res();});}catch(e){}}
+async function idbClearAll(){try{const d=await openIDB();return new Promise(res=>{const tx=d.transaction('receipts','readwrite');tx.objectStore('receipts').clear();tx.oncomplete=()=>res();tx.onerror=()=>res();});}catch(e){}}
 
 // ── CONSTANTS
 const DEFAULT_RATES={HKD:1,THB:0.21,JPY:0.052,USD:7.8,EUR:8.5,CNY:1.07,TWD:0.24,KRW:0.0057,SGD:5.8,MYR:1.67};
 const AVATAR_COLORS=['#ef4444','#f97316','#eab308','#22c55e','#3b82f6','#8b5cf6','#ec4899','#06b6d4','#10b981','#f59e0b'];
+function sortCurKeys(ks){const tc=currentTrip?.currency;return [...ks].sort((a,b)=>{if(a===tc)return -1;if(b===tc)return 1;return a.localeCompare(b);});}
 const BC_CLASSES=['bc-yellow','bc-green','bc-blue','bc-pink','bc-orange','bc-violet','bc-white','bc-dark'];
 const CAT_COLORS={Food:'#f97316',Transport:'#3b82f6',Hotel:'#8b5cf6',Activity:'#10b981',Other:'#64748b','Pending Update':'#ec4899'};
 const QUICK_CHIPS=[{label:'Lunch',cat:'Food'},{label:'Dinner',cat:'Food'},{label:'Breakfast',cat:'Food'},{label:'Taxi',cat:'Transport'},{label:'Hotel',cat:'Hotel'},{label:'Drinks',cat:'Food'},{label:'Groceries',cat:'Food'},{label:'Flight',cat:'Transport'}];
@@ -835,7 +845,7 @@ function buildCurrencyLabel(exps,showHKDTotal=true){
   const byCur={};
   exps.forEach(e=>{const c=e.currency||'HKD';byCur[c]=(byCur[c]||0)+(parseFloat(e.amount)||0);});
   const dayHKD=exps.reduce((s,e)=>s+(parseFloat(e.amountHKD)||0),0);
-  const curKeys=Object.keys(byCur);
+  const curKeys=sortCurKeys(Object.keys(byCur));
   let parts=curKeys.map(c=>`${c} ${fmt2(byCur[c])}`).join(' + ');
   if(showHKDTotal){
     // only append HKD total if there are non-HKD currencies or multiple currencies
@@ -991,15 +1001,21 @@ async function joinTrip(auto=false){
 }
 window.joinTrip=joinTrip;
 
+window.showWhoModal=showWhoModal;
 function showWhoModal(){
   document.getElementById('who-grid').innerHTML=(currentTrip.friends||[]).map((name,i)=>`
-    <button class="who-btn" onclick="selectIdentity('${esc(name)}')">
+    <button class="who-btn" onclick="selectIdentity(${i})">
       <div class="who-avatar" style="background:${AVATAR_COLORS[i%AVATAR_COLORS.length]}">${name.charAt(0).toUpperCase()}</div>
       <div class="who-name">${esc(name)}</div>
     </button>`).join('');
   openModal('who-modal');
 }
-function selectIdentity(name){myIdentity=name;localStorage.setItem('trip_'+currentCode+'_who',name);closeModal('who-modal');toast(`Welcome, ${name}! ✈️`,'success');enterTrip();}
+function selectIdentity(who){
+  const friends=currentTrip?.friends||[];
+  const name=typeof who==='number'?friends[who]:who;
+  if(!name||!friends.includes(name))return;
+  myIdentity=name;localStorage.setItem('trip_'+currentCode+'_who',name);closeModal('who-modal');toast(`Welcome, ${name}! ✈️`,'success');enterTrip();
+}
 window.selectIdentity=selectIdentity;
 function enterTrip(){setupExpensesListener();renderTripHeaders();navigateTo('new');resetNewForm();}
 
@@ -1018,6 +1034,7 @@ function onExpensesUpdated(){
   if(document.getElementById('page-expenses').classList.contains('active'))renderExpenses();
   if(document.getElementById('page-balances').classList.contains('active'))renderBalances();
   if(document.getElementById('page-settlement').classList.contains('active'))renderSettlement();
+  if(document.getElementById('person-sheet').classList.contains('show'))renderPersonSheet();
 }
 
 // ── HEADERS
@@ -1036,11 +1053,11 @@ function renderHeroBlocks(){
   // Build per-currency totals
   const byCur={};
   expenses.forEach(e=>{const c=e.currency||'HKD';byCur[c]=(byCur[c]||0)+(parseFloat(e.amount)||0);});
-  const curKeys=Object.keys(byCur);
+  const curKeys=sortCurKeys(Object.keys(byCur));
   let origSubLine;
   if(curKeys.length===0)origSubLine='—';
   else if(curKeys.length===1&&curKeys[0]==='HKD')origSubLine=''; // HKD only, no sub needed
-  else origSubLine=curKeys.map(c=>`${c} ${fmt2(byCur[c])}`).join(' · ');
+  else origSubLine=sortCurKeys(curKeys).map(c=>`${c} ${fmt2(byCur[c])}`).join(' · ');
 
   const dates=expenses.map(e=>e.date).filter(Boolean).sort();
   const dateRange=dates.length?(dates[0]===dates[dates.length-1]?fmtDateShort(dates[0]):fmtDateShort(dates[0])+' → '+fmtDateShort(dates[dates.length-1])):'—';
@@ -1109,7 +1126,9 @@ async function createTrip(){
   const name=document.getElementById('c-name').value.trim();const code=document.getElementById('c-code').value.trim();
   const pw=document.getElementById('c-pw').value;const start=document.getElementById('c-start').value;const end=document.getElementById('c-end').value;
   const cur=document.getElementById('c-currency').value;const rate=parseFloat(document.getElementById('c-rate').value)||1;
-  const members=document.getElementById('c-members').value.split(',').map(s=>s.trim()).filter(Boolean);
+  let members=document.getElementById('c-members').value.split(',').map(s=>s.trim()).filter(Boolean);
+  // dedupe case-insensitively — duplicate names break balance math
+  const seen=new Set();members=members.filter(m=>{const k=m.toLowerCase();if(seen.has(k))return false;seen.add(k);return true;});
   if(!name){toast('Trip name required','error');return;}if(pw.length<3){toast('Password min 3 chars','error');return;}
   if(!start||!end){toast('Select start date','error');return;}if(!members.length){toast('Add at least one member','error');return;}
   if(members.length>8){toast('Max 8 members','error');return;}
@@ -1119,7 +1138,11 @@ async function createTrip(){
     const hash=await sha256(pw);
     const tripData={name,code,passwordHash:hash,friends:members,startDate:start,endDate:end,currency:cur,exchangeRate:rate,baseCurrency:'HKD',createdAt:new Date().toISOString()};
     if(firebaseOk&&db)await setDoc(doc(db,'trips',code),tripData);else saveLocalTrip(code,tripData);
-    saveMyTrip(code,name,pw);toast('Trip created! 🎉','success');navigateTo('lobby');renderLobby();
+    saveMyTrip(code,name,pw);localStorage.setItem('trip_'+code+'_pw',pw);
+    toast('Trip created! 🎉','success');
+    // enter the new trip right away instead of bouncing back to the lobby
+    currentTrip=tripData;currentCode=code;myIdentity=null;expenses=[];
+    renderLobby();enterTrip();showWhoModal();
   }catch(e){toast('Error: '+e.message,'error');}
   finally{showLoading(false);document.getElementById('create-btn').disabled=false;}
 }
@@ -1129,17 +1152,21 @@ window.createTrip=createTrip;
 function buildQuickChips(){document.getElementById('quick-chips').innerHTML=QUICK_CHIPS.map(q=>`<div class="chip" onclick="applyQuickChip('${q.label}','${q.cat}')">${q.label}</div>`).join('');}
 function applyQuickChip(label,cat){
   const d=document.getElementById('exp-date').value||toDateStr(new Date());
-  document.getElementById('exp-desc').value=fmtDateShort(d)+' – '+label;
-  document.getElementById('desc-counter').textContent=document.getElementById('exp-desc').value.length+'/80';
+  const auto=fmtDateShort(d)+' – '+label;
+  const inp=document.getElementById('exp-desc');
+  // only auto-fill the description if empty or previously chip-generated — never clobber typed text
+  if(!inp.value.trim()||chipDescActive){inp.value=auto;chipDescActive=true;}
+  document.getElementById('desc-counter').textContent=inp.value.length+'/80';
   selectCategory(cat);document.querySelectorAll('#quick-chips .chip').forEach(c=>c.classList.toggle('active',c.textContent===label));
 }
+window.onDescInput=function(el){document.getElementById('desc-counter').textContent=el.value.length+'/80';chipDescActive=false;};
 window.applyQuickChip=applyQuickChip;
 function buildCategoryChips(){document.getElementById('cat-chips').innerHTML=CATEGORIES.map(c=>`<div class="chip ${c.cls}" onclick="selectCategory('${c.label}')">${c.label}</div>`).join('');}
 function selectCategory(cat){selectedCategory=cat;document.querySelectorAll('#cat-chips .chip').forEach(c=>c.classList.toggle('active',c.textContent===cat));}
 window.selectCategory=selectCategory;
 function buildSplitGrid(){
   document.getElementById('split-grid').innerHTML=(currentTrip?.friends||[]).map((name,i)=>`
-    <div class="split-person included" data-name="${esc(name)}" onclick="toggleSplit(this)">
+    <div class="split-person included" data-name="${escAttr(name)}" onclick="toggleSplit(this)">
       <div class="split-person-avatar" style="background:${AVATAR_COLORS[i%AVATAR_COLORS.length]}">${name.charAt(0).toUpperCase()}</div>
       <div class="split-person-name">${esc(name)}</div>
       <div class="split-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
@@ -1153,7 +1180,7 @@ window.splitAll=splitAll;window.splitNone=splitNone;
 function getSelectedSplit(){return[...document.querySelectorAll('.split-person.included')].map(el=>el.dataset.name);}
 function buildPaidByDropdown(){
   const sel=document.getElementById('exp-paidby');
-  sel.innerHTML=(currentTrip?.friends||[]).map(f=>`<option value="${esc(f)}">${esc(f)}</option>`).join('');
+  sel.innerHTML=(currentTrip?.friends||[]).map(f=>`<option value="${escAttr(f)}">${esc(f)}</option>`).join('');
   if(myIdentity&&currentTrip?.friends?.includes(myIdentity))sel.value=myIdentity;
 }
 function buildExpCurrencyDropdown(){
@@ -1161,12 +1188,16 @@ function buildExpCurrencyDropdown(){
   sel.innerHTML=Object.keys(DEFAULT_RATES).map(c=>`<option value="${c}">${c}</option>`).join('');
   sel.value=currentTrip?.currency||'KRW';
 }
+function rateForCurrency(cur){
+  if(!cur||cur==='HKD')return 1;
+  if(cur===currentTrip?.currency)return parseFloat(currentTrip.exchangeRate)||1;
+  return DEFAULT_RATES[cur]||1;
+}
 function updateHKDPreview(){
   const amount=parseFloat(document.getElementById('exp-amount').value)||0;
   const cur=document.getElementById('exp-currency').value;
-  const tripRate=parseFloat(currentTrip?.exchangeRate||1);
-  const rate=cur===(currentTrip?.currency)?tripRate:(DEFAULT_RATES[cur]||1);
-  document.getElementById('hkd-preview').textContent=amount>0?`≈ HKD ${fmt2(amount*rate)} (rate ${rate}) • Settle HKD`:'—';
+  const rate=rateForCurrency(cur);
+  document.getElementById('hkd-preview').textContent=amount>0?`≈ HKD ${fmt2(amount*rate)} (rate ${rate}) • Settle in HKD`:'—';
 }
 window.updateHKDPreview=updateHKDPreview;
 
@@ -1211,7 +1242,7 @@ function resetNewForm(){
   document.getElementById('editing-badge').classList.add('hidden');
   document.getElementById('add-expense-btn').textContent='Add Expense';
   document.getElementById('cancel-edit-btn').classList.add('hidden');
-  document.getElementById('exp-desc').value='';document.getElementById('desc-counter').textContent='0/80';
+  document.getElementById('exp-desc').value='';document.getElementById('desc-counter').textContent='0/80';chipDescActive=false;
   document.getElementById('exp-amount').value='';document.getElementById('hkd-preview').textContent='—';
   document.getElementById('receipt-file').value='';document.getElementById('receipt-preview').classList.remove('show');
   document.getElementById('exp-desc').classList.remove('error');document.getElementById('exp-amount').classList.remove('error');
@@ -1268,8 +1299,8 @@ async function saveExpense(){
   let effectiveCategory=selectedCategory;
   // Auto pending if image + missing fields
   if(hasRec&&(!desc||amount<=0))effectiveCategory='Pending Update';
-  // If editing and still pending → change to Other
-  if(editingExpenseId&&effectiveCategory==='Pending Update')effectiveCategory='Other';
+  // If editing a pending expense, only upgrade to Other once info is complete
+  if(editingExpenseId&&effectiveCategory==='Pending Update'&&desc&&amount>0)effectiveCategory='Other';
   const isPend=effectiveCategory==='Pending Update';
 
   let valid=true;
@@ -1285,15 +1316,14 @@ async function saveExpense(){
 
   saveBusy=true;
   const btn=document.getElementById('add-expense-btn');btn.disabled=true;btn.textContent=editingExpenseId?'Updating…':'Adding…';
-  const tripRate=parseFloat(currentTrip?.exchangeRate||1);
-  const rateToHKD=cur===(currentTrip?.currency)?tripRate:(DEFAULT_RATES[cur]||1);
+  const rateToHKD=rateForCurrency(cur);
   const amountHKD=parseFloat((amount*rateToHKD).toFixed(2));
   const perPerson=split.length>0?parseFloat((amountHKD/split.length).toFixed(2)):0;
   const expId=editingExpenseId||(currentCode+'_'+Date.now());
-  const expData={description:desc||(hasRec?'Receipt - pending update':''),amount,currency:cur,amountHKD,date,paidBy,category:effectiveCategory,splitAmong:split,perPerson,hasReceipt:hasRec,updatedAt:new Date().toISOString()};
+  const expData={description:desc||(hasRec?'Receipt - pending update':''),amount,currency:cur,amountHKD,rateUsed:rateToHKD,date,paidBy,category:effectiveCategory,splitAmong:split,perPerson,hasReceipt:hasRec,updatedAt:new Date().toISOString()};
   if(!editingExpenseId)expData.createdAt=new Date().toISOString();
   if(hasRec&&receiptDataURL){await idbSave(expId,receiptDataURL);expData.receiptBase64=(receiptDataURL.length<700000)?receiptDataURL:null;}
-  else expData.receiptBase64=null;
+  else{expData.receiptBase64=null;try{await idbDel(expId);}catch(e){}}
   try{
     if(firebaseOk&&db){if(editingExpenseId)await updateDoc(doc(db,'trips',currentCode,'expenses',editingExpenseId),expData);else await setDoc(doc(db,'trips',currentCode,'expenses',expId),expData);}
     else{let exps=getLocalExp(currentCode);if(editingExpenseId){const i=exps.findIndex(e=>e.id===editingExpenseId);if(i>=0)exps[i]={...exps[i],...expData};}else exps.unshift({id:expId,...expData});saveLocalExp(currentCode,exps);loadLocalExp();}
@@ -1418,7 +1448,7 @@ window.togglePendingFilter=togglePendingFilter;
 // ── EDIT/DELETE
 async function editExpense(id){
   const exp=expenses.find(e=>e.id===id);if(!exp)return;
-  editingExpenseId=id;navigateTo('new');
+  editingExpenseId=id;chipDescActive=false;navigateTo('new');
   document.getElementById('editing-badge').classList.remove('hidden');
   document.getElementById('add-expense-btn').textContent='Update Expense';
   document.getElementById('cancel-edit-btn').classList.remove('hidden');
@@ -1444,6 +1474,10 @@ window.editExpense=editExpense;
 async function deleteExpense(id){
   if(!confirm('Delete this expense?'))return;
   const exp=expenses.find(e=>e.id===id);
+  // capture the receipt BEFORE deleting so Undo can restore the correct image
+  let receiptToRestore=null;
+  try{receiptToRestore=await idbGet(id);}catch(e){}
+  if(!receiptToRestore)receiptToRestore=exp?.receiptBase64||null;
   try{
     if(firebaseOk&&db)await deleteDoc(doc(db,'trips',currentCode,'expenses',id));
     else{let exps=getLocalExp(currentCode).filter(e=>e.id!==id);saveLocalExp(currentCode,exps);loadLocalExp();}
@@ -1452,7 +1486,7 @@ async function deleteExpense(id){
       if(exp){
         if(firebaseOk&&db){const{id:_,...rest}=exp;await setDoc(doc(db,'trips',currentCode,'expenses',id),rest);}
         else{let exps=getLocalExp(currentCode);exps.unshift(exp);saveLocalExp(currentCode,exps);loadLocalExp();}
-        if(receiptDataURL)await idbSave(id,receiptDataURL);toast('Restored','success');
+        if(receiptToRestore)await idbSave(id,receiptToRestore);toast('Restored','success');
       }
     },4000);
   }catch(e){toast('Delete failed: '+e.message,'error');}
@@ -1495,12 +1529,12 @@ function renderBalances(){
     const sc=b.balance>0.01?'#16a34a':b.balance<-0.01?'#dc2626':'#64748b';
 
     // ✅ FIX: build per-currency paid/share detail
-    const paidCurs=Object.keys(b.paidByCur);
-    const shareCurs=Object.keys(b.shareByCur);
+    const paidCurs=sortCurKeys(Object.keys(b.paidByCur));
+    const shareCurs=sortCurKeys(Object.keys(b.shareByCur));
     const paidDetail=paidCurs.length===0?`${trip.currency} 0`:paidCurs.map(c=>`${c} ${fmt2(b.paidByCur[c])}`).join(' + ');
     const shareDetail=shareCurs.length===0?`${trip.currency} 0`:shareCurs.map(c=>`${c} ${fmt2(b.shareByCur[c])}`).join(' + ');
 
-    return`<div class="balance-card ${cls}" onclick="openPersonSheet('${esc(b.name)}')">
+    return`<div class="balance-card ${cls}" onclick="openPersonSheet(${i})">
       <div class="bc-avatar" style="background:${color}">${b.name.charAt(0).toUpperCase()}</div>
       <div class="bc-name">${esc(b.name)}</div>
       <div class="bc-balance" style="color:${sc}">${sign}HKD ${fmt2(Math.abs(b.balance))}</div>
@@ -1529,30 +1563,44 @@ async function fetchRateForBalances(){await fetchRate(document.getElementById('b
 window.fetchRateForBalances=fetchRateForBalances;
 async function saveBalanceSettings(){
   const cur=document.getElementById('bal-currency').value;const rate=parseFloat(document.getElementById('bal-rate').value)||1;
+  const oldCur=currentTrip.currency,oldRate=parseFloat(currentTrip.exchangeRate)||1;
   currentTrip.currency=cur;currentTrip.exchangeRate=rate;
+  // Re-rate: expenses in the NEW trip currency use the new rate; all others keep the rate they were entered with
+  const rateFor=e=>{
+    if(e.currency===cur)return rate;
+    if(typeof e.rateUsed==='number'&&e.rateUsed>0)return e.rateUsed;
+    if(e.currency===oldCur)return oldRate;
+    return DEFAULT_RATES[e.currency]||1;
+  };
   showLoading(true,'Recalculating…');
   try{
     if(firebaseOk&&db){
       await updateDoc(doc(db,'trips',currentCode),{currency:cur,exchangeRate:rate});
       const batch=writeBatch(db);
-      expenses.forEach(e=>{const r=e.currency===cur?rate:(DEFAULT_RATES[e.currency]||1);const nH=parseFloat(((parseFloat(e.amount)||0)*r).toFixed(2));const nP=(e.splitAmong?.length||0)>0?parseFloat((nH/e.splitAmong.length).toFixed(2)):0;batch.update(doc(db,'trips',currentCode,'expenses',e.id),{amountHKD:nH,perPerson:nP});});
+      expenses.forEach(e=>{const r=rateFor(e);const nH=parseFloat(((parseFloat(e.amount)||0)*r).toFixed(2));const nP=(e.splitAmong?.length||0)>0?parseFloat((nH/e.splitAmong.length).toFixed(2)):0;batch.update(doc(db,'trips',currentCode,'expenses',e.id),{amountHKD:nH,perPerson:nP,rateUsed:r});});
       await batch.commit();
     }else{
       const lt=getLocalTrips();if(lt[currentCode]){lt[currentCode].currency=cur;lt[currentCode].exchangeRate=rate;}localStorage.setItem('localTrips',JSON.stringify(lt));
-      let exps=getLocalExp(currentCode).map(e=>{const r=e.currency===cur?rate:(DEFAULT_RATES[e.currency]||1);const nH=parseFloat(((parseFloat(e.amount)||0)*r).toFixed(2));const nP=(e.splitAmong?.length||0)>0?parseFloat((nH/e.splitAmong.length).toFixed(2)):0;return{...e,amountHKD:nH,perPerson:nP};});
+      let exps=getLocalExp(currentCode).map(e=>{const r=rateFor(e);const nH=parseFloat(((parseFloat(e.amount)||0)*r).toFixed(2));const nP=(e.splitAmong?.length||0)>0?parseFloat((nH/e.splitAmong.length).toFixed(2)):0;return{...e,amountHKD:nH,perPerson:nP,rateUsed:r};});
       saveLocalExp(currentCode,exps);loadLocalExp();
     }
     toast('Saved & recalculated ✓','success');renderHeroBlocks();renderBalances();renderSettlement();
-  }catch(e){toast('Save failed: '+e.message,'error');}
+  }catch(e){currentTrip.currency=oldCur;currentTrip.exchangeRate=oldRate;toast('Save failed: '+e.message,'error');}
   finally{showLoading(false);}
 }
 window.saveBalanceSettings=saveBalanceSettings;
 
 // ── PERSON SHEET
-function openPersonSheet(name){
-  personSheetName=name;const tc=currentTrip?.currency||'KRW';
-  document.getElementById('ps-currency-toggle').innerHTML=`<option value="HKD">HKD</option><option value="${tc}">${tc}</option>`;
-  document.getElementById('ps-currency-toggle').value='HKD';
+function openPersonSheet(idx){
+  const friends=currentTrip?.friends||[];
+  const name=typeof idx==='number'?friends[idx]:idx;
+  if(!name||!friends.includes(name))return;
+  personSheetName=name;
+  const hasNonHKD=expenses.some(e=>(e.currency||'HKD')!=='HKD');
+  const toggle=document.getElementById('ps-currency-toggle');
+  toggle.innerHTML=`<option value="HKD">HKD</option><option value="ORIG">As entered</option>`;
+  toggle.value='HKD';
+  toggle.style.display=hasNonHKD?'':'none';
   document.querySelectorAll('.tab-btn-inner').forEach((b,i)=>b.classList.toggle('active',i===0));
   document.querySelectorAll('.tab-panel').forEach((p,i)=>p.classList.toggle('active',i===0));
   renderPersonSheet();openSheet('person-sheet');
@@ -1564,48 +1612,65 @@ function renderPersonSheet(){
   const name=personSheetName;if(!name||!currentTrip)return;
   const friends=currentTrip.friends||[];const idx=friends.indexOf(name);
   const color=AVATAR_COLORS[idx<0?0:idx%AVATAR_COLORS.length];
-  const dispCur=document.getElementById('ps-currency-toggle').value;const isHKD=dispCur==='HKD';const tripCur=currentTrip.currency||'KRW';
-  let paid=0,share=0,paidOrig=0,shareOrig=0;const paidExps=[],owesExps=[];
+  const isHKD=document.getElementById('ps-currency-toggle').value!=='ORIG';
+  // per-currency totals (never sum different currencies together)
+  const me=(computeBalances().find(b=>b.name===name)||{paid:0,share:0,paidByCur:{},shareByCur:{}});
+  const paid=me.paid,share=me.share;
+  const paidExps=[],owesExps=[];
   expenses.forEach(e=>{
     const hkd=parseFloat(e.amountHKD)||0,orig=parseFloat(e.amount)||0;
     const split=(e.splitAmong||[]).filter(f=>friends.includes(f));
-    if(e.paidBy===name){paid+=hkd;paidOrig+=orig;paidExps.push(e);}
-    if(split.includes(name)){const ph=split.length?hkd/split.length:0,po=split.length?orig/split.length:0;share+=ph;shareOrig+=po;owesExps.push({...e,perHKD:ph,perOrig:po});}
+    if(e.paidBy===name)paidExps.push(e);
+    if(split.includes(name)){const ph=split.length?hkd/split.length:0,po=split.length?orig/split.length:0;owesExps.push({...e,perHKD:ph,perOrig:po});}
   });
   const balance=parseFloat((paid-share).toFixed(2));const sign=balance>0?'+':'';const sc=balance>0.01?'#16a34a':balance<-0.01?'#dc2626':'#64748b';
   const av=document.getElementById('ps-avatar');av.style.background=color;av.textContent=name.charAt(0).toUpperCase();
   document.getElementById('ps-name').textContent=name;
   document.getElementById('ps-balance-big').textContent=`${sign}HKD ${fmt2(Math.abs(balance))}`;
   document.getElementById('ps-balance-big').style.color=sc;
-  const v=(h,o)=>isHKD?'HKD '+fmt2(h):tripCur+' '+fmt2(o);const vs=(h,o)=>isHKD?tripCur+' '+fmt2(o):'HKD '+fmt2(h);
+  // build per-currency labels e.g. "KRW 50,000 + JPY 1,000"
+  const curList=byCur=>{const ks=sortCurKeys(Object.keys(byCur));return ks.length?ks.map(c=>`${c} ${fmt2(byCur[c])}`).join(' + '):null;};
+  const paidOrigLbl=curList(me.paidByCur),shareOrigLbl=curList(me.shareByCur);
+  const bigStyle=lbl=>lbl&&lbl.length>14?'font-size:14px;line-height:1.4;word-break:break-word;':'font-size:20px;';
+  const card=(title,bg,labColor,valColor,hkdVal,origLbl)=>`
+    <div style="background:${bg};border-radius:12px;padding:14px;text-align:center;overflow:hidden">
+      <div style="font-size:11px;font-weight:700;color:${labColor};margin-bottom:6px">${title}</div>
+      ${isHKD
+        ?`<div style="font-size:20px;font-weight:800;color:${valColor}">HKD ${fmt2(hkdVal)}</div>
+          <div style="font-size:11px;color:#64748b;margin-top:4px">${origLbl||'—'}</div>`
+        :`<div style="font-weight:800;color:${valColor};${bigStyle(origLbl)}">${origLbl||'—'}</div>
+          <div style="font-size:11px;color:#64748b;margin-top:4px">HKD ${fmt2(hkdVal)}</div>`}
+    </div>`;
   document.getElementById('ps-tab-overview').innerHTML=`
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
-      <div style="background:#dbeafe;border-radius:12px;padding:14px;text-align:center">
-        <div style="font-size:11px;font-weight:700;color:#1d4ed8;margin-bottom:6px">PAID</div>
-        <div style="font-size:20px;font-weight:800;color:#1e40af">${v(paid,paidOrig)}</div>
-        <div style="font-size:11px;color:#64748b;margin-top:4px">${vs(paid,paidOrig)}</div>
-      </div>
-      <div style="background:#fef9c3;border-radius:12px;padding:14px;text-align:center">
-        <div style="font-size:11px;font-weight:700;color:#a16207;margin-bottom:6px">SHARE</div>
-        <div style="font-size:20px;font-weight:800;color:#92400e">${v(share,shareOrig)}</div>
-        <div style="font-size:11px;color:#64748b;margin-top:4px">${vs(share,shareOrig)}</div>
-      </div>
+      ${card('PAID','#dbeafe','#1d4ed8','#1e40af',paid,paidOrigLbl)}
+      ${card('SHARE','#fef9c3','#a16207','#92400e',share,shareOrigLbl)}
     </div>
     <div style="text-align:center;padding:16px;background:${balance>0.01?'#dcfce7':balance<-0.01?'#fee2e2':'#f1f5f9'};border-radius:12px">
       <div style="font-size:12px;font-weight:700;color:var(--gray);margin-bottom:4px">NET BALANCE</div>
       <div style="font-size:28px;font-weight:800;color:${sc}">${sign}HKD ${fmt2(Math.abs(balance))}</div>
       <div style="font-size:13px;font-weight:600;color:${sc};margin-top:4px">${Math.abs(balance)<0.01?'Settled':balance>0?'Gets back':'Owes'}</div>
+      <div style="font-size:11px;color:var(--gray);margin-top:6px">Settlements are calculated in HKD</div>
     </div>`;
-  const eRow=(e,m,s,x='')=>`
+  // rows always show the expense's REAL currency + HKD equivalent (never relabel a foreign amount)
+  const eRow=(e,main,sub,x='')=>`
     <div style="padding:10px 0;border-bottom:1px solid var(--gray-mid);display:flex;justify-content:space-between;align-items:center">
-      <div><div style="font-size:13px;font-weight:700">${esc(e.description)}${e.hasReceipt?' 📎':''}</div>
+      <div><div style="font-size:13px;font-weight:700">${esc(e.description||'—')}${e.hasReceipt?' 📎':''}</div>
         <div style="font-size:11px;color:var(--gray);margin-top:2px">${fmtDateShort(e.date)}${x}</div></div>
-      <div style="text-align:right;flex-shrink:0"><div style="font-size:14px;font-weight:800">${m}</div><div style="font-size:10px;color:var(--gray)">${s}</div></div>
+      <div style="text-align:right;flex-shrink:0"><div style="font-size:14px;font-weight:800">${main}</div><div style="font-size:10px;color:var(--gray)">${sub}</div></div>
     </div>`;
-  document.getElementById('ps-tab-paid').innerHTML=paidExps.length?paidExps.map(e=>eRow(e,v(e.amountHKD,e.amount),vs(e.amountHKD,e.amount),` • Split ${e.splitAmong?.length||0}`)).join(''):'<div style="text-align:center;padding:20px;color:var(--gray)">No expenses paid</div>';
-  document.getElementById('ps-tab-owes').innerHTML=owesExps.length?owesExps.map(e=>eRow(e,v(e.perHKD,e.perOrig),vs(e.perHKD,e.perOrig),` • Paid by ${esc(e.paidBy)}`)).join(''):'<div style="text-align:center;padding:20px;color:var(--gray)">No shared expenses</div>';
+  document.getElementById('ps-tab-paid').innerHTML=paidExps.length?paidExps.map(e=>{
+    const m=isHKD?`HKD ${fmt2(e.amountHKD)}`:`${e.currency||'HKD'} ${fmt2(e.amount)}`;
+    const s=isHKD?`${e.currency||'HKD'} ${fmt2(e.amount)}`:`HKD ${fmt2(e.amountHKD)}`;
+    return eRow(e,m,s,` • Split ${e.splitAmong?.length||0}`);
+  }).join(''):'<div style="text-align:center;padding:20px;color:var(--gray)">No expenses paid</div>';
+  document.getElementById('ps-tab-owes').innerHTML=owesExps.length?owesExps.map(e=>{
+    const m=isHKD?`HKD ${fmt2(e.perHKD)}`:`${e.currency||'HKD'} ${fmt2(e.perOrig)}`;
+    const s=isHKD?`${e.currency||'HKD'} ${fmt2(e.perOrig)}`:`HKD ${fmt2(e.perHKD)}`;
+    return eRow(e,m,s,` • Paid by ${esc(e.paidBy)}`);
+  }).join(''):'<div style="text-align:center;padding:20px;color:var(--gray)">No shared expenses</div>';
   const settlements=computeSettlements();const relevant=settlements.filter(s=>s.from===name||s.to===name);
-  document.getElementById('ps-tab-settle').innerHTML=relevant.length?relevant.map(s=>{const iF=s.from===name;return`<div style="padding:12px;background:${iF?'#fee2e2':'#dcfce7'};border-radius:10px;margin-bottom:8px"><div style="font-size:13px;font-weight:700;color:${iF?'#dc2626':'#16a34a'}">${iF?'You pay '+esc(s.to):esc(s.from)+' pays you'}</div><div style="font-size:18px;font-weight:800;margin-top:4px">HKD ${fmt2(s.amount)}</div></div>`;}).join(''):'<div style="text-align:center;padding:20px;color:var(--gray)">No settlements needed ✅</div>';
+  document.getElementById('ps-tab-settle').innerHTML=(relevant.length?relevant.map(s=>{const iF=s.from===name;return`<div style="padding:12px;background:${iF?'#fee2e2':'#dcfce7'};border-radius:10px;margin-bottom:8px"><div style="font-size:13px;font-weight:700;color:${iF?'#dc2626':'#16a34a'}">${iF?esc(name)+' pays '+esc(s.to):esc(s.from)+' pays '+esc(name)}</div><div style="font-size:18px;font-weight:800;margin-top:4px">HKD ${fmt2(s.amount)}</div></div>`;}).join(''):'<div style="text-align:center;padding:20px;color:var(--gray)">No settlements needed ✅</div>')+(relevant.length?`<div style="font-size:11px;color:var(--gray);text-align:center;margin-top:4px">All transfers settle in HKD</div>`:'');
 }
 window.renderPersonSheet=renderPersonSheet;
 
@@ -1648,9 +1713,10 @@ window.copySettlement=copySettlement;
 function exportExcel(){
   if(!window.XLSX){toast('Excel library not loaded','warn');return;}
   const trip=currentTrip,bal=computeBalances(),trans=computeSettlements();
+  const curList=byCur=>{const ks=sortCurKeys(Object.keys(byCur));return ks.length?ks.map(c=>`${c} ${fmt2(byCur[c])}`).join(' + '):'';};
   const wb=XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['Date','Description','Category','Paid By',`Amount (${trip.currency})`,'Amount (HKD)','Shared With','Receipt'],...expenses.map(e=>[e.date||'',e.description||'',e.category||'',e.paidBy||'',e.amount||0,e.amountHKD||0,(e.splitAmong||[]).join(', '),e.hasReceipt?'Yes':'No'])]),'Expenses');
-  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['Name',`Paid (${trip.currency})`,'Paid (HKD)',`Share (${trip.currency})`,'Share (HKD)','Balance (HKD)','Status'],...bal.map(b=>[b.name,fmt2(b.paidOrig),fmt2(b.paid),fmt2(b.shareOrig),fmt2(b.share),fmt2(b.balance),Math.abs(b.balance)<0.01?'Settled':b.balance>0?'Gets back':'Owes'])]),'Balances');
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['Date','Description','Category','Paid By','Currency','Amount (as entered)','Amount (HKD)','Rate to HKD','Shared With','Receipt'],...expenses.map(e=>[e.date||'',e.description||'',e.category||'',e.paidBy||'',e.currency||'HKD',e.amount||0,e.amountHKD||0,e.rateUsed||'',(e.splitAmong||[]).join(', '),e.hasReceipt?'Yes':'No'])]),'Expenses');
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['Name','Paid (as entered)','Paid (HKD)','Share (as entered)','Share (HKD)','Balance (HKD)','Status'],...bal.map(b=>[b.name,curList(b.paidByCur),fmt2(b.paid),curList(b.shareByCur),fmt2(b.share),fmt2(b.balance),Math.abs(b.balance)<0.01?'Settled':b.balance>0?'Gets back':'Owes'])]),'Balances');
   XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['From','To','Amount (HKD)'],...trans.map(t=>[t.from,t.to,fmt2(t.amount)])]),'Settlement');
   XLSX.writeFile(wb,(trip.name||'TripSplit')+'_export.xlsx');toast('Exported ✓','success');
 }
@@ -1665,20 +1731,28 @@ function _openSettingsForm(){
   document.getElementById('s-start').value=currentTrip.startDate||'';
   document.getElementById('s-end').value=currentTrip.endDate||'';
   document.getElementById('s-members').value=(currentTrip.friends||[]).join(', ');
+  document.getElementById('s-identity-display').textContent=myIdentity||'Not set';
   document.getElementById('s-trip-name-display').textContent=currentTrip.name||'';
   document.getElementById('s-confirm-delete').value='';
 }
 async function saveTripSettings(){
   const name=document.getElementById('s-name').value.trim();const start=document.getElementById('s-start').value;const end=document.getElementById('s-end').value;
-  const members=document.getElementById('s-members').value.split(',').map(s=>s.trim()).filter(Boolean);
+  let members=document.getElementById('s-members').value.split(',').map(s=>s.trim()).filter(Boolean);
+  const seen=new Set();members=members.filter(m=>{const k=m.toLowerCase();if(seen.has(k))return false;seen.add(k);return true;});
   if(!name){toast('Name required','error');return;}if(start>end){toast('Start ≤ end','error');return;}if(!members.length||members.length>8){toast('1–8 members','error');return;}
+  // warn before silently redistributing a removed member's shares
+  const removed=(currentTrip.friends||[]).filter(f=>!members.includes(f));
+  const activeRemoved=removed.filter(f=>expenses.some(e=>e.paidBy===f||(e.splitAmong||[]).includes(f)));
+  if(activeRemoved.length&&!confirm(`${activeRemoved.join(', ')} ${activeRemoved.length>1?'have':'has'} paid or shared expenses. Removing ${activeRemoved.length>1?'them':'them'} will re-split those expenses among the remaining members. Continue?`))return;
   showLoading(true,'Saving…');
   try{
     const u={name,startDate:start,endDate:end,friends:members};
     if(firebaseOk&&db)await updateDoc(doc(db,'trips',currentCode),u);
     else{const lt=getLocalTrips();if(lt[currentCode])Object.assign(lt[currentCode],u);localStorage.setItem('localTrips',JSON.stringify(lt));}
     Object.assign(currentTrip,u);saveMyTrip(currentCode,name,localStorage.getItem('trip_'+currentCode+'_pw')||'');
-    renderTripHeaders();toast('Saved ✓','success');
+    renderTripHeaders();renderDateStrip();
+    if(!currentTrip.friends?.includes(myIdentity))myIdentity=null;
+    toast('Saved ✓','success');
   }catch(e){toast('Save failed: '+e.message,'error');}finally{showLoading(false);}
 }
 window.saveTripSettings=saveTripSettings;
@@ -1689,7 +1763,12 @@ async function updateTripPassword(){
     const hash=await sha256(pw);
     if(firebaseOk&&db)await updateDoc(doc(db,'trips',currentCode),{passwordHash:hash});
     else{const lt=getLocalTrips();if(lt[currentCode])lt[currentCode].passwordHash=hash;localStorage.setItem('localTrips',JSON.stringify(lt));}
-    currentTrip.passwordHash=hash;document.getElementById('s-newpw').value='';toast('Password updated ✓','success');
+    currentTrip.passwordHash=hash;document.getElementById('s-newpw').value='';
+    // keep the remembered password in sync so quick-join still works
+    const storedPw=localStorage.getItem('trip_'+currentCode+'_pw');
+    if(storedPw!==null)localStorage.setItem('trip_'+currentCode+'_pw',pw);
+    saveMyTrip(currentCode,currentTrip.name||'',storedPw!==null?pw:'');
+    toast('Password updated ✓','success');
   }catch(e){toast('Failed: '+e.message,'error');}finally{showLoading(false);}
 }
 window.updateTripPassword=updateTripPassword;
@@ -1716,13 +1795,17 @@ async function confirmDeleteAll(){
   try{
     if(firebaseOk&&db){const ts=await getDocs(collection(db,'trips'));for(const td of ts.docs){const es=await getDocs(collection(db,'trips',td.id,'expenses'));const batch=writeBatch(db);es.docs.forEach(d=>batch.delete(d.ref));batch.delete(td.ref);await batch.commit();}}
     Object.keys(localStorage).filter(k=>k.startsWith('localExp_')||k.startsWith('trip_')||k==='localTrips'||k==='myTrips').forEach(k=>localStorage.removeItem(k));
-    renderLobby();toast('All trips deleted','warn');
+    await idbClearAll();
+    if(expensesUnsub){expensesUnsub();expensesUnsub=null;}
+    currentTrip=null;currentCode=null;myIdentity=null;expenses=[];
+    navigateTo('lobby');renderLobby();toast('All trips deleted','warn');
   }catch(e){toast('Error: '+e.message,'error');}finally{showLoading(false);}
 }
 window.confirmDeleteAll=confirmDeleteAll;
 
 // ── UTILS
 function esc(s){const d=document.createElement('div');d.textContent=s||'';return d.innerHTML;}
+function escAttr(s){return esc(s).replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
 function fmt2(n){return(Math.round((parseFloat(n)||0)*100)/100).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});}
 function toDateStr(d){return d.toISOString().split('T')[0];}
 function fmtDateShort(s){if(!s)return'';const[y,m,d]=s.split('-').map(Number);return new Date(Date.UTC(y,m-1,d)).toLocaleDateString('en',{day:'numeric',month:'short',timeZone:'UTC'});}
@@ -1735,5 +1818,5 @@ function formatDateLong(s){if(!s)return'';const[y,m,d]=s.split('-').map(Number);
 })();
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3140abb8fb0fbc9',t:'MTc4Nzc1OTk0OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
