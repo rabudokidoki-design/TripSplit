@@ -12,10 +12,10 @@
 :root{
   --blue:#2563eb;--blue-light:#eff6ff;--blue-mid:#3b82f6;
   --dark:#0f172a;--gray:#64748b;--gray-light:#f1f5f9;--gray-mid:#e2e8f0;
-  --white:#ffffff;--danger:#ef4444;--success:#22c55e;--warn:#f59e0b;
+  --white:#ffffff;--danger:#ef4444;--warn:#f59e0b;
   --orange:#f97316;--violet:#8b5cf6;--green:#10b981;--pink:#ec4899;
-  --radius:14px;--radius-sm:8px;--shadow:0 4px 24px rgba(0,0,0,.10);
-  --shadow-sm:0 2px 8px rgba(0,0,0,.08);
+  --radius:14px;--radius-sm:8px;
+  --shadow:0 4px 24px rgba(0,0,0,.10);--shadow-sm:0 2px 8px rgba(0,0,0,.08);
   --font:'Plus Jakarta Sans',sans-serif;--font2:'Inter',sans-serif;
   --cat-food:#f97316;--cat-transport:#3b82f6;--cat-hotel:#8b5cf6;
   --cat-activity:#10b981;--cat-other:#64748b;--cat-pending:#ec4899;
@@ -26,13 +26,8 @@ input,select,textarea,button{font-family:var(--font);outline:none}
 button{cursor:pointer;border:none;background:none}
 #app{flex:1;overflow-y:auto;overflow-x:hidden;scroll-behavior:smooth;-webkit-overflow-scrolling:touch}
 
-/* BOTTOM TABS */
-#bottom-tabs{
-  position:fixed;bottom:12px;left:50%;transform:translateX(-50%);
-  width:calc(100% - 32px);max-width:480px;background:var(--dark);border-radius:20px;
-  display:none;align-items:center;justify-content:space-around;
-  padding:10px 8px;z-index:40;box-shadow:0 8px 32px rgba(0,0,0,.3);
-}
+/* TABS */
+#bottom-tabs{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:480px;background:var(--dark);border-radius:20px;display:none;align-items:center;justify-content:space-around;padding:10px 8px;z-index:40;box-shadow:0 8px 32px rgba(0,0,0,.3)}
 .tab-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 4px;border-radius:12px;transition:all .2s;color:#94a3b8}
 .tab-btn.active{color:var(--white);background:rgba(255,255,255,.12)}
 .tab-btn svg{width:20px;height:20px;stroke-width:2}
@@ -50,7 +45,6 @@ button{cursor:pointer;border:none;background:none}
 .lobby-hero::after{content:'';position:absolute;bottom:-60px;left:-30px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,.04)}
 .lobby-logo{font-size:32px;margin-bottom:8px}
 .lobby-title{font-size:28px;font-weight:800;letter-spacing:-.5px;margin-bottom:4px}
-.lobby-sub{font-size:14px;opacity:.75;font-weight:500}
 .firebase-badge{display:inline-flex;align-items:center;gap:6px;margin-top:14px;background:rgba(255,255,255,.15);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:600;backdrop-filter:blur(8px)}
 .firebase-badge .dot{width:7px;height:7px;border-radius:50%;background:#4ade80;animation:pulse 2s infinite}
 .firebase-badge.offline .dot{background:#fbbf24;animation:none}
@@ -114,8 +108,6 @@ button{cursor:pointer;border:none;background:none}
 .trip-header-title{font-size:20px;font-weight:800;text-align:center;flex:1;letter-spacing:-.3px}
 .trip-header-settings{padding:6px;cursor:pointer;opacity:.85}
 .trip-header-settings svg{width:20px;height:20px;stroke-width:2}
-
-/* HERO BLOCKS — shown on Expenses/Balances, hidden on New */
 .hero-blocks{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px 0 4px}
 .hero-block{background:rgba(255,255,255,.15);border-radius:12px;padding:12px;backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.2)}
 .hero-block-label{font-size:10px;font-weight:700;opacity:.7;text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px}
@@ -159,6 +151,7 @@ button{cursor:pointer;border:none;background:none}
 .receipt-thumb{width:48px;height:48px;object-fit:cover;border-radius:6px;cursor:pointer}
 .receipt-actions{display:flex;gap:8px}
 .receipt-btn{padding:5px 10px;border-radius:6px;font-size:12px;font-weight:600;background:var(--white);border:1.5px solid var(--gray-mid);color:var(--dark);cursor:pointer}
+.storage-badge{display:inline-flex;align-items:center;gap:5px;background:#f0fdf4;border:1.5px solid #86efac;border-radius:8px;padding:4px 10px;font-size:11px;font-weight:600;color:#16a34a;margin-top:6px}
 .split-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
 .split-person{display:flex;align-items:center;gap:8px;padding:10px;border-radius:var(--radius-sm);border:2px solid var(--gray-mid);cursor:pointer;transition:all .15s}
 .split-person.included{border-color:var(--blue);background:var(--blue-light)}
@@ -166,7 +159,6 @@ button{cursor:pointer;border:none;background:none}
 .split-person-name{font-size:12px;font-weight:600;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .split-check{color:var(--blue);flex-shrink:0;transition:opacity .15s}
 .split-check svg{width:14px;height:14px;stroke-width:2.5}
-.storage-badge{display:inline-flex;align-items:center;gap:5px;background:#f0fdf4;border:1.5px solid #86efac;border-radius:8px;padding:4px 10px;font-size:11px;font-weight:600;color:#16a34a;margin-top:6px}
 
 /* EXPENSES */
 .expenses-controls{display:flex;gap:8px;padding:14px 16px 0;align-items:center;flex-wrap:wrap}
@@ -175,6 +167,10 @@ button{cursor:pointer;border:none;background:none}
 .filter-select{padding:10px 30px 10px 12px;border:2px solid var(--gray-mid);border-radius:var(--radius-sm);font-size:13px;font-weight:500;color:var(--dark);background:var(--white);appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center}
 .pending-btn{padding:10px 14px;border-radius:var(--radius-sm);border:2px solid var(--cat-pending);color:var(--cat-pending);font-size:12px;font-weight:700;background:var(--white);cursor:pointer;transition:all .15s;white-space:nowrap}
 .pending-btn.active{background:var(--cat-pending);color:var(--white)}
+/* Pending banner */
+.pending-banner{margin:10px 16px 0;background:#fdf2f8;border:1.5px solid var(--cat-pending);border-radius:var(--radius-sm);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.pending-banner-text{font-size:13px;font-weight:700;color:var(--cat-pending)}
+.pending-banner-count{background:var(--cat-pending);color:#fff;border-radius:20px;padding:2px 10px;font-size:12px;font-weight:800}
 .date-group{margin:0 16px 4px}
 .date-group-header{display:flex;align-items:center;justify-content:space-between;padding:12px 0 8px;border-bottom:1.5px solid var(--gray-mid);margin-bottom:4px;position:sticky;top:0;background:#f8fafc;z-index:5}
 .date-group-label{font-size:12px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.6px}
@@ -188,14 +184,26 @@ button{cursor:pointer;border:none;background:none}
 .expense-row.cat-activity::before{background:var(--cat-activity)}
 .expense-row.cat-other::before{background:var(--cat-other)}
 .expense-row.cat-pending::before{background:var(--cat-pending)}
+/* select mode checkbox on expense row */
+.exp-select-cb{width:18px;height:18px;accent-color:var(--blue);cursor:pointer;flex-shrink:0;display:none}
+.select-mode .exp-select-cb{display:block}
 .expense-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:var(--white);flex-shrink:0}
 .expense-info{flex:1;min-width:0}
 .expense-title{font-size:14px;font-weight:700;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .expense-meta{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
 .meta-chip{padding:2px 7px;border-radius:10px;font-size:10px;font-weight:600;background:var(--gray-light);color:var(--gray)}
+.meta-chip.pending-chip{background:#fdf2f8;color:var(--cat-pending);border:1px solid var(--cat-pending)}
 .expense-right{text-align:right;flex-shrink:0}
 .expense-amount{font-size:15px;font-weight:800;color:var(--dark)}
 .expense-hkd{font-size:10px;color:var(--gray);margin-top:2px}
+/* bulk image remove bar */
+.bulk-bar{display:none;align-items:center;justify-content:space-between;padding:10px 16px;background:#1e293b;color:#fff;position:sticky;top:0;z-index:10}
+.bulk-bar.show{display:flex}
+.bulk-bar-left{font-size:13px;font-weight:700}
+.bulk-bar-actions{display:flex;gap:8px}
+.bulk-btn{padding:7px 14px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;border:none}
+.bulk-btn-danger{background:var(--danger);color:#fff}
+.bulk-btn-cancel{background:rgba(255,255,255,.15);color:#fff}
 .pagination{display:flex;align-items:center;justify-content:center;gap:6px;padding:16px;flex-wrap:wrap}
 .page-btn{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;border:2px solid var(--gray-mid);color:var(--dark);background:var(--white);cursor:pointer;transition:all .15s}
 .page-btn.active{background:var(--blue);border-color:var(--blue);color:var(--white)}
@@ -206,38 +214,27 @@ button{cursor:pointer;border:none;background:none}
 .balance-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px 16px}
 .balance-card{border-radius:var(--radius);padding:14px;cursor:pointer;transition:transform .15s}
 .balance-card:hover{transform:translateY(-2px)}
-.bc-yellow{background:#fef9c3;border:2px solid #fde047}
-.bc-green{background:#dcfce7;border:2px solid #86efac}
-.bc-blue{background:#dbeafe;border:2px solid #93c5fd}
-.bc-pink{background:#fce7f3;border:2px solid #f9a8d4}
-.bc-orange{background:#ffedd5;border:2px solid #fdba74}
-.bc-violet{background:#ede9fe;border:2px solid #c4b5fd}
-.bc-white{background:#f8fafc;border:2px solid #e2e8f0}
-.bc-black{background:#1e293b;border:2px solid #334155}
+.bc-yellow{background:#fef9c3;border:2px solid #fde047}.bc-green{background:#dcfce7;border:2px solid #86efac}
+.bc-blue{background:#dbeafe;border:2px solid #93c5fd}.bc-pink{background:#fce7f3;border:2px solid #f9a8d4}
+.bc-orange{background:#ffedd5;border:2px solid #fdba74}.bc-violet{background:#ede9fe;border:2px solid #c4b5fd}
+.bc-white{background:#f8fafc;border:2px solid #e2e8f0}.bc-black{background:#1e293b;border:2px solid #334155}
 .bc-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;color:var(--white);margin-bottom:10px}
-.bc-name{font-size:14px;font-weight:700;margin-bottom:4px}
-.bc-balance{font-size:20px;font-weight:800;line-height:1}
-.bc-status{font-size:11px;font-weight:600;margin-top:4px}
-.bc-detail{font-size:10px;opacity:.7;margin-top:4px}
+.bc-name{font-size:14px;font-weight:700;margin-bottom:4px}.bc-balance{font-size:20px;font-weight:800;line-height:1}
+.bc-status{font-size:11px;font-weight:600;margin-top:4px}.bc-detail{font-size:10px;opacity:.7;margin-top:4px}
 .bc-black .bc-name,.bc-black .bc-balance,.bc-black .bc-status,.bc-black .bc-detail{color:var(--white)}
 .cat-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--gray-mid)}
 .cat-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-.cat-name{flex:1;font-size:13px;font-weight:600}
-.cat-pct{font-size:12px;color:var(--gray)}
-.cat-total{font-size:13px;font-weight:700;color:var(--dark)}
+.cat-name{flex:1;font-size:13px;font-weight:600}.cat-pct{font-size:12px;color:var(--gray)}.cat-total{font-size:13px;font-weight:700}
 
 /* SETTLEMENT */
 .settlement-content{padding:14px 16px}
 .settlement-summary{background:var(--blue-light);border-radius:var(--radius);padding:14px 16px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
-.settle-stat{text-align:center}
-.settle-stat-val{font-size:20px;font-weight:800;color:var(--blue)}
+.settle-stat{text-align:center}.settle-stat-val{font-size:20px;font-weight:800;color:var(--blue)}
 .settle-stat-lbl{font-size:10px;color:var(--gray);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
 .transfer-row{background:var(--white);border-radius:var(--radius);padding:16px;margin-bottom:10px;box-shadow:var(--shadow-sm);display:flex;align-items:center;gap:12px}
 .transfer-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:var(--white);flex-shrink:0}
 .transfer-arrow{color:var(--gray);font-size:18px;margin:0 4px}
-.transfer-info{flex:1;min-width:0}
-.transfer-names{font-size:14px;font-weight:700;color:var(--dark)}
-.transfer-sub{font-size:12px;color:var(--gray)}
+.transfer-info{flex:1;min-width:0}.transfer-names{font-size:14px;font-weight:700}.transfer-sub{font-size:12px;color:var(--gray)}
 .transfer-amount{background:var(--dark);color:var(--white);border-radius:20px;padding:6px 14px;font-size:15px;font-weight:800;white-space:nowrap}
 .settle-actions{display:flex;gap:10px;margin-top:16px}
 .settle-btn{flex:1;padding:12px;border-radius:var(--radius-sm);font-size:13px;font-weight:700;border:2px solid var(--gray-mid);color:var(--dark);background:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .15s}
@@ -249,8 +246,7 @@ button{cursor:pointer;border:none;background:none}
 .settings-content{padding:14px 16px}
 .settings-block{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:18px;margin-bottom:14px}
 .settings-block h3{font-size:14px;font-weight:700;color:var(--dark);margin-bottom:14px;padding-bottom:8px;border-bottom:1.5px solid var(--gray-mid)}
-.danger-zone{border:2px solid var(--danger)!important}
-.danger-zone h3{color:var(--danger)!important}
+.danger-zone{border:2px solid var(--danger)!important}.danger-zone h3{color:var(--danger)!important}
 
 /* MODALS */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .2s}
@@ -274,15 +270,12 @@ button{cursor:pointer;border:none;background:none}
 .tab-bar{display:flex;gap:4px;background:var(--gray-light);border-radius:10px;padding:4px;margin-bottom:16px}
 .tab-btn-inner{flex:1;padding:8px 4px;border-radius:8px;font-size:12px;font-weight:700;color:var(--gray);background:none;cursor:pointer;transition:all .15s;text-align:center;border:none}
 .tab-btn-inner.active{background:var(--white);color:var(--dark);box-shadow:var(--shadow-sm)}
-.tab-panel{display:none}
-.tab-panel.active{display:block}
+.tab-panel{display:none}.tab-panel.active{display:block}
 
 /* TOAST */
 .toast-container{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);z-index:200;display:flex;flex-direction:column;gap:8px;pointer-events:none;width:calc(100% - 32px);max-width:360px}
 .toast{background:var(--dark);color:var(--white);border-radius:12px;padding:12px 16px;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,.3);pointer-events:all;animation:toastIn .25s ease}
-.toast.success{background:#065f46}
-.toast.error{background:#991b1b}
-.toast.warn{background:#92400e}
+.toast.success{background:#065f46}.toast.error{background:#991b1b}.toast.warn{background:#92400e}
 .toast-undo{padding:4px 10px;background:rgba(255,255,255,.2);border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;border:none;color:var(--white);white-space:nowrap}
 @keyframes toastIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 
@@ -302,8 +295,7 @@ button{cursor:pointer;border:none;background:none}
 <body>
 
 <div class="loading-overlay" id="loading-overlay" style="display:none">
-  <div class="spinner"></div>
-  <p id="loading-text">Loading…</p>
+  <div class="spinner"></div><p id="loading-text">Loading…</p>
 </div>
 <div class="toast-container" id="toast-container"></div>
 
@@ -394,9 +386,6 @@ button{cursor:pointer;border:none;background:none}
   </div>
 </div>
 
-<!-- ====================================================
-     APP
-     ==================================================== -->
 <div id="app">
 
 <!-- LOBBY -->
@@ -404,10 +393,8 @@ button{cursor:pointer;border:none;background:none}
   <div class="lobby-hero">
     <div class="lobby-logo">✈️</div>
     <div class="lobby-title">TripSplit</div>
-    <div class="lobby-sub">Split expenses with friends, hassle-free</div>
     <div class="firebase-badge" id="firebase-badge">
-      <div class="dot"></div>
-      <span id="firebase-status-text">Connecting…</span>
+      <div class="dot"></div><span id="firebase-status-text">Connecting…</span>
     </div>
   </div>
   <div class="lobby-content">
@@ -479,8 +466,6 @@ button{cursor:pointer;border:none;background:none}
           </button>
         </div>
       </div>
-
-      <!-- Start date + Number of days → auto end date -->
       <div class="form-group">
         <label class="form-label">Start Date *</label>
         <input type="date" id="c-start" class="form-input" oninput="calcEndDate()">
@@ -488,19 +473,15 @@ button{cursor:pointer;border:none;background:none}
       <div class="rate-row">
         <div class="form-group" style="margin-bottom:0">
           <label class="form-label">Number of Days *</label>
-          <select class="currency-select" id="c-numdays" onchange="calcEndDate()" style="padding:12px 36px 12px 14px">
-            <!-- filled by JS 1-30 -->
-          </select>
+          <select class="currency-select" id="c-numdays" onchange="calcEndDate()" style="padding:12px 36px 12px 14px"></select>
         </div>
         <div class="form-group" style="margin-bottom:0">
           <label class="form-label">End Date (auto)</label>
           <div class="end-date-display" id="c-end-display">—</div>
-          <!-- hidden real end date value -->
           <input type="hidden" id="c-end">
         </div>
       </div>
     </div>
-
     <div class="section-card">
       <div class="form-group">
         <label class="form-label">Currency</label>
@@ -530,7 +511,6 @@ button{cursor:pointer;border:none;background:none}
         <input type="text" id="c-members" class="form-input" placeholder="Alice, Bob, Charlie, Dana">
       </div>
     </div>
-
     <div class="section-card" style="background:var(--blue-light);border:2px solid var(--blue-mid)">
       <div style="font-size:12px;font-weight:700;color:var(--blue);margin-bottom:6px">📎 Invite Link</div>
       <div class="invite-preview" id="c-invite-preview">—</div>
@@ -539,7 +519,7 @@ button{cursor:pointer;border:none;background:none}
   </div>
 </div>
 
-<!-- NEW EXPENSE — no hero blocks in header -->
+<!-- NEW EXPENSE -->
 <div class="page" id="page-new">
   <div class="trip-header">
     <div class="trip-header-top">
@@ -551,7 +531,6 @@ button{cursor:pointer;border:none;background:none}
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       </button>
     </div>
-    <!-- NO hero blocks here on New page -->
   </div>
   <div class="new-content">
     <div id="editing-badge" class="editing-badge hidden">
@@ -565,14 +544,14 @@ button{cursor:pointer;border:none;background:none}
     <div class="chips-row mt-8" id="quick-chips"></div>
     <div class="form-group">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-        <label class="form-label" style="margin-bottom:0">Description *</label>
+        <label class="form-label" style="margin-bottom:0">Description</label>
         <span id="desc-counter" style="font-size:11px;color:var(--gray)">0/80</span>
       </div>
-      <input type="text" id="exp-desc" class="form-input" placeholder="What was this expense?" maxlength="80"
+      <input type="text" id="exp-desc" class="form-input" placeholder="What was this expense? (optional if photo)" maxlength="80"
         oninput="document.getElementById('desc-counter').textContent=this.value.length+'/80'">
     </div>
     <div class="form-group">
-      <label class="form-label">Amount *</label>
+      <label class="form-label">Amount</label>
       <div class="amount-row">
         <input type="number" id="exp-amount" class="form-input amount-input" placeholder="0.00" step="0.01" min="0" oninput="updateHKDPreview()">
         <select class="currency-select" id="exp-currency" onchange="updateHKDPreview()" style="padding:12px 30px 12px 12px"></select>
@@ -625,7 +604,7 @@ button{cursor:pointer;border:none;background:none}
   </div>
 </div>
 
-<!-- EXPENSES — hero blocks in header -->
+<!-- EXPENSES -->
 <div class="page" id="page-expenses">
   <div class="trip-header">
     <div class="trip-header-top">
@@ -639,6 +618,19 @@ button{cursor:pointer;border:none;background:none}
     </div>
     <div class="hero-blocks" id="exp-hero-blocks"></div>
   </div>
+  <!-- Pending banner -->
+  <div class="pending-banner hidden" id="pending-banner">
+    <span class="pending-banner-text">⏳ Pending expenses need updating</span>
+    <span class="pending-banner-count" id="pending-banner-count">0</span>
+  </div>
+  <!-- Bulk image remove bar -->
+  <div class="bulk-bar" id="bulk-bar">
+    <div class="bulk-bar-left" id="bulk-bar-label">0 selected</div>
+    <div class="bulk-bar-actions">
+      <button class="bulk-btn bulk-btn-danger" onclick="bulkRemoveImages()">🗑 Remove Images</button>
+      <button class="bulk-btn bulk-btn-cancel" onclick="exitSelectMode()">Cancel</button>
+    </div>
+  </div>
   <div class="expenses-controls">
     <input type="text" class="search-box" id="exp-search" placeholder="🔍 Search…" oninput="onSearchFilter()">
     <select class="filter-select" id="exp-filter" onchange="onSearchFilter()">
@@ -651,12 +643,13 @@ button{cursor:pointer;border:none;background:none}
       <option value="Pending Update">Pending</option>
     </select>
     <button class="pending-btn" id="pending-filter-btn" onclick="togglePendingFilter()">⏳ Pending</button>
+    <button class="pending-btn" id="select-images-btn" onclick="enterSelectMode()" style="border-color:var(--blue);color:var(--blue)" title="Select expenses with images to remove">🖼 Select</button>
   </div>
   <div id="expenses-list" style="padding:10px 0 4px"></div>
   <div class="pagination" id="pagination"></div>
 </div>
 
-<!-- BALANCES — hero blocks in header -->
+<!-- BALANCES -->
 <div class="page" id="page-balances">
   <div class="trip-header">
     <div class="trip-header-top">
@@ -683,8 +676,7 @@ button{cursor:pointer;border:none;background:none}
         <select class="currency-select" id="bal-currency" style="width:100%" onchange="onBalCurrencyChange()">
           <option value="HKD">HKD</option><option value="THB">THB</option><option value="JPY">JPY</option>
           <option value="USD">USD</option><option value="EUR">EUR</option><option value="CNY">CNY</option>
-          <option value="TWD">TWD</option><option value="KRW">KRW</option><option value="SGD">SGD</option>
-          <option value="MYR">MYR</option>
+          <option value="TWD">TWD</option><option value="KRW">KRW</option><option value="SGD">SGD</option><option value="MYR">MYR</option>
         </select>
       </div>
       <div style="flex:1;min-width:100px">
@@ -692,8 +684,7 @@ button{cursor:pointer;border:none;background:none}
         <input type="number" id="bal-rate" class="form-input" step="0.0001">
       </div>
       <button class="fetch-rate-btn" id="bal-fetch-btn" onclick="fetchRateForBalances()" style="margin-top:0;height:46px">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10"/><path d="M23 14l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
-        Auto
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10"/><path d="M23 14l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>Auto
       </button>
     </div>
     <button class="btn btn-primary" onclick="saveBalanceSettings()">Save & Recalculate</button>
@@ -718,12 +709,10 @@ button{cursor:pointer;border:none;background:none}
     <div id="settlement-list"></div>
     <div class="settle-actions">
       <button class="settle-btn" onclick="copySettlement()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-        Copy Text
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy Text
       </button>
       <button class="settle-btn" onclick="exportExcel()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-        Export Excel
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Export Excel
       </button>
     </div>
   </div>
@@ -735,8 +724,7 @@ button{cursor:pointer;border:none;background:none}
     <div class="page-header-back" onclick="navigateTo('expenses')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>Back
     </div>
-    <h1>Trip Settings</h1>
-    <p>Manage your trip details</p>
+    <h1>Trip Settings</h1><p>Manage your trip details</p>
   </div>
   <div class="settings-content">
     <div class="settings-block">
@@ -794,20 +782,16 @@ button{cursor:pointer;border:none;background:none}
 
 <nav id="bottom-tabs">
   <button class="tab-btn active" onclick="switchTab('new')" data-tab="new">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-    <span>New</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg><span>New</span>
   </button>
   <button class="tab-btn" onclick="switchTab('expenses')" data-tab="expenses">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-    <span>Expenses</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg><span>Expenses</span>
   </button>
   <button class="tab-btn" onclick="switchTab('balances')" data-tab="balances">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-    <span>Balances</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><span>Balances</span>
   </button>
   <button class="tab-btn" onclick="switchTab('settlement')" data-tab="settlement">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
-    <span>Settle</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg><span>Settle</span>
   </button>
 </nav>
 
@@ -820,225 +804,149 @@ import {
   deleteDoc, query, orderBy, onSnapshot, writeBatch
 } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
-// ── STATE ──────────────────────────────────────────────────
-let db = null, firebaseOk = false;
-let currentTrip = null, currentCode = null, myIdentity = null;
-let expenses = [];
-let expensesUnsub = null;
-let editingExpenseId = null;
-let receiptDataURL = null;
-let selectedDate = null;
-let selectedCategory = 'Other';
-let pendingFilterActive = false;
-let currentExpPage = 1;
-let saveBusy = false;
-let personSheetName = null;
-let isAdminMode = false;
-const EXP_PER_PAGE = 10;
+// ─── STATE ────────────────────────────────────────────────
+let db=null, firebaseOk=false;
+let currentTrip=null, currentCode=null, myIdentity=null;
+let expenses=[], expensesUnsub=null;
+let editingExpenseId=null, receiptDataURL=null;
+let selectedDate=null, selectedCategory='Other';
+let pendingFilterActive=false, selectMode=false;
+let selectedForBulk=new Set();
+let currentExpPage=1, saveBusy=false, personSheetName=null, isAdminMode=false;
+const EXP_PER_PAGE=10;
 
-// ── INDEXEDDB ──────────────────────────────────────────────
-let idb = null;
-function openIDB() {
-  return new Promise((resolve, reject) => {
-    if (idb) { resolve(idb); return; }
-    const req = indexedDB.open('TripSplitDB', 1);
-    req.onupgradeneeded = e => e.target.result.createObjectStore('receipts', { keyPath:'id' });
-    req.onsuccess = e => { idb = e.target.result; resolve(idb); };
-    req.onerror   = e => reject(e.target.error);
+// ─── INDEXEDDB ────────────────────────────────────────────
+let idb=null;
+function openIDB(){
+  return new Promise((res,rej)=>{
+    if(idb){res(idb);return;}
+    const r=indexedDB.open('TripSplitDB',1);
+    r.onupgradeneeded=e=>e.target.result.createObjectStore('receipts',{keyPath:'id'});
+    r.onsuccess=e=>{idb=e.target.result;res(idb);};
+    r.onerror=e=>rej(e.target.error);
   });
 }
-async function idbSave(id, data) {
-  try {
-    const d = await openIDB();
-    return new Promise((res,rej) => {
-      const tx = d.transaction('receipts','readwrite');
-      tx.objectStore('receipts').put({ id, data });
-      tx.oncomplete = () => res();
-      tx.onerror = e => rej(e.target.error);
-    });
-  } catch(e) { console.warn('IDB save:', e); }
+async function idbSave(id,data){
+  try{const d=await openIDB();return new Promise((res,rej)=>{const tx=d.transaction('receipts','readwrite');tx.objectStore('receipts').put({id,data});tx.oncomplete=()=>res();tx.onerror=e=>rej(e.target.error)});}catch(e){console.warn('IDB save:',e);}
 }
-async function idbGet(id) {
-  try {
-    const d = await openIDB();
-    return new Promise(res => {
-      const req = d.transaction('receipts','readonly').objectStore('receipts').get(id);
-      req.onsuccess = e => res(e.target.result?.data || null);
-      req.onerror   = () => res(null);
-    });
-  } catch(e) { return null; }
+async function idbGet(id){
+  try{const d=await openIDB();return new Promise(res=>{const r=d.transaction('receipts','readonly').objectStore('receipts').get(id);r.onsuccess=e=>res(e.target.result?.data||null);r.onerror=()=>res(null)});}catch(e){return null;}
 }
-async function idbDel(id) {
-  try {
-    const d = await openIDB();
-    return new Promise(res => {
-      const tx = d.transaction('receipts','readwrite');
-      tx.objectStore('receipts').delete(id);
-      tx.oncomplete = () => res();
-      tx.onerror    = () => res();
-    });
-  } catch(e) {}
+async function idbDel(id){
+  try{const d=await openIDB();return new Promise(res=>{const tx=d.transaction('receipts','readwrite');tx.objectStore('receipts').delete(id);tx.oncomplete=()=>res();tx.onerror=()=>res()});}catch(e){}
 }
-async function idbDelTrip(code) {
-  try {
-    const d = await openIDB();
-    return new Promise(res => {
-      const tx = d.transaction('receipts','readwrite');
-      const store = tx.objectStore('receipts');
-      const req = store.openCursor();
-      req.onsuccess = e => {
-        const c = e.target.result;
-        if (c) { if (String(c.key).startsWith(code+'_')) c.delete(); c.continue(); }
-      };
-      tx.oncomplete = () => res();
-      tx.onerror    = () => res();
-    });
-  } catch(e) {}
+async function idbDelTrip(code){
+  try{const d=await openIDB();return new Promise(res=>{const tx=d.transaction('receipts','readwrite');const s=tx.objectStore('receipts');const r=s.openCursor();r.onsuccess=e=>{const c=e.target.result;if(c){if(String(c.key).startsWith(code+'_'))c.delete();c.continue();}};tx.oncomplete=()=>res();tx.onerror=()=>res()});}catch(e){}
 }
 
-// ── CONSTANTS ──────────────────────────────────────────────
-const DEFAULT_RATES = {
-  HKD:1, THB:0.21, JPY:0.052, USD:7.8, EUR:8.5,
-  CNY:1.07, TWD:0.24, KRW:0.0057, SGD:5.8, MYR:1.67
-};
-const AVATAR_COLORS = [
-  '#ef4444','#f97316','#eab308','#22c55e','#3b82f6',
-  '#8b5cf6','#ec4899','#06b6d4','#10b981','#f59e0b'
-];
-const BC_CLASSES = ['bc-yellow','bc-green','bc-blue','bc-pink','bc-orange','bc-violet','bc-white','bc-black'];
-const CAT_COLORS = {
-  Food:'#f97316', Transport:'#3b82f6', Hotel:'#8b5cf6',
-  Activity:'#10b981', Other:'#64748b', 'Pending Update':'#ec4899'
-};
-const QUICK_CHIPS = [
-  {label:'Lunch',cat:'Food'},{label:'Dinner',cat:'Food'},
-  {label:'Breakfast',cat:'Food'},{label:'Taxi',cat:'Transport'},
-  {label:'Hotel',cat:'Hotel'},{label:'Drinks',cat:'Food'},
-  {label:'Groceries',cat:'Food'},{label:'Flight',cat:'Transport'}
-];
-const CATEGORIES = [
-  {label:'Food',cls:'cat-food'},{label:'Transport',cls:'cat-transport'},
-  {label:'Hotel',cls:'cat-hotel'},{label:'Activity',cls:'cat-activity'},
-  {label:'Other',cls:'cat-other'},{label:'Pending Update',cls:'cat-pending'}
-];
+// ─── CONSTANTS ────────────────────────────────────────────
+const DEFAULT_RATES={HKD:1,THB:0.21,JPY:0.052,USD:7.8,EUR:8.5,CNY:1.07,TWD:0.24,KRW:0.0057,SGD:5.8,MYR:1.67};
+const AVATAR_COLORS=['#ef4444','#f97316','#eab308','#22c55e','#3b82f6','#8b5cf6','#ec4899','#06b6d4','#10b981','#f59e0b'];
+const BC_CLASSES=['bc-yellow','bc-green','bc-blue','bc-pink','bc-orange','bc-violet','bc-white','bc-black'];
+const CAT_COLORS={Food:'#f97316',Transport:'#3b82f6',Hotel:'#8b5cf6',Activity:'#10b981',Other:'#64748b','Pending Update':'#ec4899'};
+const QUICK_CHIPS=[{label:'Lunch',cat:'Food'},{label:'Dinner',cat:'Food'},{label:'Breakfast',cat:'Food'},{label:'Taxi',cat:'Transport'},{label:'Hotel',cat:'Hotel'},{label:'Drinks',cat:'Food'},{label:'Groceries',cat:'Food'},{label:'Flight',cat:'Transport'}];
+const CATEGORIES=[{label:'Food',cls:'cat-food'},{label:'Transport',cls:'cat-transport'},{label:'Hotel',cls:'cat-hotel'},{label:'Activity',cls:'cat-activity'},{label:'Other',cls:'cat-other'},{label:'Pending Update',cls:'cat-pending'}];
 
-// ── FIREBASE ───────────────────────────────────────────────
-async function initFirebase() {
-  try {
-    const cfg = window.FIREBASE_CONFIG;
-    if (!cfg || !cfg.apiKey || cfg.apiKey==='Axxx') throw new Error('no-config');
-    const app = getApps().length ? getApps()[0] : initializeApp(cfg);
-    db = getFirestore(app);
-    try { await enableIndexedDbPersistence(db); } catch(e) {}
+// ─── FIREBASE ─────────────────────────────────────────────
+async function initFirebase(){
+  try{
+    const cfg=window.FIREBASE_CONFIG;
+    if(!cfg||!cfg.apiKey||cfg.apiKey==='Axxx')throw new Error('no-config');
+    const app=getApps().length?getApps()[0]:initializeApp(cfg);
+    db=getFirestore(app);
+    try{await enableIndexedDbPersistence(db);}catch(e){}
     await getDocs(query(collection(db,'trips')));
-    firebaseOk = true; setFirebaseBadge(true);
-  } catch(e) {
-    db=null; firebaseOk=false; setFirebaseBadge(false);
-  }
+    firebaseOk=true;setFirebaseBadge(true);
+  }catch(e){db=null;firebaseOk=false;setFirebaseBadge(false);}
 }
-function setFirebaseBadge(ok) {
+function setFirebaseBadge(ok){
   document.getElementById('firebase-badge').classList.toggle('offline',!ok);
-  document.getElementById('firebase-status-text').textContent = ok ? 'Live sync enabled' : 'Local mode • Works offline';
+  document.getElementById('firebase-status-text').textContent=ok?'Live sync enabled':'Local mode • Works offline';
 }
 
-// ── SHA256 ─────────────────────────────────────────────────
-async function sha256(str) {
-  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+// ─── SHA256 ───────────────────────────────────────────────
+async function sha256(str){
+  const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));
   return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
 }
 
-// ── NAVIGATION ─────────────────────────────────────────────
-function navigateTo(page) {
+// ─── NAVIGATION ───────────────────────────────────────────
+function navigateTo(page){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page-'+page).classList.add('active');
-  const tabs = document.getElementById('bottom-tabs');
-  const tripPages = ['new','expenses','balances','settlement'];
-  if (tripPages.includes(page)) {
-    tabs.style.display = 'flex';
+  const tabs=document.getElementById('bottom-tabs');
+  const tripPages=['new','expenses','balances','settlement'];
+  if(tripPages.includes(page)){
+    tabs.style.display='flex';
     document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===page));
-  } else {
-    tabs.style.display = 'none';
-  }
+  }else tabs.style.display='none';
   document.getElementById('app').scrollTo(0,0);
-  if (page==='create')  initCreatePage();
-  if (page==='settings') openSettings();
+  if(page==='create')initCreatePage();
+  if(page==='settings')_openSettingsForm();
 }
-window.navigateTo = navigateTo;
+window.navigateTo=navigateTo;
 
-function switchTab(tab) {
+function switchTab(tab){
   navigateTo(tab);
-  if (tab==='expenses')   renderExpenses();
-  if (tab==='balances')   renderBalances();
-  if (tab==='settlement') renderSettlement();
-  if (tab==='new' && !editingExpenseId) resetNewForm();
+  if(tab==='expenses')renderExpenses();
+  if(tab==='balances')renderBalances();
+  if(tab==='settlement')renderSettlement();
+  if(tab==='new'&&!editingExpenseId)resetNewForm();
 }
-window.switchTab = switchTab;
+window.switchTab=switchTab;
 
-// ── MODALS ─────────────────────────────────────────────────
-function openModal(id)  { document.getElementById(id).classList.add('show'); }
-function closeModal(id) { document.getElementById(id).classList.remove('show'); }
-function openSheet(id)  { document.getElementById(id).classList.add('show'); }
-function closeSheet(id) { document.getElementById(id).classList.remove('show'); }
-window.openModal=openModal; window.closeModal=closeModal;
-window.openSheet=openSheet; window.closeSheet=closeSheet;
+// ─── MODALS ───────────────────────────────────────────────
+function openModal(id){document.getElementById(id).classList.add('show');}
+function closeModal(id){document.getElementById(id).classList.remove('show');}
+function openSheet(id){document.getElementById(id).classList.add('show');}
+function closeSheet(id){document.getElementById(id).classList.remove('show');}
+window.openModal=openModal;window.closeModal=closeModal;window.openSheet=openSheet;window.closeSheet=closeSheet;
 document.querySelectorAll('.modal-overlay,.sheet-overlay').forEach(el=>{
-  el.addEventListener('click', function(e){ if(e.target===this) this.classList.remove('show'); });
+  el.addEventListener('click',function(e){if(e.target===this)this.classList.remove('show');});
 });
 
-// ── TOAST ──────────────────────────────────────────────────
-function toast(msg, type='', undoFn=null, duration=3500) {
-  const c = document.getElementById('toast-container');
-  const t = document.createElement('div');
-  t.className = 'toast'+(type?' '+type:'');
-  t.innerHTML = `<span>${msg}</span>`;
-  if (undoFn) {
-    const u = document.createElement('button');
-    u.className='toast-undo'; u.textContent='Undo';
-    u.onclick=()=>{ undoFn(); t.remove(); };
-    t.appendChild(u);
-  }
-  c.appendChild(t);
-  setTimeout(()=>t.remove(), duration);
+// ─── TOAST ────────────────────────────────────────────────
+function toast(msg,type='',undoFn=null,duration=3500){
+  const c=document.getElementById('toast-container');
+  const t=document.createElement('div');
+  t.className='toast'+(type?' '+type:'');
+  t.innerHTML=`<span>${msg}</span>`;
+  if(undoFn){const u=document.createElement('button');u.className='toast-undo';u.textContent='Undo';u.onclick=()=>{undoFn();t.remove();};t.appendChild(u);}
+  c.appendChild(t);setTimeout(()=>t.remove(),duration);
 }
-window.toast = toast;
-
-function showLoading(show, msg='Loading…') {
-  document.getElementById('loading-overlay').style.display = show?'flex':'none';
-  document.getElementById('loading-text').textContent = msg;
+window.toast=toast;
+function showLoading(show,msg='Loading…'){
+  document.getElementById('loading-overlay').style.display=show?'flex':'none';
+  document.getElementById('loading-text').textContent=msg;
 }
-
-function toggleEye(inputId, btn) {
-  const inp = document.getElementById(inputId);
-  const isText = inp.type==='text';
-  inp.type = isText?'password':'text';
-  btn.querySelector('svg').innerHTML = isText
-    ? '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>'
-    : '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>';
+function toggleEye(inputId,btn){
+  const inp=document.getElementById(inputId);const isText=inp.type==='text';inp.type=isText?'password':'text';
+  btn.querySelector('svg').innerHTML=isText?'<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>':'<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>';
 }
-window.toggleEye = toggleEye;
+window.toggleEye=toggleEye;
 
-// ── LOCAL STORAGE ──────────────────────────────────────────
-function getMyTrips()  { try{return JSON.parse(localStorage.getItem('myTrips')||'[]')}catch(e){return[]} }
-function saveMyTrip(code,name,pw) {
-  let t=getMyTrips(), idx=t.findIndex(x=>x.code===code);
-  if(idx>=0) t[idx]={code,name,pw}; else t.unshift({code,name,pw});
+// ─── LOCAL STORAGE ────────────────────────────────────────
+function getMyTrips(){try{return JSON.parse(localStorage.getItem('myTrips')||'[]');}catch(e){return[];}}
+function saveMyTrip(code,name,pw){
+  let t=getMyTrips(),idx=t.findIndex(x=>x.code===code);
+  if(idx>=0)t[idx]={code,name,pw};else t.unshift({code,name,pw});
   localStorage.setItem('myTrips',JSON.stringify(t));
 }
-function removeMyTrip(code) { localStorage.setItem('myTrips',JSON.stringify(getMyTrips().filter(t=>t.code!==code))); }
-function getLocalTrips() { try{return JSON.parse(localStorage.getItem('localTrips')||'{}')}catch(e){return{}} }
-function saveLocalTrip(code,data) { const t=getLocalTrips(); t[code]=data; localStorage.setItem('localTrips',JSON.stringify(t)); }
-function getLocalExp(code) { try{return JSON.parse(localStorage.getItem('localExp_'+code)||'[]')}catch(e){return[]} }
-function saveLocalExp(code,exps) { localStorage.setItem('localExp_'+code,JSON.stringify(exps)); }
+function removeMyTrip(code){localStorage.setItem('myTrips',JSON.stringify(getMyTrips().filter(t=>t.code!==code)));}
+function getLocalTrips(){try{return JSON.parse(localStorage.getItem('localTrips')||'{}');}catch(e){return{};}}
+function saveLocalTrip(code,data){const t=getLocalTrips();t[code]=data;localStorage.setItem('localTrips',JSON.stringify(t));}
+function getLocalExp(code){try{return JSON.parse(localStorage.getItem('localExp_'+code)||'[]');}catch(e){return[];}}
+function saveLocalExp(code,exps){localStorage.setItem('localExp_'+code,JSON.stringify(exps));}
 
-// ── LOBBY ──────────────────────────────────────────────────
-function renderLobby() {
-  const trips = getMyTrips();
-  document.getElementById('my-trips-count').textContent = trips.length;
-  const list = document.getElementById('my-trips-list');
-  if (!trips.length) {
+// ─── LOBBY ────────────────────────────────────────────────
+function renderLobby(){
+  const trips=getMyTrips();
+  document.getElementById('my-trips-count').textContent=trips.length;
+  const list=document.getElementById('my-trips-list');
+  if(!trips.length){
     list.innerHTML='<div style="text-align:center;padding:20px;color:var(--gray);font-size:13px">No trips yet. Join one above!</div>';
-  } else {
-    list.innerHTML = trips.map(t=>`
+  }else{
+    list.innerHTML=trips.map(t=>`
       <div class="trip-card" onclick="quickJoin('${esc(t.code)}')">
         <div class="trip-card-icon">${(t.name||t.code).charAt(0).toUpperCase()}</div>
         <div class="trip-card-info">
@@ -1050,129 +958,150 @@ function renderLobby() {
   }
   document.getElementById('create-section').classList.toggle('hidden',!isAdminMode);
 }
-async function quickJoin(code) {
-  const saved = getMyTrips().find(t=>t.code===code);
-  document.getElementById('join-code').value = code;
-  if (saved?.pw) { document.getElementById('join-pw').value=saved.pw; await joinTrip(true); }
-  else { document.getElementById('join-pw').value=''; document.getElementById('join-pw').focus(); }
+async function quickJoin(code){
+  const saved=getMyTrips().find(t=>t.code===code);
+  document.getElementById('join-code').value=code;
+  if(saved?.pw){document.getElementById('join-pw').value=saved.pw;await joinTrip(true);}
+  else{document.getElementById('join-pw').value='';document.getElementById('join-pw').focus();}
 }
-window.quickJoin = quickJoin;
+window.quickJoin=quickJoin;
 
-// ?join and ?admin
+// ─── ?join AND ?admin ────────────────────────────────────
 (function(){
-  const p = new URLSearchParams(location.search);
-  const jc = p.get('join');
-  if (jc) { document.getElementById('join-code').value=jc.toUpperCase(); document.getElementById('join-pw').focus(); }
-  if (p.get('admin')==='1') isAdminMode=true;
+  const p=new URLSearchParams(location.search);
+  const jc=p.get('join');
+  if(jc){
+    const code=jc.toUpperCase();
+    document.getElementById('join-code').value=code;
+    // ✅ FIX: also check myTrips for saved password so 2nd visit auto-joins
+    const saved=getMyTrips().find(t=>t.code===code);
+    if(saved?.pw){
+      document.getElementById('join-pw').value=saved.pw;
+      // slight delay to let firebase init finish
+      setTimeout(()=>joinTrip(true),800);
+    }else{
+      document.getElementById('join-pw').focus();
+    }
+  }
+  if(p.get('admin')==='1')isAdminMode=true;
 })();
 
-// ── ADMIN ──────────────────────────────────────────────────
-function promptAdmin() { openModal('admin-modal'); document.getElementById('admin-pw-input').value=''; }
-window.promptAdmin = promptAdmin;
-function checkAdminPassword() {
-  if (document.getElementById('admin-pw-input').value===(window.ADMIN_CREATE_PASSWORD||'ADMIN2026')) {
-    isAdminMode=true; closeModal('admin-modal'); renderLobby(); toast('Admin mode unlocked ✓','success');
-  } else toast('Wrong admin password','error');
+// ─── ADMIN ────────────────────────────────────────────────
+function promptAdmin(){openModal('admin-modal');document.getElementById('admin-pw-input').value='';}
+window.promptAdmin=promptAdmin;
+function checkAdminPassword(){
+  if(document.getElementById('admin-pw-input').value===(window.ADMIN_CREATE_PASSWORD||'ADMIN2026')){
+    isAdminMode=true;closeModal('admin-modal');renderLobby();toast('Admin mode unlocked ✓','success');
+  }else toast('Wrong admin password','error');
 }
-window.checkAdminPassword = checkAdminPassword;
+window.checkAdminPassword=checkAdminPassword;
 
-// ── JOIN ───────────────────────────────────────────────────
-async function joinTrip(auto=false) {
-  const code = document.getElementById('join-code').value.trim().toUpperCase();
-  const pw   = document.getElementById('join-pw').value;
-  const rem  = document.getElementById('remember-me').checked;
-  if (code.length<6) { toast('Enter valid 6-char code','error'); return; }
-  if (!pw)           { toast('Enter password','error'); return; }
+// ─── JOIN ─────────────────────────────────────────────────
+async function joinTrip(auto=false){
+  const code=document.getElementById('join-code').value.trim().toUpperCase();
+  const pw=document.getElementById('join-pw').value;
+  const rem=document.getElementById('remember-me').checked;
+  if(code.length<6){toast('Enter valid 6-char code','error');return;}
+  if(!pw){toast('Enter password','error');return;}
   showLoading(true,'Joining…');
-  try {
+  try{
     let trip;
-    if (firebaseOk && db) {
-      const snap = await getDoc(doc(db,'trips',code));
-      if (!snap.exists()) throw new Error('Trip not found');
-      trip = { id:snap.id, ...snap.data() };
-    } else {
-      const local = getLocalTrips();
-      if (!local[code]) throw new Error('Trip not found');
-      trip = local[code];
+    if(firebaseOk&&db){
+      const snap=await getDoc(doc(db,'trips',code));
+      if(!snap.exists())throw new Error('Trip not found');
+      trip={id:snap.id,...snap.data()};
+    }else{
+      const local=getLocalTrips();
+      if(!local[code])throw new Error('Trip not found');
+      trip=local[code];
     }
-    if (await sha256(pw) !== trip.passwordHash) throw new Error('Wrong password');
-    currentTrip=trip; currentCode=code;
-    if (rem) { saveMyTrip(code,trip.name,pw); localStorage.setItem('trip_'+code+'_pw',pw); }
-    else      saveMyTrip(code,trip.name,'');
-    const who = localStorage.getItem('trip_'+code+'_who');
-    if (who && trip.friends?.includes(who)) {
-      myIdentity=who; showLoading(false);
+    if(await sha256(pw)!==trip.passwordHash)throw new Error('Wrong password');
+    currentTrip=trip;currentCode=code;
+    // ✅ FIX: always save to myTrips so 2nd visit via invite link finds it
+    if(rem){
+      saveMyTrip(code,trip.name,pw);
+      localStorage.setItem('trip_'+code+'_pw',pw);
+    }else{
+      // still save trip card (without password) so it appears in My Trips
+      saveMyTrip(code,trip.name,'');
+    }
+    const who=localStorage.getItem('trip_'+code+'_who');
+    if(who&&trip.friends?.includes(who)){
+      myIdentity=who;showLoading(false);
       toast(`Welcome back ${who} — remembered 👋`,'success');
       enterTrip();
-    } else { showLoading(false); showWhoModal(); }
-  } catch(e) {
+    }else{showLoading(false);showWhoModal();}
+  }catch(e){
     showLoading(false);
     toast(e.message==='Trip not found'?'Trip not found — check code':'Wrong password ❌','error');
   }
 }
-window.joinTrip = joinTrip;
+window.joinTrip=joinTrip;
 
-function showWhoModal() {
-  document.getElementById('who-grid').innerHTML = (currentTrip.friends||[]).map((name,i)=>`
+function showWhoModal(){
+  document.getElementById('who-grid').innerHTML=(currentTrip.friends||[]).map((name,i)=>`
     <button class="who-btn" onclick="selectIdentity('${esc(name)}')">
       <div class="who-avatar" style="background:${AVATAR_COLORS[i%AVATAR_COLORS.length]}">${name.charAt(0).toUpperCase()}</div>
       <div class="who-name">${esc(name)}</div>
     </button>`).join('');
   openModal('who-modal');
 }
-function selectIdentity(name) {
-  myIdentity=name; localStorage.setItem('trip_'+currentCode+'_who',name);
-  closeModal('who-modal'); toast(`Welcome, ${name}! ✈️`,'success'); enterTrip();
+function selectIdentity(name){
+  myIdentity=name;localStorage.setItem('trip_'+currentCode+'_who',name);
+  closeModal('who-modal');toast(`Welcome, ${name}! ✈️`,'success');enterTrip();
 }
-window.selectIdentity = selectIdentity;
+window.selectIdentity=selectIdentity;
+function enterTrip(){setupExpensesListener();renderTripHeaders();navigateTo('new');resetNewForm();}
 
-function enterTrip() {
-  setupExpensesListener(); renderTripHeaders(); navigateTo('new'); resetNewForm();
-}
-
-// ── EXPENSES LISTENER ──────────────────────────────────────
-function setupExpensesListener() {
-  if (expensesUnsub) { expensesUnsub(); expensesUnsub=null; }
-  if (firebaseOk && db) {
-    expensesUnsub = onSnapshot(
-      query(collection(db,'trips',currentCode,'expenses'), orderBy('date','desc')),
-      snap => { expenses=snap.docs.map(d=>({id:d.id,...d.data()})); onExpensesUpdated(); },
-      err  => { console.error(err); loadLocalExp(); }
+// ─── EXPENSES LISTENER ────────────────────────────────────
+function setupExpensesListener(){
+  if(expensesUnsub){expensesUnsub();expensesUnsub=null;}
+  if(firebaseOk&&db){
+    expensesUnsub=onSnapshot(
+      query(collection(db,'trips',currentCode,'expenses'),orderBy('date','desc')),
+      snap=>{expenses=snap.docs.map(d=>({id:d.id,...d.data()}));onExpensesUpdated();},
+      err=>{console.error(err);loadLocalExp();}
     );
-  } else loadLocalExp();
+  }else loadLocalExp();
 }
-function loadLocalExp() { expenses=getLocalExp(currentCode); onExpensesUpdated(); }
-function onExpensesUpdated() {
-  renderHeroBlocks(); renderDateStrip();
-  if (document.getElementById('page-expenses').classList.contains('active'))   renderExpenses();
-  if (document.getElementById('page-balances').classList.contains('active'))   renderBalances();
-  if (document.getElementById('page-settlement').classList.contains('active')) renderSettlement();
+function loadLocalExp(){expenses=getLocalExp(currentCode);onExpensesUpdated();}
+function onExpensesUpdated(){
+  renderHeroBlocks();renderDateStrip();
+  if(document.getElementById('page-expenses').classList.contains('active'))renderExpenses();
+  if(document.getElementById('page-balances').classList.contains('active'))renderBalances();
+  if(document.getElementById('page-settlement').classList.contains('active'))renderSettlement();
 }
 
-// ── TRIP HEADERS + HERO ────────────────────────────────────
-function renderTripHeaders() {
-  if (!currentTrip) return;
+// ─── TRIP HEADERS ─────────────────────────────────────────
+function renderTripHeaders(){
+  if(!currentTrip)return;
   ['new-trip-title','exp-trip-title','bal-trip-title','set-trip-title'].forEach(id=>{
-    const el=document.getElementById(id); if(el) el.textContent=currentTrip.name||currentCode;
+    const el=document.getElementById(id);if(el)el.textContent=currentTrip.name||currentCode;
   });
   renderHeroBlocks();
 }
-function renderHeroBlocks() {
-  if (!currentTrip) return;
-  const trip = currentTrip;
-  const totalOrig = expenses.reduce((s,e)=>s+(parseFloat(e.amount)||0),0);
-  const totalHKD  = expenses.reduce((s,e)=>s+(parseFloat(e.amountHKD)||0),0);
-  const dates = expenses.map(e=>e.date).filter(Boolean).sort();
-  const dateRange = dates.length
-    ? (dates[0]===dates[dates.length-1]
-        ? fmtDateShort(dates[0])
-        : fmtDateShort(dates[0])+' → '+fmtDateShort(dates[dates.length-1]))
-    : '—';
-  const html = `
+
+// ─── HERO BLOCKS — FIXED mixed currency ──────────────────
+function renderHeroBlocks(){
+  if(!currentTrip)return;
+  const trip=currentTrip;
+  const totalHKD=expenses.reduce((s,e)=>s+(parseFloat(e.amountHKD)||0),0);
+
+  // ✅ FIX: only show original sum if all expenses use trip currency
+  const allSameCur=expenses.length>0&&expenses.every(e=>e.currency===trip.currency);
+  const origSubLine=allSameCur
+    ?`${trip.currency} ${fmt2(expenses.reduce((s,e)=>s+(parseFloat(e.amount)||0),0))}`
+    :'mixed currencies';
+
+  const dates=expenses.map(e=>e.date).filter(Boolean).sort();
+  const dateRange=dates.length
+    ?(dates[0]===dates[dates.length-1]?fmtDateShort(dates[0]):fmtDateShort(dates[0])+' → '+fmtDateShort(dates[dates.length-1]))
+    :'—';
+  const html=`
     <div class="hero-block">
       <div class="hero-block-label">Total Spent</div>
       <div class="hero-block-value">HKD ${fmt2(totalHKD)}</div>
-      <div class="hero-block-sub">${trip.currency} ${fmt2(totalOrig)}</div>
+      <div class="hero-block-sub">${origSubLine}</div>
     </div>
     <div class="hero-block">
       <div class="hero-block-label">Entries</div>
@@ -1189,283 +1118,173 @@ function renderHeroBlocks() {
       <div class="hero-block-value">${(trip.friends||[]).length}</div>
       <div class="hero-block-sub">${(trip.friends||[]).join(', ')}</div>
     </div>`;
-  // Only update Expenses and Balances hero blocks (NOT New page)
-  ['exp-hero-blocks','bal-hero-blocks'].forEach(id=>{
-    const el=document.getElementById(id); if(el) el.innerHTML=html;
-  });
+  ['exp-hero-blocks','bal-hero-blocks'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=html;});
 }
 
-// ── CREATE TRIP ────────────────────────────────────────────
-function generateCode() {
-  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  return Array.from({length:6},()=>chars[Math.floor(Math.random()*chars.length)]).join('');
-}
-async function getUniqueCode() {
+// ─── CREATE TRIP ──────────────────────────────────────────
+function generateCode(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';return Array.from({length:6},()=>c[Math.floor(Math.random()*c.length)]).join('');}
+async function getUniqueCode(){
   let code=generateCode();
-  if (firebaseOk&&db) {
-    for(let i=0;i<5;i++){
-      if(!(await getDoc(doc(db,'trips',code))).exists()) return code;
-      code=generateCode();
-    }
-  }
+  if(firebaseOk&&db){for(let i=0;i<5;i++){if(!(await getDoc(doc(db,'trips',code))).exists())return code;code=generateCode();}}
   return code;
 }
-
-async function initCreatePage() {
-  // Fill number of days dropdown 1-30
-  const sel = document.getElementById('c-numdays');
-  if (!sel.options.length) {
-    for(let i=1;i<=30;i++) {
-      const o=document.createElement('option');
-      o.value=i; o.textContent=i+' day'+(i>1?'s':'');
-      sel.appendChild(o);
-    }
-    sel.value=5; // default 5 days
-  }
-  const code = await getUniqueCode();
-  document.getElementById('c-code').value = code;
-  document.getElementById('c-invite-preview').textContent =
-    location.origin+location.pathname+'?join='+code;
-  // Default start = today
-  const today = toDateStr(new Date());
-  document.getElementById('c-start').value = today;
-  calcEndDate();
-  onCreateCurrencyChange();
+async function initCreatePage(){
+  const sel=document.getElementById('c-numdays');
+  if(!sel.options.length){for(let i=1;i<=30;i++){const o=document.createElement('option');o.value=i;o.textContent=i+' day'+(i>1?'s':'');sel.appendChild(o);}sel.value=5;}
+  const code=await getUniqueCode();
+  document.getElementById('c-code').value=code;
+  document.getElementById('c-invite-preview').textContent=location.origin+location.pathname+'?join='+code;
+  document.getElementById('c-start').value=toDateStr(new Date());
+  calcEndDate();onCreateCurrencyChange();
 }
-
-// ── FIX: calcEndDate uses local date arithmetic ─────────────
-function calcEndDate() {
-  const startVal = document.getElementById('c-start').value;
-  const days     = parseInt(document.getElementById('c-numdays').value) || 1;
-  if (!startVal) { document.getElementById('c-end-display').textContent='—'; return; }
-
-  // ✅ FIXED: split YYYY-MM-DD and use Date.UTC to avoid timezone shift
-  const [y,m,d] = startVal.split('-').map(Number);
-  const endMs   = Date.UTC(y, m-1, d) + (days-1)*86400000;
-  const endDate = new Date(endMs);
-  // format back to YYYY-MM-DD
-  const endStr  = endDate.toISOString().split('T')[0];
-
-  document.getElementById('c-end').value = endStr;
-  document.getElementById('c-end-display').textContent =
-    endDate.toLocaleDateString('en',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'});
+function calcEndDate(){
+  const sv=document.getElementById('c-start').value;
+  const days=parseInt(document.getElementById('c-numdays').value)||1;
+  if(!sv){document.getElementById('c-end-display').textContent='—';return;}
+  const[y,m,d]=sv.split('-').map(Number);
+  const endMs=Date.UTC(y,m-1,d)+(days-1)*86400000;
+  const endStr=new Date(endMs).toISOString().split('T')[0];
+  document.getElementById('c-end').value=endStr;
+  document.getElementById('c-end-display').textContent=new Date(endMs).toLocaleDateString('en',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'});
 }
-window.calcEndDate = calcEndDate;
-
-function onCreateCurrencyChange() {
-  const cur = document.getElementById('c-currency').value;
-  document.getElementById('c-rate').value = DEFAULT_RATES[cur]||1;
-}
-window.onCreateCurrencyChange = onCreateCurrencyChange;
-
-async function fetchRateForCreate() {
-  await fetchRate(document.getElementById('c-currency').value,'c-rate','c-fetch-btn');
-}
-window.fetchRateForCreate = fetchRateForCreate;
-
-async function fetchRate(currency, rateId, btnId) {
-  if (currency==='HKD') { document.getElementById(rateId).value='1'; return; }
-  const btn=document.getElementById(btnId); btn.classList.add('loading');
-  try {
+window.calcEndDate=calcEndDate;
+function onCreateCurrencyChange(){document.getElementById('c-rate').value=DEFAULT_RATES[document.getElementById('c-currency').value]||1;}
+window.onCreateCurrencyChange=onCreateCurrencyChange;
+async function fetchRateForCreate(){await fetchRate(document.getElementById('c-currency').value,'c-rate','c-fetch-btn');}
+window.fetchRateForCreate=fetchRateForCreate;
+async function fetchRate(currency,rateId,btnId){
+  if(currency==='HKD'){document.getElementById(rateId).value='1';return;}
+  const btn=document.getElementById(btnId);btn.classList.add('loading');
+  try{
     let rate=null;
-    try {
-      const r=await fetch('https://open.er-api.com/v6/latest/HKD');
-      const d=await r.json();
-      if(d.rates?.[currency]) rate=1/d.rates[currency];
-    } catch(e){}
-    if(!rate){
-      const r=await fetch(`https://api.frankfurter.app/latest?from=HKD&to=${currency}`);
-      const d=await r.json();
-      if(d.rates?.[currency]) rate=d.rates[currency];
-    }
-    if(rate){ document.getElementById(rateId).value=rate.toFixed(4); toast('Rate fetched ✓','success'); }
+    try{const r=await fetch('https://open.er-api.com/v6/latest/HKD');const d=await r.json();if(d.rates?.[currency])rate=1/d.rates[currency];}catch(e){}
+    if(!rate){const r=await fetch(`https://api.frankfurter.app/latest?from=HKD&to=${currency}`);const d=await r.json();if(d.rates?.[currency])rate=d.rates[currency];}
+    if(rate){document.getElementById(rateId).value=rate.toFixed(4);toast('Rate fetched ✓','success');}
     else throw new Error('no rate');
-  } catch(e){
-    document.getElementById(rateId).value=DEFAULT_RATES[currency]||'';
-    toast('Using default rate','warn');
-  } finally { btn.classList.remove('loading'); }
+  }catch(e){document.getElementById(rateId).value=DEFAULT_RATES[currency]||'';toast('Using default rate','warn');}
+  finally{btn.classList.remove('loading');}
 }
-
-async function createTrip() {
-  const name    = document.getElementById('c-name').value.trim();
-  const code    = document.getElementById('c-code').value.trim();
-  const pw      = document.getElementById('c-pw').value;
-  const start   = document.getElementById('c-start').value;
-  const end     = document.getElementById('c-end').value;
-  const cur     = document.getElementById('c-currency').value;
-  const rate    = parseFloat(document.getElementById('c-rate').value)||1;
-  const members = document.getElementById('c-members').value.split(',').map(s=>s.trim()).filter(Boolean);
-  if(!name)             { toast('Trip name required','error'); return; }
-  if(pw.length<3)       { toast('Password min 3 chars','error'); return; }
-  if(!start||!end)      { toast('Select start date','error'); return; }
-  if(!members.length)   { toast('Add at least one member','error'); return; }
-  if(members.length>8)  { toast('Max 8 members','error'); return; }
-  if(firebaseOk&&db){
-    const all=await getDocs(collection(db,'trips'));
-    if(all.docs.some(d=>d.data().name?.toLowerCase()===name.toLowerCase())){
-      toast('Trip name already exists','error'); return;
-    }
-  }
-  showLoading(true,'Creating…');
-  document.getElementById('create-btn').disabled=true;
-  try {
-    const hash = await sha256(pw);
-    const tripData = {
-      name, code, passwordHash:hash, friends:members,
-      startDate:start, endDate:end,
-      currency:cur, exchangeRate:rate, baseCurrency:'HKD',
-      createdAt:new Date().toISOString()
-    };
-    if(firebaseOk&&db) await setDoc(doc(db,'trips',code),tripData);
+async function createTrip(){
+  const name=document.getElementById('c-name').value.trim();
+  const code=document.getElementById('c-code').value.trim();
+  const pw=document.getElementById('c-pw').value;
+  const start=document.getElementById('c-start').value;
+  const end=document.getElementById('c-end').value;
+  const cur=document.getElementById('c-currency').value;
+  const rate=parseFloat(document.getElementById('c-rate').value)||1;
+  const members=document.getElementById('c-members').value.split(',').map(s=>s.trim()).filter(Boolean);
+  if(!name){toast('Trip name required','error');return;}
+  if(pw.length<3){toast('Password min 3 chars','error');return;}
+  if(!start||!end){toast('Select start date','error');return;}
+  if(!members.length){toast('Add at least one member','error');return;}
+  if(members.length>8){toast('Max 8 members','error');return;}
+  if(firebaseOk&&db){const all=await getDocs(collection(db,'trips'));if(all.docs.some(d=>d.data().name?.toLowerCase()===name.toLowerCase())){toast('Trip name already exists','error');return;}}
+  showLoading(true,'Creating…');document.getElementById('create-btn').disabled=true;
+  try{
+    const hash=await sha256(pw);
+    const tripData={name,code,passwordHash:hash,friends:members,startDate:start,endDate:end,currency:cur,exchangeRate:rate,baseCurrency:'HKD',createdAt:new Date().toISOString()};
+    if(firebaseOk&&db)await setDoc(doc(db,'trips',code),tripData);
     else saveLocalTrip(code,tripData);
     saveMyTrip(code,name,pw);
-    toast('Trip created! 🎉','success');
-    navigateTo('lobby'); renderLobby();
-  } catch(e){ toast('Error: '+e.message,'error'); }
-  finally{ showLoading(false); document.getElementById('create-btn').disabled=false; }
+    toast('Trip created! 🎉','success');navigateTo('lobby');renderLobby();
+  }catch(e){toast('Error: '+e.message,'error');}
+  finally{showLoading(false);document.getElementById('create-btn').disabled=false;}
 }
-window.createTrip = createTrip;
+window.createTrip=createTrip;
 
-// ── NEW EXPENSE FORM ───────────────────────────────────────
-function buildQuickChips() {
-  document.getElementById('quick-chips').innerHTML = QUICK_CHIPS.map(q=>
-    `<div class="chip" onclick="applyQuickChip('${q.label}','${q.cat}')">${q.label}</div>`
-  ).join('');
+// ─── NEW EXPENSE FORM ─────────────────────────────────────
+function buildQuickChips(){
+  document.getElementById('quick-chips').innerHTML=QUICK_CHIPS.map(q=>`<div class="chip" onclick="applyQuickChip('${q.label}','${q.cat}')">${q.label}</div>`).join('');
 }
-function applyQuickChip(label,cat) {
+function applyQuickChip(label,cat){
   const d=document.getElementById('exp-date').value||toDateStr(new Date());
-  document.getElementById('exp-desc').value = fmtDateShort(d)+' – '+label;
+  document.getElementById('exp-desc').value=fmtDateShort(d)+' – '+label;
   document.getElementById('desc-counter').textContent=document.getElementById('exp-desc').value.length+'/80';
   selectCategory(cat);
   document.querySelectorAll('#quick-chips .chip').forEach(c=>c.classList.toggle('active',c.textContent===label));
 }
-window.applyQuickChip = applyQuickChip;
-
-function buildCategoryChips() {
-  document.getElementById('cat-chips').innerHTML = CATEGORIES.map(c=>
-    `<div class="chip ${c.cls}" onclick="selectCategory('${c.label}')">${c.label}</div>`
-  ).join('');
+window.applyQuickChip=applyQuickChip;
+function buildCategoryChips(){
+  document.getElementById('cat-chips').innerHTML=CATEGORIES.map(c=>`<div class="chip ${c.cls}" onclick="selectCategory('${c.label}')">${c.label}</div>`).join('');
 }
-function selectCategory(cat) {
+function selectCategory(cat){
   selectedCategory=cat;
   document.querySelectorAll('#cat-chips .chip').forEach(c=>c.classList.toggle('active',c.textContent===cat));
 }
-window.selectCategory = selectCategory;
-
-function buildSplitGrid() {
-  document.getElementById('split-grid').innerHTML = (currentTrip?.friends||[]).map((name,i)=>`
+window.selectCategory=selectCategory;
+function buildSplitGrid(){
+  document.getElementById('split-grid').innerHTML=(currentTrip?.friends||[]).map((name,i)=>`
     <div class="split-person included" data-name="${esc(name)}" onclick="toggleSplit(this)">
       <div class="split-person-avatar" style="background:${AVATAR_COLORS[i%AVATAR_COLORS.length]}">${name.charAt(0).toUpperCase()}</div>
       <div class="split-person-name">${esc(name)}</div>
       <div class="split-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
     </div>`).join('');
 }
-function toggleSplit(el) {
-  el.classList.toggle('included');
-  el.querySelector('.split-check').style.opacity = el.classList.contains('included')?'1':'0';
-}
-window.toggleSplit = toggleSplit;
-function splitAll()  { document.querySelectorAll('.split-person').forEach(el=>{ el.classList.add('included');    el.querySelector('.split-check').style.opacity='1'; }); }
-function splitNone() { document.querySelectorAll('.split-person').forEach(el=>{ el.classList.remove('included'); el.querySelector('.split-check').style.opacity='0'; }); }
-window.splitAll=splitAll; window.splitNone=splitNone;
-function getSelectedSplit() { return [...document.querySelectorAll('.split-person.included')].map(el=>el.dataset.name); }
-
-function buildPaidByDropdown() {
+function toggleSplit(el){el.classList.toggle('included');el.querySelector('.split-check').style.opacity=el.classList.contains('included')?'1':'0';}
+window.toggleSplit=toggleSplit;
+function splitAll(){document.querySelectorAll('.split-person').forEach(el=>{el.classList.add('included');el.querySelector('.split-check').style.opacity='1';});}
+function splitNone(){document.querySelectorAll('.split-person').forEach(el=>{el.classList.remove('included');el.querySelector('.split-check').style.opacity='0';});}
+window.splitAll=splitAll;window.splitNone=splitNone;
+function getSelectedSplit(){return[...document.querySelectorAll('.split-person.included')].map(el=>el.dataset.name);}
+function buildPaidByDropdown(){
   const sel=document.getElementById('exp-paidby');
   sel.innerHTML=(currentTrip?.friends||[]).map(f=>`<option value="${esc(f)}">${esc(f)}</option>`).join('');
-  if(myIdentity&&currentTrip?.friends?.includes(myIdentity)) sel.value=myIdentity;
+  if(myIdentity&&currentTrip?.friends?.includes(myIdentity))sel.value=myIdentity;
 }
-function buildExpCurrencyDropdown() {
+function buildExpCurrencyDropdown(){
   const sel=document.getElementById('exp-currency');
   sel.innerHTML=Object.keys(DEFAULT_RATES).map(c=>`<option value="${c}">${c}</option>`).join('');
   sel.value=currentTrip?.currency||'KRW';
 }
-function updateHKDPreview() {
+function updateHKDPreview(){
   const amount=parseFloat(document.getElementById('exp-amount').value)||0;
   const cur=document.getElementById('exp-currency').value;
   const tripRate=parseFloat(currentTrip?.exchangeRate||1);
   const rate=cur===(currentTrip?.currency)?tripRate:(DEFAULT_RATES[cur]||1);
-  const hkd=amount*rate;
-  document.getElementById('hkd-preview').textContent =
-    amount>0?`≈ HKD ${fmt2(hkd)} (rate ${rate}) • Settle HKD`:'—';
+  document.getElementById('hkd-preview').textContent=amount>0?`≈ HKD ${fmt2(amount*rate)} (rate ${rate}) • Settle HKD`:'—';
 }
-window.updateHKDPreview = updateHKDPreview;
+window.updateHKDPreview=updateHKDPreview;
 
-// ── DATE STRIP — FIXED timezone bug ───────────────────────
-function renderDateStrip() {
-  if (!currentTrip) return;
-  const strip = document.getElementById('date-strip');
-  const { startDate, endDate } = currentTrip;
-  if (!startDate||!endDate) { strip.innerHTML=''; return; }
-
-  // ✅ FIXED: use Date.UTC to build date range — no timezone offset
-  function parseUTC(s) {
-    const [y,m,d]=s.split('-').map(Number);
-    return Date.UTC(y,m-1,d);
-  }
-  function utcToStr(ms) {
-    return new Date(ms).toISOString().split('T')[0];
-  }
-
-  const startMs = parseUTC(startDate);
-  const endMs   = parseUTC(endDate);
-  const diffDays = Math.round((endMs-startMs)/86400000)+1;
-
+// ─── DATE STRIP — UTC fixed ───────────────────────────────
+function renderDateStrip(){
+  if(!currentTrip)return;
+  const strip=document.getElementById('date-strip');
+  const{startDate,endDate}=currentTrip;
+  if(!startDate||!endDate){strip.innerHTML='';return;}
+  function parseUTC(s){const[y,m,d]=s.split('-').map(Number);return Date.UTC(y,m-1,d);}
+  function utcStr(ms){return new Date(ms).toISOString().split('T')[0];}
+  const startMs=parseUTC(startDate),endMs=parseUTC(endDate);
+  const diffDays=Math.round((endMs-startMs)/86400000)+1;
   let dates=[];
-  if (diffDays<=12) {
-    for(let i=0;i<diffDays;i++) dates.push(utcToStr(startMs+i*86400000));
-  } else {
-    const selMs = selectedDate ? parseUTC(selectedDate) : parseUTC(toDateStr(new Date()));
-    const pivMs = selMs - 5*86400000;
-    for(let i=0;i<12;i++){
-      const ms=pivMs+i*86400000;
-      if(ms>=startMs&&ms<=endMs) dates.push(utcToStr(ms));
-    }
-    if(dates.length<6){
-      dates=[];
-      for(let i=0;i<Math.min(12,diffDays);i++) dates.push(utcToStr(startMs+i*86400000));
-    }
+  if(diffDays<=12){for(let i=0;i<diffDays;i++)dates.push(utcStr(startMs+i*86400000));}
+  else{
+    const selMs=selectedDate?parseUTC(selectedDate):parseUTC(toDateStr(new Date()));
+    const pivMs=selMs-5*86400000;
+    for(let i=0;i<12;i++){const ms=pivMs+i*86400000;if(ms>=startMs&&ms<=endMs)dates.push(utcStr(ms));}
+    if(dates.length<6){dates=[];for(let i=0;i<Math.min(12,diffDays);i++)dates.push(utcStr(startMs+i*86400000));}
   }
-
-  const today   = toDateStr(new Date());
-  const expDates= new Set(expenses.map(e=>e.date));
-
-  strip.innerHTML = dates.map(d=>{
-    // ✅ FIXED: parse display using UTC to avoid local day shift
-    const ms  = parseUTC(d);
-    const dt  = new Date(ms);
-    const wd  = dt.toLocaleDateString('en',{weekday:'short',timeZone:'UTC'});
-    const dd  = dt.toLocaleDateString('en',{day:'numeric',timeZone:'UTC'});
-    const mm  = dt.toLocaleDateString('en',{month:'short',timeZone:'UTC'});
-    const isToday  = d===today;
-    const isActive = d===selectedDate;
-    const hasDot   = expDates.has(d);
-    return `<div class="date-card${isActive?' active':''}${isToday?' today-card':''}${hasDot?' has-expenses':''}"
-      onclick="selectStripDate('${d}')">
-      <div class="wd">${wd}</div>
-      <div class="dd">${dd}</div>
-      <div class="mm">${mm}</div>
+  const today=toDateStr(new Date());
+  const expDates=new Set(expenses.map(e=>e.date));
+  strip.innerHTML=dates.map(d=>{
+    const ms=parseUTC(d);
+    const wd=new Date(ms).toLocaleDateString('en',{weekday:'short',timeZone:'UTC'});
+    const dd=new Date(ms).toLocaleDateString('en',{day:'numeric',timeZone:'UTC'});
+    const mm=new Date(ms).toLocaleDateString('en',{month:'short',timeZone:'UTC'});
+    const isToday=d===today,isActive=d===selectedDate,hasDot=expDates.has(d);
+    return`<div class="date-card${isActive?' active':''}${isToday?' today-card':''}${hasDot?' has-expenses':''}" onclick="selectStripDate('${d}')">
+      <div class="wd">${wd}</div><div class="dd">${dd}</div><div class="mm">${mm}</div>
     </div>`;
   }).join('');
-
-  setTimeout(()=>{
-    const active=strip.querySelector('.date-card.active');
-    if(active) active.scrollIntoView({inline:'center',behavior:'smooth',block:'nearest'});
-  },50);
+  setTimeout(()=>{const a=strip.querySelector('.date-card.active');if(a)a.scrollIntoView({inline:'center',behavior:'smooth',block:'nearest'});},50);
 }
+function selectStripDate(d){selectedDate=d;document.getElementById('exp-date').value=d;renderDateStrip();}
+window.selectStripDate=selectStripDate;
+function onManualDateChange(){selectedDate=document.getElementById('exp-date').value;renderDateStrip();}
+window.onManualDateChange=onManualDateChange;
 
-function selectStripDate(d) {
-  selectedDate=d; document.getElementById('exp-date').value=d; renderDateStrip();
-}
-window.selectStripDate = selectStripDate;
-function onManualDateChange() {
-  selectedDate=document.getElementById('exp-date').value; renderDateStrip();
-}
-window.onManualDateChange = onManualDateChange;
-
-// ── RESET FORM ─────────────────────────────────────────────
-function resetNewForm() {
-  editingExpenseId=null; receiptDataURL=null;
+// ─── RESET FORM ───────────────────────────────────────────
+function resetNewForm(){
+  editingExpenseId=null;receiptDataURL=null;
   document.getElementById('editing-badge').classList.add('hidden');
   document.getElementById('add-expense-btn').textContent='Add Expense';
   document.getElementById('cancel-edit-btn').classList.add('hidden');
@@ -1477,168 +1296,190 @@ function resetNewForm() {
   document.getElementById('receipt-preview').classList.remove('show');
   document.getElementById('exp-desc').classList.remove('error');
   document.getElementById('exp-amount').classList.remove('error');
-  const db2=document.getElementById('delete-exp-btn'); if(db2) db2.remove();
-
-  // ✅ FIXED: default date using UTC
+  const db2=document.getElementById('delete-exp-btn');if(db2)db2.remove();
   const today=toDateStr(new Date());
   const trip=currentTrip;
   let defDate=today;
   if(trip){
-    const [ty,tm,td]=today.split('-').map(Number);
-    const [sy,sm,sd]=trip.startDate.split('-').map(Number);
-    const [ey,em,ed]=trip.endDate.split('-').map(Number);
-    const todayMs=Date.UTC(ty,tm-1,td);
-    const startMs=Date.UTC(sy,sm-1,sd);
-    const endMs  =Date.UTC(ey,em-1,ed);
-    defDate=(todayMs>=startMs&&todayMs<=endMs)?today:trip.startDate;
+    const[ty,tm,td]=today.split('-').map(Number);
+    const[sy,sm,sd]=trip.startDate.split('-').map(Number);
+    const[ey,em,ed]=trip.endDate.split('-').map(Number);
+    const tMs=Date.UTC(ty,tm-1,td),sMs=Date.UTC(sy,sm-1,sd),eMs=Date.UTC(ey,em-1,ed);
+    defDate=(tMs>=sMs&&tMs<=eMs)?today:trip.startDate;
   }
   selectedDate=defDate;
   document.getElementById('exp-date').value=defDate;
-  buildQuickChips(); buildCategoryChips(); selectCategory('Other');
-  buildPaidByDropdown(); buildExpCurrencyDropdown(); buildSplitGrid(); splitAll(); renderDateStrip();
+  buildQuickChips();buildCategoryChips();selectCategory('Other');
+  buildPaidByDropdown();buildExpCurrencyDropdown();buildSplitGrid();splitAll();renderDateStrip();
 }
 
-// ── RECEIPT ────────────────────────────────────────────────
-function handleReceiptUpload(e) {
-  const file=e.target.files[0]; if(!file) return;
+// ─── RECEIPT ──────────────────────────────────────────────
+function handleReceiptUpload(e){
+  const file=e.target.files[0];if(!file)return;
   const reader=new FileReader();
   reader.onload=ev=>{
     const img=new Image();
     img.onload=()=>{
-      const MAX=800; let w=img.width,h=img.height;
-      if(w>MAX||h>MAX){ if(w>h){h=Math.round(h*MAX/w);w=MAX;}else{w=Math.round(w*MAX/h);h=MAX;} }
-      const canvas=document.createElement('canvas');
-      canvas.width=w; canvas.height=h;
+      const MAX=800;let w=img.width,h=img.height;
+      if(w>MAX||h>MAX){if(w>h){h=Math.round(h*MAX/w);w=MAX;}else{w=Math.round(w*MAX/h);h=MAX;}}
+      const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
       canvas.getContext('2d').drawImage(img,0,0,w,h);
       receiptDataURL=canvas.toDataURL('image/jpeg',0.7);
       document.getElementById('receipt-thumb').src=receiptDataURL;
       document.getElementById('receipt-preview').classList.add('show');
+      // ✅ FIX: if no desc/amount, auto set Pending Update category
+      autoPendingIfNeeded();
     };
     img.src=ev.target.result;
   };
   reader.readAsDataURL(file);
 }
 window.handleReceiptUpload=handleReceiptUpload;
-function viewReceipt() {
-  if(!receiptDataURL) return;
-  document.getElementById('receipt-modal-img').src=receiptDataURL;
-  openModal('receipt-modal');
+
+// ✅ NEW: auto-set Pending Update when image uploaded but desc/amount missing
+function autoPendingIfNeeded(){
+  const desc=document.getElementById('exp-desc').value.trim();
+  const amount=parseFloat(document.getElementById('exp-amount').value)||0;
+  if(!desc||amount<=0){
+    selectCategory('Pending Update');
+  }
 }
+
+function viewReceipt(){if(!receiptDataURL)return;document.getElementById('receipt-modal-img').src=receiptDataURL;openModal('receipt-modal');}
 window.viewReceipt=viewReceipt;
-function removeReceipt() {
-  receiptDataURL=null;
-  document.getElementById('receipt-preview').classList.remove('show');
-  document.getElementById('receipt-file').value='';
-}
+function removeReceipt(){receiptDataURL=null;document.getElementById('receipt-preview').classList.remove('show');document.getElementById('receipt-file').value='';}
 window.removeReceipt=removeReceipt;
 
-// ── SAVE EXPENSE ───────────────────────────────────────────
-async function saveExpense() {
-  if(saveBusy) return;
-  const desc   =document.getElementById('exp-desc').value.trim();
-  const amount =parseFloat(document.getElementById('exp-amount').value)||0;
-  const date   =document.getElementById('exp-date').value||selectedDate||toDateStr(new Date());
-  const paidBy =document.getElementById('exp-paidby').value;
-  const cur    =document.getElementById('exp-currency').value;
-  const split  =getSelectedSplit();
-  const isPend =selectedCategory==='Pending Update';
-  const hasRec =!!receiptDataURL;
+// ─── SAVE EXPENSE ─────────────────────────────────────────
+async function saveExpense(){
+  if(saveBusy)return;
+  const desc=document.getElementById('exp-desc').value.trim();
+  const amount=parseFloat(document.getElementById('exp-amount').value)||0;
+  const date=document.getElementById('exp-date').value||selectedDate||toDateStr(new Date());
+  const paidBy=document.getElementById('exp-paidby').value;
+  const cur=document.getElementById('exp-currency').value;
+  const split=getSelectedSplit();
+  const hasRec=!!receiptDataURL;
 
+  // ✅ FIX: if image uploaded and desc/amount empty → auto Pending Update, skip validation
+  let effectiveCategory=selectedCategory;
+  if(hasRec&&(!desc||amount<=0)){
+    effectiveCategory='Pending Update';
+  }
+  const isPend=effectiveCategory==='Pending Update';
+
+  // ✅ FIX: editing pending → press update → auto change to Other if still Pending Update
+  if(editingExpenseId&&effectiveCategory==='Pending Update'){
+    effectiveCategory='Other';
+    selectCategory('Other');
+  }
+
+  // Validation — skip if has receipt (pending flow)
   let valid=true;
-  if(!desc&&!hasRec){ document.getElementById('exp-desc').classList.add('error'); valid=false; }
-  else document.getElementById('exp-desc').classList.remove('error');
-  if(amount<=0&&!isPend){ document.getElementById('exp-amount').classList.add('error'); valid=false; }
-  else document.getElementById('exp-amount').classList.remove('error');
-  if(!paidBy){ toast('Select who paid','error'); valid=false; }
-  if(split.length<1&&!isPend){ toast('Select at least 1 person to split','error'); valid=false; }
-  if(!valid) return;
+  if(!hasRec){
+    if(!desc){document.getElementById('exp-desc').classList.add('error');valid=false;}
+    else document.getElementById('exp-desc').classList.remove('error');
+    if(amount<=0&&!isPend){document.getElementById('exp-amount').classList.add('error');valid=false;}
+    else document.getElementById('exp-amount').classList.remove('error');
+  }else{
+    document.getElementById('exp-desc').classList.remove('error');
+    document.getElementById('exp-amount').classList.remove('error');
+  }
+  if(!paidBy){toast('Select who paid','error');valid=false;}
+  if(split.length<1&&!isPend){toast('Select at least 1 person to split','error');valid=false;}
+  if(!valid)return;
 
   saveBusy=true;
   const btn=document.getElementById('add-expense-btn');
-  btn.disabled=true; btn.textContent=editingExpenseId?'Updating…':'Adding…';
+  btn.disabled=true;btn.textContent=editingExpenseId?'Updating…':'Adding…';
 
-  const tripRate  =parseFloat(currentTrip?.exchangeRate||1);
-  const rateToHKD =cur===(currentTrip?.currency)?tripRate:(DEFAULT_RATES[cur]||1);
-  const amountHKD =parseFloat((amount*rateToHKD).toFixed(2));
-  const perPerson =split.length>0?parseFloat((amountHKD/split.length).toFixed(2)):0;
-  const expId     =editingExpenseId||(currentCode+'_'+Date.now());
+  const tripRate=parseFloat(currentTrip?.exchangeRate||1);
+  const rateToHKD=cur===(currentTrip?.currency)?tripRate:(DEFAULT_RATES[cur]||1);
+  const amountHKD=parseFloat((amount*rateToHKD).toFixed(2));
+  const perPerson=split.length>0?parseFloat((amountHKD/split.length).toFixed(2)):0;
+  const expId=editingExpenseId||(currentCode+'_'+Date.now());
 
   const expData={
-    description:desc||'Receipt - pending update',
-    amount, currency:cur, amountHKD, date, paidBy,
-    category:selectedCategory, splitAmong:split, perPerson,
-    hasReceipt:hasRec, updatedAt:new Date().toISOString(),
+    description:desc||(hasRec?'Receipt - pending update':''),
+    amount,currency:cur,amountHKD,date,paidBy,
+    category:effectiveCategory,
+    splitAmong:split,perPerson,
+    hasReceipt:hasRec,updatedAt:new Date().toISOString(),
   };
-  if(!editingExpenseId) expData.createdAt=new Date().toISOString();
+  if(!editingExpenseId)expData.createdAt=new Date().toISOString();
 
   if(hasRec&&receiptDataURL){
     await idbSave(expId,receiptDataURL);
     expData.receiptBase64=(receiptDataURL.length<700000)?receiptDataURL:null;
-  } else expData.receiptBase64=null;
+  }else expData.receiptBase64=null;
 
-  try {
+  try{
     if(firebaseOk&&db){
-      if(editingExpenseId) await updateDoc(doc(db,'trips',currentCode,'expenses',editingExpenseId),expData);
+      if(editingExpenseId)await updateDoc(doc(db,'trips',currentCode,'expenses',editingExpenseId),expData);
       else await setDoc(doc(db,'trips',currentCode,'expenses',expId),expData);
-    } else {
+    }else{
       let exps=getLocalExp(currentCode);
-      if(editingExpenseId){ const i=exps.findIndex(e=>e.id===editingExpenseId); if(i>=0) exps[i]={...exps[i],...expData}; }
+      if(editingExpenseId){const i=exps.findIndex(e=>e.id===editingExpenseId);if(i>=0)exps[i]={...exps[i],...expData};}
       else exps.unshift({id:expId,...expData});
-      saveLocalExp(currentCode,exps); loadLocalExp();
+      saveLocalExp(currentCode,exps);loadLocalExp();
     }
     toast(editingExpenseId?'Updated ✓':'Added ✓','success');
     resetNewForm();
-  } catch(e){ toast('Save failed: '+e.message,'error'); }
-  finally{
-    saveBusy=false;
-    setTimeout(()=>{ btn.disabled=false; btn.textContent=editingExpenseId?'Update Expense':'Add Expense'; },600);
-  }
+  }catch(e){toast('Save failed: '+e.message,'error');}
+  finally{saveBusy=false;setTimeout(()=>{btn.disabled=false;btn.textContent=editingExpenseId?'Update Expense':'Add Expense';},600);}
 }
 window.saveExpense=saveExpense;
-function cancelEdit(){ editingExpenseId=null; resetNewForm(); }
+function cancelEdit(){editingExpenseId=null;resetNewForm();}
 window.cancelEdit=cancelEdit;
 
-// ── EXPENSES PAGE ──────────────────────────────────────────
-function renderExpenses() {
+// ─── EXPENSES PAGE ────────────────────────────────────────
+function renderExpenses(){
+  // Pending banner
+  const pendingCount=expenses.filter(e=>e.category==='Pending Update').length;
+  const banner=document.getElementById('pending-banner');
+  if(pendingCount>0){
+    banner.classList.remove('hidden');
+    document.getElementById('pending-banner-count').textContent=pendingCount;
+  }else banner.classList.add('hidden');
+
   const search=document.getElementById('exp-search').value.toLowerCase();
   const filter=document.getElementById('exp-filter').value;
   let filtered=expenses.filter(e=>{
-    if(pendingFilterActive&&e.category!=='Pending Update') return false;
-    if(filter&&e.category!==filter) return false;
-    if(search&&!e.description?.toLowerCase().includes(search)&&!e.paidBy?.toLowerCase().includes(search)) return false;
+    if(pendingFilterActive&&e.category!=='Pending Update')return false;
+    if(filter&&e.category!==filter)return false;
+    if(search&&!e.description?.toLowerCase().includes(search)&&!e.paidBy?.toLowerCase().includes(search))return false;
     return true;
   }).sort((a,b)=>(b.date||'').localeCompare(a.date||'')||0);
 
   const total=filtered.length;
   const pages=Math.ceil(total/EXP_PER_PAGE)||1;
-  if(currentExpPage>pages) currentExpPage=1;
+  if(currentExpPage>pages)currentExpPage=1;
   const paged=filtered.slice((currentExpPage-1)*EXP_PER_PAGE,currentExpPage*EXP_PER_PAGE);
 
-  // Group by date
   const groups={};
-  paged.forEach(e=>{ (groups[e.date||'']= groups[e.date||'']||[]).push(e); });
+  paged.forEach(e=>{(groups[e.date||'']=groups[e.date||'']||[]).push(e);});
 
   const list=document.getElementById('expenses-list');
   if(!paged.length){
     list.innerHTML='<div class="empty-state"><div class="icon">📭</div><p>No expenses found</p></div>';
-    document.getElementById('pagination').innerHTML=''; return;
+    document.getElementById('pagination').innerHTML='';return;
   }
 
+  // Toggle select-mode class on list
+  list.classList.toggle('select-mode',selectMode);
+
   list.innerHTML=Object.entries(groups).sort(([a],[b])=>b.localeCompare(a)).map(([date,exps])=>{
-    // ✅ FIXED: show HKD total for mixed-currency groups
+    // ✅ FIX: per-currency day totals
     const dayHKD=exps.reduce((s,e)=>s+(parseFloat(e.amountHKD)||0),0);
-    // Build per-currency subtotals for same-currency groups
-    const currencies=[...new Set(exps.map(e=>e.currency))];
+    const byCur={};
+    exps.forEach(e=>{const c=e.currency||'HKD';byCur[c]=(byCur[c]||0)+(parseFloat(e.amount)||0);});
+    const curKeys=Object.keys(byCur);
     let totalLabel;
-    if(currencies.length===1){
-      // Single currency — show original + HKD
-      const dayOrig=exps.reduce((s,e)=>s+(parseFloat(e.amount)||0),0);
-      totalLabel=`${currencies[0]} ${fmt2(dayOrig)} • HKD ${fmt2(dayHKD)}`;
-    } else {
-      // Mixed currencies — show HKD only
-      totalLabel=`HKD ${fmt2(dayHKD)}`;
-    }
-    return `<div class="date-group">
+    if(curKeys.length===1&&curKeys[0]==='HKD')totalLabel=`HKD ${fmt2(dayHKD)}`;
+    else if(curKeys.length===1)totalLabel=`${curKeys[0]} ${fmt2(byCur[curKeys[0]])} • HKD ${fmt2(dayHKD)}`;
+    else totalLabel=curKeys.map(c=>`${c} ${fmt2(byCur[c])}`).join(' + ')+` • HKD ${fmt2(dayHKD)}`;
+
+    return`<div class="date-group">
       <div class="date-group-header">
         <div class="date-group-label">${date?formatDateLong(date):'Unknown'}</div>
         <div class="date-group-total">${totalLabel}</div>
@@ -1650,19 +1491,28 @@ function renderExpenses() {
   renderPagination(pages,total);
 }
 
-function buildExpRow(e) {
-  const catKey  =(e.category||'Other').replace(' ','').toLowerCase();
+function buildExpRow(e){
+  const catKey=(e.category||'Other').replace(' ','').toLowerCase();
   const catClass=catKey==='pendingupdate'?'cat-pending':'cat-'+(catKey||'other');
   const catColor=CAT_COLORS[e.category]||'#64748b';
-  const friends =currentTrip?.friends||[];
+  const friends=currentTrip?.friends||[];
   const splitLbl=e.splitAmong?.length===friends.length?'All':(e.splitAmong?.join(', ')||'—');
-  return `<div class="expense-row ${catClass}" onclick="editExpense('${e.id}')">
+  const isPending=e.category==='Pending Update';
+  const hasImg=e.hasReceipt;
+
+  // In select mode, only show checkbox on rows that have images
+  const showCb=selectMode&&hasImg;
+  const isChecked=selectedForBulk.has(e.id);
+
+  return`<div class="expense-row ${catClass}" data-id="${e.id}" onclick="onExpRowClick(event,'${e.id}')">
+    ${showCb?`<input type="checkbox" class="exp-select-cb" ${isChecked?'checked':''} onclick="event.stopPropagation();toggleBulkSelect('${e.id}',this)">`:
+      selectMode?`<div style="width:18px;flex-shrink:0"></div>`:''}
     <div class="expense-icon" style="background:${catColor}">${(e.description||'?').charAt(0).toUpperCase()}</div>
     <div class="expense-info">
-      <div class="expense-title">${esc(e.description||'—')}${e.hasReceipt?' 📎':''}</div>
+      <div class="expense-title">${esc(e.description||'—')}${hasImg?' 📎':''}</div>
       <div class="expense-meta">
         <span class="meta-chip">👤 ${esc(e.paidBy||'?')}</span>
-        <span class="meta-chip">${esc(e.category||'Other')}</span>
+        ${isPending?`<span class="meta-chip pending-chip">⏳ Pending</span>`:`<span class="meta-chip">${esc(e.category||'Other')}</span>`}
         <span class="meta-chip">Split: ${esc(splitLbl)}</span>
       </div>
     </div>
@@ -1673,12 +1523,82 @@ function buildExpRow(e) {
   </div>`;
 }
 
+function onExpRowClick(event,id){
+  if(selectMode){
+    // In select mode, clicking the row (not checkbox) on image expense toggles it
+    const e=expenses.find(x=>x.id===id);
+    if(e?.hasReceipt){
+      if(selectedForBulk.has(id))selectedForBulk.delete(id);
+      else selectedForBulk.add(id);
+      updateBulkBar();
+      renderExpenses();
+    }
+  }else{
+    editExpense(id);
+  }
+}
+window.onExpRowClick=onExpRowClick;
+
+function toggleBulkSelect(id,cb){
+  if(cb.checked)selectedForBulk.add(id);else selectedForBulk.delete(id);
+  updateBulkBar();
+}
+window.toggleBulkSelect=toggleBulkSelect;
+
+function updateBulkBar(){
+  const bar=document.getElementById('bulk-bar');
+  const n=selectedForBulk.size;
+  bar.classList.toggle('show',selectMode);
+  document.getElementById('bulk-bar-label').textContent=n>0?`${n} selected`:'Tap image expenses to select';
+}
+
+function enterSelectMode(){
+  selectMode=true;selectedForBulk.clear();
+  document.getElementById('bulk-bar').classList.add('show');
+  document.getElementById('bulk-bar-label').textContent='Tap image expenses to select';
+  renderExpenses();
+}
+window.enterSelectMode=enterSelectMode;
+
+function exitSelectMode(){
+  selectMode=false;selectedForBulk.clear();
+  document.getElementById('bulk-bar').classList.remove('show');
+  renderExpenses();
+}
+window.exitSelectMode=exitSelectMode;
+
+async function bulkRemoveImages(){
+  const ids=[...selectedForBulk];
+  if(!ids.length){toast('Select at least one expense','error');return;}
+  if(!confirm(`Remove images from ${ids.length} expense(s)? This cannot be undone.`))return;
+  showLoading(true,'Removing images…');
+  try{
+    for(const id of ids){
+      await idbDel(id);
+      const update={hasReceipt:false,receiptBase64:null};
+      if(firebaseOk&&db){
+        await updateDoc(doc(db,'trips',currentCode,'expenses',id),update);
+      }else{
+        let exps=getLocalExp(currentCode);
+        const i=exps.findIndex(e=>e.id===id);
+        if(i>=0)exps[i]={...exps[i],...update};
+        saveLocalExp(currentCode,exps);
+      }
+    }
+    if(!firebaseOk||!db)loadLocalExp();
+    toast(`Removed images from ${ids.length} expense(s) ✓`,'success');
+    exitSelectMode();
+  }catch(e){toast('Error: '+e.message,'error');}
+  finally{showLoading(false);}
+}
+window.bulkRemoveImages=bulkRemoveImages;
+
 function renderPagination(pages,total){
   const p=document.getElementById('pagination');
   if(pages<=1){p.innerHTML='';return;}
   const start=Math.max(1,currentExpPage-2),end=Math.min(pages,start+4);
   let html=`<button class="page-btn" onclick="goPage(${currentExpPage-1})" ${currentExpPage<=1?'disabled':''}>‹</button>`;
-  for(let i=start;i<=end;i++) html+=`<button class="page-btn${i===currentExpPage?' active':''}" onclick="goPage(${i})">${i}</button>`;
+  for(let i=start;i<=end;i++)html+=`<button class="page-btn${i===currentExpPage?' active':''}" onclick="goPage(${i})">${i}</button>`;
   html+=`<button class="page-btn" onclick="goPage(${currentExpPage+1})" ${currentExpPage>=pages?'disabled':''}>›</button>`;
   html+=`<span class="page-info">${currentExpPage}/${pages} • ${total} items</span>`;
   p.innerHTML=html;
@@ -1694,10 +1614,10 @@ function togglePendingFilter(){
 }
 window.togglePendingFilter=togglePendingFilter;
 
-// ── EDIT / DELETE ──────────────────────────────────────────
-async function editExpense(id) {
-  const exp=expenses.find(e=>e.id===id); if(!exp) return;
-  editingExpenseId=id; navigateTo('new');
+// ─── EDIT / DELETE ────────────────────────────────────────
+async function editExpense(id){
+  const exp=expenses.find(e=>e.id===id);if(!exp)return;
+  editingExpenseId=id;navigateTo('new');
   document.getElementById('editing-badge').classList.remove('hidden');
   document.getElementById('add-expense-btn').textContent='Update Expense';
   document.getElementById('cancel-edit-btn').classList.remove('hidden');
@@ -1706,86 +1626,70 @@ async function editExpense(id) {
   document.getElementById('exp-desc').value=exp.description||'';
   document.getElementById('desc-counter').textContent=(exp.description||'').length+'/80';
   document.getElementById('exp-amount').value=exp.amount||'';
-  buildExpCurrencyDropdown(); document.getElementById('exp-currency').value=exp.currency||currentTrip?.currency;
-  buildPaidByDropdown();      document.getElementById('exp-paidby').value=exp.paidBy||'';
-  buildCategoryChips(); selectCategory(exp.category||'Other');
+  buildExpCurrencyDropdown();document.getElementById('exp-currency').value=exp.currency||currentTrip?.currency;
+  buildPaidByDropdown();document.getElementById('exp-paidby').value=exp.paidBy||'';
+  buildCategoryChips();selectCategory(exp.category||'Other');
   buildSplitGrid();
   const ss=new Set(exp.splitAmong||[]);
   document.querySelectorAll('.split-person').forEach(el=>{
-    const inc=ss.has(el.dataset.name);
-    el.classList.toggle('included',inc);
+    const inc=ss.has(el.dataset.name);el.classList.toggle('included',inc);
     el.querySelector('.split-check').style.opacity=inc?'1':'0';
   });
   receiptDataURL=null;
   if(exp.hasReceipt){
     const idbData=await idbGet(id);
     receiptDataURL=idbData||exp.receiptBase64||null;
-    if(receiptDataURL){
-      document.getElementById('receipt-thumb').src=receiptDataURL;
-      document.getElementById('receipt-preview').classList.add('show');
-    }
-  } else document.getElementById('receipt-preview').classList.remove('show');
-
+    if(receiptDataURL){document.getElementById('receipt-thumb').src=receiptDataURL;document.getElementById('receipt-preview').classList.add('show');}
+  }else document.getElementById('receipt-preview').classList.remove('show');
   let delBtn=document.getElementById('delete-exp-btn');
-  if(!delBtn){
-    delBtn=document.createElement('button');
-    delBtn.id='delete-exp-btn'; delBtn.className='btn btn-danger'; delBtn.style.marginTop='8px';
-    document.getElementById('form-action-row').after(delBtn);
-  }
-  delBtn.textContent='Delete Expense'; delBtn.onclick=()=>deleteExpense(id);
-  updateHKDPreview(); renderDateStrip(); buildQuickChips();
+  if(!delBtn){delBtn=document.createElement('button');delBtn.id='delete-exp-btn';delBtn.className='btn btn-danger';delBtn.style.marginTop='8px';document.getElementById('form-action-row').after(delBtn);}
+  delBtn.textContent='Delete Expense';delBtn.onclick=()=>deleteExpense(id);
+  updateHKDPreview();renderDateStrip();buildQuickChips();
 }
 window.editExpense=editExpense;
 
 async function deleteExpense(id){
-  if(!confirm('Delete this expense?')) return;
+  if(!confirm('Delete this expense?'))return;
   const exp=expenses.find(e=>e.id===id);
   try{
-    if(firebaseOk&&db) await deleteDoc(doc(db,'trips',currentCode,'expenses',id));
-    else { let exps=getLocalExp(currentCode).filter(e=>e.id!==id); saveLocalExp(currentCode,exps); loadLocalExp(); }
+    if(firebaseOk&&db)await deleteDoc(doc(db,'trips',currentCode,'expenses',id));
+    else{let exps=getLocalExp(currentCode).filter(e=>e.id!==id);saveLocalExp(currentCode,exps);loadLocalExp();}
     await idbDel(id);
-    cancelEdit(); navigateTo('expenses'); renderExpenses();
+    cancelEdit();navigateTo('expenses');renderExpenses();
     toast('Expense deleted','warn',async()=>{
       if(exp){
-        if(firebaseOk&&db){ const{id:_,...rest}=exp; await setDoc(doc(db,'trips',currentCode,'expenses',id),rest); }
-        else{ let exps=getLocalExp(currentCode); exps.unshift(exp); saveLocalExp(currentCode,exps); loadLocalExp(); }
-        if(receiptDataURL) await idbSave(id,receiptDataURL);
+        if(firebaseOk&&db){const{id:_,...rest}=exp;await setDoc(doc(db,'trips',currentCode,'expenses',id),rest);}
+        else{let exps=getLocalExp(currentCode);exps.unshift(exp);saveLocalExp(currentCode,exps);loadLocalExp();}
+        if(receiptDataURL)await idbSave(id,receiptDataURL);
         toast('Restored','success');
       }
     },4000);
-  } catch(e){ toast('Delete failed: '+e.message,'error'); }
+  }catch(e){toast('Delete failed: '+e.message,'error');}
 }
 window.deleteExpense=deleteExpense;
 
-// ── BALANCES ───────────────────────────────────────────────
+// ─── BALANCES ─────────────────────────────────────────────
 function computeBalances(){
   const friends=currentTrip?.friends||[];
   const paid={},share={},paidOrig={},shareOrig={};
   friends.forEach(f=>{paid[f]=0;share[f]=0;paidOrig[f]=0;shareOrig[f]=0;});
   expenses.forEach(e=>{
-    const hkd=parseFloat(e.amountHKD)||0, orig=parseFloat(e.amount)||0;
+    const hkd=parseFloat(e.amountHKD)||0,orig=parseFloat(e.amount)||0;
     const split=(e.splitAmong||[]).filter(f=>friends.includes(f));
     if(e.paidBy&&friends.includes(e.paidBy)){paid[e.paidBy]+=hkd;paidOrig[e.paidBy]+=orig;}
-    if(split.length){
-      const ph=hkd/split.length, po=orig/split.length;
-      split.forEach(f=>{if(friends.includes(f)){share[f]+=ph;shareOrig[f]+=po;}});
-    }
+    if(split.length){const ph=hkd/split.length,po=orig/split.length;split.forEach(f=>{if(friends.includes(f)){share[f]+=ph;shareOrig[f]+=po;}});}
   });
-  return friends.map((f,i)=>({
-    name:f,idx:i,paid:paid[f],share:share[f],paidOrig:paidOrig[f],shareOrig:shareOrig[f],
-    balance:parseFloat((paid[f]-share[f]).toFixed(2))
-  }));
+  return friends.map((f,i)=>({name:f,idx:i,paid:paid[f],share:share[f],paidOrig:paidOrig[f],shareOrig:shareOrig[f],balance:parseFloat((paid[f]-share[f]).toFixed(2))}));
 }
-
 function renderBalances(){
-  if(!currentTrip) return;
+  if(!currentTrip)return;
   const balances=computeBalances();
   document.getElementById('balance-grid').innerHTML=balances.map((b,i)=>{
-    const cls=BC_CLASSES[i%BC_CLASSES.length], color=AVATAR_COLORS[b.idx%AVATAR_COLORS.length];
+    const cls=BC_CLASSES[i%BC_CLASSES.length],color=AVATAR_COLORS[b.idx%AVATAR_COLORS.length];
     const sign=b.balance>0?'+':'';
     const status=Math.abs(b.balance)<0.01?'Settled':b.balance>0?'Gets back':'Owes';
     const sc=b.balance>0.01?'#16a34a':b.balance<-0.01?'#dc2626':'#64748b';
-    return `<div class="balance-card ${cls}" onclick="openPersonSheet('${esc(b.name)}')">
+    return`<div class="balance-card ${cls}" onclick="openPersonSheet('${esc(b.name)}')">
       <div class="bc-avatar" style="background:${color}">${b.name.charAt(0).toUpperCase()}</div>
       <div class="bc-name">${esc(b.name)}</div>
       <div class="bc-balance" style="color:${sc}">${sign}HKD ${fmt2(Math.abs(b.balance))}</div>
@@ -1793,9 +1697,8 @@ function renderBalances(){
       <div class="bc-detail">Paid ${currentTrip.currency} ${fmt2(b.paidOrig)} / Share ${fmt2(b.shareOrig)}</div>
     </div>`;
   }).join('');
-
   const catTotals={};
-  expenses.forEach(e=>{ catTotals[e.category]=(catTotals[e.category]||0)+(parseFloat(e.amountHKD)||0); });
+  expenses.forEach(e=>{catTotals[e.category]=(catTotals[e.category]||0)+(parseFloat(e.amountHKD)||0);});
   const totalHKD=Object.values(catTotals).reduce((a,b)=>a+b,0)||1;
   document.getElementById('cat-breakdown').innerHTML=Object.entries(catTotals).sort(([,a],[,b])=>b-a)
     .map(([cat,total])=>`<div class="cat-row">
@@ -1804,21 +1707,17 @@ function renderBalances(){
       <div class="cat-pct">${Math.round(total/totalHKD*100)}%</div>
       <div class="cat-total">HKD ${fmt2(total)}</div>
     </div>`).join('');
-
   document.getElementById('bal-currency').value=currentTrip.currency||'KRW';
   document.getElementById('bal-rate').value=currentTrip.exchangeRate||0.0057;
 }
-
-function onBalCurrencyChange(){
-  document.getElementById('bal-rate').value=DEFAULT_RATES[document.getElementById('bal-currency').value]||1;
-}
+function onBalCurrencyChange(){document.getElementById('bal-rate').value=DEFAULT_RATES[document.getElementById('bal-currency').value]||1;}
 window.onBalCurrencyChange=onBalCurrencyChange;
-async function fetchRateForBalances(){ await fetchRate(document.getElementById('bal-currency').value,'bal-rate','bal-fetch-btn'); }
+async function fetchRateForBalances(){await fetchRate(document.getElementById('bal-currency').value,'bal-rate','bal-fetch-btn');}
 window.fetchRateForBalances=fetchRateForBalances;
 async function saveBalanceSettings(){
   const cur=document.getElementById('bal-currency').value;
   const rate=parseFloat(document.getElementById('bal-rate').value)||1;
-  currentTrip.currency=cur; currentTrip.exchangeRate=rate;
+  currentTrip.currency=cur;currentTrip.exchangeRate=rate;
   showLoading(true,'Recalculating…');
   try{
     if(firebaseOk&&db){
@@ -1831,9 +1730,8 @@ async function saveBalanceSettings(){
         batch.update(doc(db,'trips',currentCode,'expenses',e.id),{amountHKD:nH,perPerson:nP});
       });
       await batch.commit();
-    } else {
-      const lt=getLocalTrips();
-      if(lt[currentCode]){lt[currentCode].currency=cur;lt[currentCode].exchangeRate=rate;}
+    }else{
+      const lt=getLocalTrips();if(lt[currentCode]){lt[currentCode].currency=cur;lt[currentCode].exchangeRate=rate;}
       localStorage.setItem('localTrips',JSON.stringify(lt));
       let exps=getLocalExp(currentCode).map(e=>{
         const r=e.currency===cur?rate:(DEFAULT_RATES[e.currency]||1);
@@ -1841,36 +1739,33 @@ async function saveBalanceSettings(){
         const nP=(e.splitAmong?.length||0)>0?parseFloat((nH/e.splitAmong.length).toFixed(2)):0;
         return{...e,amountHKD:nH,perPerson:nP};
       });
-      saveLocalExp(currentCode,exps); loadLocalExp();
+      saveLocalExp(currentCode,exps);loadLocalExp();
     }
-    toast('Saved & recalculated ✓','success');
-    renderHeroBlocks(); renderBalances(); renderSettlement();
-  } catch(e){ toast('Save failed: '+e.message,'error'); }
-  finally{ showLoading(false); }
+    toast('Saved & recalculated ✓','success');renderHeroBlocks();renderBalances();renderSettlement();
+  }catch(e){toast('Save failed: '+e.message,'error');}
+  finally{showLoading(false);}
 }
 window.saveBalanceSettings=saveBalanceSettings;
 
-// ── PERSON SHEET ───────────────────────────────────────────
+// ─── PERSON SHEET ─────────────────────────────────────────
 function openPersonSheet(name){
   personSheetName=name;
   const tc=currentTrip?.currency||'KRW';
-  document.getElementById('ps-currency-toggle').innerHTML=
-    `<option value="HKD">HKD</option><option value="${tc}">${tc}</option>`;
+  document.getElementById('ps-currency-toggle').innerHTML=`<option value="HKD">HKD</option><option value="${tc}">${tc}</option>`;
   document.getElementById('ps-currency-toggle').value='HKD';
   document.querySelectorAll('.tab-btn-inner').forEach((b,i)=>b.classList.toggle('active',i===0));
   document.querySelectorAll('.tab-panel').forEach((p,i)=>p.classList.toggle('active',i===0));
-  renderPersonSheet(); openSheet('person-sheet');
+  renderPersonSheet();openSheet('person-sheet');
 }
 window.openPersonSheet=openPersonSheet;
 function switchPersonTab(idx,btn){
   document.querySelectorAll('.tab-btn-inner').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-  btn.classList.add('active'); document.querySelectorAll('.tab-panel')[idx].classList.add('active');
+  btn.classList.add('active');document.querySelectorAll('.tab-panel')[idx].classList.add('active');
 }
 window.switchPersonTab=switchPersonTab;
-
 function renderPersonSheet(){
-  const name=personSheetName; if(!name||!currentTrip) return;
+  const name=personSheetName;if(!name||!currentTrip)return;
   const friends=currentTrip.friends||[];
   const idx=friends.indexOf(name);
   const color=AVATAR_COLORS[idx<0?0:idx%AVATAR_COLORS.length];
@@ -1880,19 +1775,15 @@ function renderPersonSheet(){
   let paid=0,share=0,paidOrig=0,shareOrig=0;
   const paidExps=[],owesExps=[];
   expenses.forEach(e=>{
-    const hkd=parseFloat(e.amountHKD)||0, orig=parseFloat(e.amount)||0;
+    const hkd=parseFloat(e.amountHKD)||0,orig=parseFloat(e.amount)||0;
     const split=(e.splitAmong||[]).filter(f=>friends.includes(f));
     if(e.paidBy===name){paid+=hkd;paidOrig+=orig;paidExps.push(e);}
-    if(split.includes(name)){
-      const ph=split.length?hkd/split.length:0, po=split.length?orig/split.length:0;
-      share+=ph; shareOrig+=po; owesExps.push({...e,perHKD:ph,perOrig:po});
-    }
+    if(split.includes(name)){const ph=split.length?hkd/split.length:0,po=split.length?orig/split.length:0;share+=ph;shareOrig+=po;owesExps.push({...e,perHKD:ph,perOrig:po});}
   });
   const balance=parseFloat((paid-share).toFixed(2));
   const sign=balance>0?'+':'';
   const sc=balance>0.01?'#16a34a':balance<-0.01?'#dc2626':'#64748b';
-  const av=document.getElementById('ps-avatar');
-  av.style.background=color; av.textContent=name.charAt(0).toUpperCase();
+  const av=document.getElementById('ps-avatar');av.style.background=color;av.textContent=name.charAt(0).toUpperCase();
   document.getElementById('ps-name').textContent=name;
   document.getElementById('ps-balance-big').textContent=`${sign}HKD ${fmt2(Math.abs(balance))}`;
   document.getElementById('ps-balance-big').style.color=sc;
@@ -1925,41 +1816,35 @@ function renderPersonSheet(){
         <div style="font-size:10px;color:var(--gray)">${s}</div>
       </div>
     </div>`;
-  document.getElementById('ps-tab-paid').innerHTML=paidExps.length
-    ?paidExps.map(e=>eRow(e,v(e.amountHKD,e.amount),vs(e.amountHKD,e.amount),` • Split ${e.splitAmong?.length||0}`)).join('')
-    :'<div style="text-align:center;padding:20px;color:var(--gray)">No expenses paid</div>';
-  document.getElementById('ps-tab-owes').innerHTML=owesExps.length
-    ?owesExps.map(e=>eRow(e,v(e.perHKD,e.perOrig),vs(e.perHKD,e.perOrig),` • Paid by ${esc(e.paidBy)}`)).join('')
-    :'<div style="text-align:center;padding:20px;color:var(--gray)">No shared expenses</div>';
+  document.getElementById('ps-tab-paid').innerHTML=paidExps.length?paidExps.map(e=>eRow(e,v(e.amountHKD,e.amount),vs(e.amountHKD,e.amount),` • Split ${e.splitAmong?.length||0}`)).join(''):'<div style="text-align:center;padding:20px;color:var(--gray)">No expenses paid</div>';
+  document.getElementById('ps-tab-owes').innerHTML=owesExps.length?owesExps.map(e=>eRow(e,v(e.perHKD,e.perOrig),vs(e.perHKD,e.perOrig),` • Paid by ${esc(e.paidBy)}`)).join(''):'<div style="text-align:center;padding:20px;color:var(--gray)">No shared expenses</div>';
   const settlements=computeSettlements();
   const relevant=settlements.filter(s=>s.from===name||s.to===name);
-  document.getElementById('ps-tab-settle').innerHTML=relevant.length
-    ?relevant.map(s=>{
-        const iF=s.from===name;
-        return`<div style="padding:12px;background:${iF?'#fee2e2':'#dcfce7'};border-radius:10px;margin-bottom:8px">
-          <div style="font-size:13px;font-weight:700;color:${iF?'#dc2626':'#16a34a'}">${iF?'You pay '+esc(s.to):esc(s.from)+' pays you'}</div>
-          <div style="font-size:18px;font-weight:800;margin-top:4px">HKD ${fmt2(s.amount)}</div>
-        </div>`;}).join('')
-    :'<div style="text-align:center;padding:20px;color:var(--gray)">No settlements needed ✅</div>';
+  document.getElementById('ps-tab-settle').innerHTML=relevant.length?relevant.map(s=>{
+    const iF=s.from===name;
+    return`<div style="padding:12px;background:${iF?'#fee2e2':'#dcfce7'};border-radius:10px;margin-bottom:8px">
+      <div style="font-size:13px;font-weight:700;color:${iF?'#dc2626':'#16a34a'}">${iF?'You pay '+esc(s.to):esc(s.from)+' pays you'}</div>
+      <div style="font-size:18px;font-weight:800;margin-top:4px">HKD ${fmt2(s.amount)}</div>
+    </div>`;}).join(''):'<div style="text-align:center;padding:20px;color:var(--gray)">No settlements needed ✅</div>';
 }
 window.renderPersonSheet=renderPersonSheet;
 
-// ── SETTLEMENT ─────────────────────────────────────────────
+// ─── SETTLEMENT ───────────────────────────────────────────
 function computeSettlements(){
   const bal=computeBalances();
   const deb=bal.filter(b=>b.balance<-0.01).sort((a,b)=>a.balance-b.balance).map(b=>({name:b.name,amount:-b.balance}));
   const cred=bal.filter(b=>b.balance>0.01).sort((a,b)=>b.balance-a.balance).map(b=>({name:b.name,amount:b.balance}));
-  const trans=[]; let di=0,ci=0;
+  const trans=[];let di=0,ci=0;
   while(di<deb.length&&ci<cred.length){
     const pay=Math.min(deb[di].amount,cred[ci].amount);
-    if(pay>0.01) trans.push({from:deb[di].name,to:cred[ci].name,amount:parseFloat(pay.toFixed(2))});
-    deb[di].amount-=pay; cred[ci].amount-=pay;
-    if(deb[di].amount<0.01) di++; if(cred[ci].amount<0.01) ci++;
+    if(pay>0.01)trans.push({from:deb[di].name,to:cred[ci].name,amount:parseFloat(pay.toFixed(2))});
+    deb[di].amount-=pay;cred[ci].amount-=pay;
+    if(deb[di].amount<0.01)di++;if(cred[ci].amount<0.01)ci++;
   }
   return trans;
 }
 function renderSettlement(){
-  if(!currentTrip) return;
+  if(!currentTrip)return;
   const trans=computeSettlements();
   const friends=currentTrip.friends||[];
   const totalHKD=trans.reduce((s,t)=>s+t.amount,0);
@@ -1967,18 +1852,14 @@ function renderSettlement(){
     <div class="settle-stat"><div class="settle-stat-val">${trans.length}</div><div class="settle-stat-lbl">Transfers</div></div>
     <div class="settle-stat"><div class="settle-stat-val">HKD ${fmt2(totalHKD)}</div><div class="settle-stat-lbl">Total</div></div>
     <div class="settle-stat"><div class="settle-stat-val">HKD</div><div class="settle-stat-lbl">Currency</div></div>`;
-  if(!trans.length){
-    document.getElementById('settlement-list').innerHTML=
-      '<div class="empty-state"><div class="icon">✅</div><p>All settled!</p></div>'; return;
-  }
+  if(!trans.length){document.getElementById('settlement-list').innerHTML='<div class="empty-state"><div class="icon">✅</div><p>All settled!</p></div>';return;}
   document.getElementById('settlement-list').innerHTML=trans.map(t=>{
     const fi=friends.indexOf(t.from),ti=friends.indexOf(t.to);
-    const fc=AVATAR_COLORS[fi<0?0:fi%AVATAR_COLORS.length];
-    const tc=AVATAR_COLORS[ti<0?0:ti%AVATAR_COLORS.length];
+    const fc=AVATAR_COLORS[fi<0?0:fi%AVATAR_COLORS.length],tc2=AVATAR_COLORS[ti<0?0:ti%AVATAR_COLORS.length];
     return`<div class="transfer-row">
       <div class="transfer-avatar" style="background:${fc}">${t.from.charAt(0).toUpperCase()}</div>
       <div class="transfer-arrow">→</div>
-      <div class="transfer-avatar" style="background:${tc}">${t.to.charAt(0).toUpperCase()}</div>
+      <div class="transfer-avatar" style="background:${tc2}">${t.to.charAt(0).toUpperCase()}</div>
       <div class="transfer-info">
         <div class="transfer-names">${esc(t.from)} → ${esc(t.to)}</div>
         <div class="transfer-sub">${esc(t.from)} pays ${esc(t.to)}</div>
@@ -1995,10 +1876,10 @@ function copySettlement(){
 }
 window.copySettlement=copySettlement;
 
-// ── EXCEL ──────────────────────────────────────────────────
+// ─── EXCEL ────────────────────────────────────────────────
 function exportExcel(){
-  if(!window.XLSX){toast('Excel library not loaded yet','warn');return;}
-  const trip=currentTrip, bal=computeBalances(), trans=computeSettlements();
+  if(!window.XLSX){toast('Excel library not loaded','warn');return;}
+  const trip=currentTrip,bal=computeBalances(),trans=computeSettlements();
   const wb=XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([
     ['Date','Description','Category','Paid By',`Amount (${trip.currency})`,'Amount (HKD)','Shared With','Receipt'],
@@ -2008,45 +1889,41 @@ function exportExcel(){
     ['Name',`Paid (${trip.currency})`,'Paid (HKD)',`Share (${trip.currency})`,'Share (HKD)','Balance (HKD)','Status'],
     ...bal.map(b=>[b.name,fmt2(b.paidOrig),fmt2(b.paid),fmt2(b.shareOrig),fmt2(b.share),fmt2(b.balance),Math.abs(b.balance)<0.01?'Settled':b.balance>0?'Gets back':'Owes'])
   ]),'Balances');
-  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([
-    ['From','To','Amount (HKD)'],
-    ...trans.map(t=>[t.from,t.to,fmt2(t.amount)])
-  ]),'Settlement');
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['From','To','Amount (HKD)'],...trans.map(t=>[t.from,t.to,fmt2(t.amount)])]),'Settlement');
   XLSX.writeFile(wb,(trip.name||'TripSplit')+'_export.xlsx');
   toast('Exported ✓','success');
 }
 window.exportExcel=exportExcel;
 
-// ── SETTINGS ───────────────────────────────────────────────
-function openSettings(){
-  if(!currentTrip) return;
+// ─── SETTINGS ─────────────────────────────────────────────
+function openSettings(){if(currentTrip)navigateTo('settings');}
+window.openSettings=openSettings;
+function _openSettingsForm(){
+  if(!currentTrip)return;
   document.getElementById('s-name').value=currentTrip.name||'';
   document.getElementById('s-start').value=currentTrip.startDate||'';
   document.getElementById('s-end').value=currentTrip.endDate||'';
   document.getElementById('s-members').value=(currentTrip.friends||[]).join(', ');
   document.getElementById('s-trip-name-display').textContent=currentTrip.name||'';
   document.getElementById('s-confirm-delete').value='';
-  navigateTo('settings');
 }
-window.openSettings=openSettings;
 async function saveTripSettings(){
   const name=document.getElementById('s-name').value.trim();
   const start=document.getElementById('s-start').value;
   const end=document.getElementById('s-end').value;
   const members=document.getElementById('s-members').value.split(',').map(s=>s.trim()).filter(Boolean);
-  if(!name){toast('Name required','error');return;}
-  if(start>end){toast('Start ≤ end','error');return;}
+  if(!name){toast('Name required','error');return;}if(start>end){toast('Start ≤ end','error');return;}
   if(!members.length||members.length>8){toast('1–8 members','error');return;}
   showLoading(true,'Saving…');
   try{
     const u={name,startDate:start,endDate:end,friends:members};
-    if(firebaseOk&&db) await updateDoc(doc(db,'trips',currentCode),u);
-    else{ const lt=getLocalTrips(); if(lt[currentCode]) Object.assign(lt[currentCode],u); localStorage.setItem('localTrips',JSON.stringify(lt)); }
+    if(firebaseOk&&db)await updateDoc(doc(db,'trips',currentCode),u);
+    else{const lt=getLocalTrips();if(lt[currentCode])Object.assign(lt[currentCode],u);localStorage.setItem('localTrips',JSON.stringify(lt));}
     Object.assign(currentTrip,u);
     saveMyTrip(currentCode,name,localStorage.getItem('trip_'+currentCode+'_pw')||'');
-    renderTripHeaders(); toast('Saved ✓','success');
-  } catch(e){ toast('Save failed: '+e.message,'error'); }
-  finally{ showLoading(false); }
+    renderTripHeaders();toast('Saved ✓','success');
+  }catch(e){toast('Save failed: '+e.message,'error');}
+  finally{showLoading(false);}
 }
 window.saveTripSettings=saveTripSettings;
 async function updateTripPassword(){
@@ -2055,13 +1932,12 @@ async function updateTripPassword(){
   showLoading(true,'Updating…');
   try{
     const hash=await sha256(pw);
-    if(firebaseOk&&db) await updateDoc(doc(db,'trips',currentCode),{passwordHash:hash});
-    else{ const lt=getLocalTrips(); if(lt[currentCode]) lt[currentCode].passwordHash=hash; localStorage.setItem('localTrips',JSON.stringify(lt)); }
-    currentTrip.passwordHash=hash;
-    document.getElementById('s-newpw').value='';
+    if(firebaseOk&&db)await updateDoc(doc(db,'trips',currentCode),{passwordHash:hash});
+    else{const lt=getLocalTrips();if(lt[currentCode])lt[currentCode].passwordHash=hash;localStorage.setItem('localTrips',JSON.stringify(lt));}
+    currentTrip.passwordHash=hash;document.getElementById('s-newpw').value='';
     toast('Password updated ✓','success');
-  } catch(e){ toast('Failed: '+e.message,'error'); }
-  finally{ showLoading(false); }
+  }catch(e){toast('Failed: '+e.message,'error');}
+  finally{showLoading(false);}
 }
 window.updateTripPassword=updateTripPassword;
 function copyTripNameForDelete(){
@@ -2073,70 +1949,51 @@ window.copyTripNameForDelete=copyTripNameForDelete;
 async function deleteTripSettings(){
   const typed=document.getElementById('s-confirm-delete').value;
   if(typed!==currentTrip?.name){toast('Name does not match','error');return;}
-  if(!confirm(`Permanently delete "${currentTrip.name}"?`)) return;
+  if(!confirm(`Permanently delete "${currentTrip.name}"?`))return;
   showLoading(true,'Deleting…');
   try{
     if(firebaseOk&&db){
       const snap=await getDocs(collection(db,'trips',currentCode,'expenses'));
-      const batch=writeBatch(db);
-      snap.docs.forEach(d=>batch.delete(d.ref));
-      batch.delete(doc(db,'trips',currentCode));
-      await batch.commit();
-    } else {
-      const lt=getLocalTrips(); delete lt[currentCode]; localStorage.setItem('localTrips',JSON.stringify(lt));
-      localStorage.removeItem('localExp_'+currentCode);
-    }
+      const batch=writeBatch(db);snap.docs.forEach(d=>batch.delete(d.ref));batch.delete(doc(db,'trips',currentCode));await batch.commit();
+    }else{const lt=getLocalTrips();delete lt[currentCode];localStorage.setItem('localTrips',JSON.stringify(lt));localStorage.removeItem('localExp_'+currentCode);}
     await idbDelTrip(currentCode);
     removeMyTrip(currentCode);
-    localStorage.removeItem('trip_'+currentCode+'_who');
-    localStorage.removeItem('trip_'+currentCode+'_pw');
+    localStorage.removeItem('trip_'+currentCode+'_who');localStorage.removeItem('trip_'+currentCode+'_pw');
     currentTrip=null;currentCode=null;myIdentity=null;expenses=[];
     if(expensesUnsub){expensesUnsub();expensesUnsub=null;}
-    renderLobby(); navigateTo('lobby'); toast('Trip deleted','warn');
-  } catch(e){ toast('Delete failed: '+e.message,'error'); }
-  finally{ showLoading(false); }
+    renderLobby();navigateTo('lobby');toast('Trip deleted','warn');
+  }catch(e){toast('Delete failed: '+e.message,'error');}
+  finally{showLoading(false);}
 }
 window.deleteTripSettings=deleteTripSettings;
 
-// ── DELETE ALL ─────────────────────────────────────────────
+// ─── DELETE ALL ───────────────────────────────────────────
 async function confirmDeleteAll(){
   if(document.getElementById('delete-all-input').value!=='DELETE ALL'){toast('Type DELETE ALL exactly','error');return;}
-  closeModal('delete-all-modal'); showLoading(true,'Deleting all…');
+  closeModal('delete-all-modal');showLoading(true,'Deleting all…');
   try{
     if(firebaseOk&&db){
       const ts=await getDocs(collection(db,'trips'));
       for(const td of ts.docs){
         const es=await getDocs(collection(db,'trips',td.id,'expenses'));
-        const batch=writeBatch(db);
-        es.docs.forEach(d=>batch.delete(d.ref)); batch.delete(td.ref); await batch.commit();
+        const batch=writeBatch(db);es.docs.forEach(d=>batch.delete(d.ref));batch.delete(td.ref);await batch.commit();
       }
     }
-    Object.keys(localStorage).filter(k=>k.startsWith('localExp_')||k.startsWith('trip_')||k==='localTrips'||k==='myTrips')
-      .forEach(k=>localStorage.removeItem(k));
-    renderLobby(); toast('All trips deleted','warn');
-  } catch(e){ toast('Error: '+e.message,'error'); }
-  finally{ showLoading(false); }
+    Object.keys(localStorage).filter(k=>k.startsWith('localExp_')||k.startsWith('trip_')||k==='localTrips'||k==='myTrips').forEach(k=>localStorage.removeItem(k));
+    renderLobby();toast('All trips deleted','warn');
+  }catch(e){toast('Error: '+e.message,'error');}
+  finally{showLoading(false);}
 }
 window.confirmDeleteAll=confirmDeleteAll;
 
-// ── UTILS ──────────────────────────────────────────────────
-function esc(s){ const d=document.createElement('div');d.textContent=s||'';return d.innerHTML; }
-function fmt2(n){ return(Math.round((parseFloat(n)||0)*100)/100).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}); }
-function toDateStr(d){ return d.toISOString().split('T')[0]; }
-function fmtDateShort(s){
-  if(!s) return '';
-  const[y,m,d]=s.split('-').map(Number);
-  return new Date(Date.UTC(y,m-1,d)).toLocaleDateString('en',{day:'numeric',month:'short',timeZone:'UTC'});
-}
-function formatDateLong(s){
-  if(!s) return '';
-  const[y,m,d]=s.split('-').map(Number);
-  return new Date(Date.UTC(y,m-1,d))
-    .toLocaleDateString('en',{weekday:'short',day:'numeric',month:'long',year:'numeric',timeZone:'UTC'})
-    .replace(',',' •');
-}
+// ─── UTILS ────────────────────────────────────────────────
+function esc(s){const d=document.createElement('div');d.textContent=s||'';return d.innerHTML;}
+function fmt2(n){return(Math.round((parseFloat(n)||0)*100)/100).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});}
+function toDateStr(d){return d.toISOString().split('T')[0];}
+function fmtDateShort(s){if(!s)return'';const[y,m,d]=s.split('-').map(Number);return new Date(Date.UTC(y,m-1,d)).toLocaleDateString('en',{day:'numeric',month:'short',timeZone:'UTC'});}
+function formatDateLong(s){if(!s)return'';const[y,m,d]=s.split('-').map(Number);return new Date(Date.UTC(y,m-1,d)).toLocaleDateString('en',{weekday:'short',day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}).replace(',',' •');}
 
-// ── INIT ───────────────────────────────────────────────────
+// ─── INIT ─────────────────────────────────────────────────
 (async function init(){
   showLoading(true,'Loading TripSplit…');
   await openIDB();
