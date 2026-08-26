@@ -44,6 +44,7 @@ button{cursor:pointer;border:none;background:none}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
 /* LOBBY */
+#page-lobby{padding:0 0 24px}
 .lobby-hero{background:linear-gradient(135deg,#1e40af 0%,#2563eb 50%,#3b82f6 100%);padding:56px 24px 40px;color:var(--white);text-align:center;position:relative;overflow:hidden}
 .lobby-hero::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.06)}
 .lobby-hero::after{content:'';position:absolute;bottom:-60px;left:-30px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,.04)}
@@ -61,7 +62,7 @@ button{cursor:pointer;border:none;background:none}
 .form-label{font-size:13px;font-weight:600;color:var(--dark);margin-bottom:6px;display:block}
 .form-input{width:100%;padding:12px 14px;border:2px solid var(--gray-mid);border-radius:var(--radius-sm);font-size:15px;font-weight:500;color:var(--dark);background:var(--white);transition:border-color .2s}
 .form-input:focus{border-color:var(--blue)}
-.form-input.error{border-color:var(--danger)}
+.form-input.error{border-color:var(--danger)!important}
 .input-wrap{position:relative}
 .input-wrap .form-input{padding-right:44px}
 .eye-btn{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--gray);padding:4px}
@@ -69,12 +70,12 @@ button{cursor:pointer;border:none;background:none}
 .checkbox-row{display:flex;align-items:center;gap:8px;margin-top:10px}
 .checkbox-row input[type=checkbox]{width:16px;height:16px;accent-color:var(--blue)}
 .checkbox-row label{font-size:13px;font-weight:500;color:var(--gray)}
-.btn{width:100%;padding:14px;border-radius:var(--radius-sm);font-size:15px;font-weight:700;letter-spacing:.3px;transition:all .15s;border:none;cursor:pointer}
+.btn{width:100%;padding:14px;border-radius:var(--radius-sm);font-size:15px;font-weight:700;letter-spacing:.3px;transition:all .15s}
 .btn-primary{background:var(--blue);color:var(--white)}
 .btn-primary:hover{background:#1d4ed8}
 .btn-primary:active{transform:scale(.98)}
 .btn-danger{background:var(--danger);color:var(--white)}
-.btn-outline{border:2px solid var(--gray-mid)!important;color:var(--dark);background:var(--white)}
+.btn-outline{border:2px solid var(--gray-mid);color:var(--dark);background:var(--white)}
 .btn-sm{padding:8px 14px;font-size:13px;width:auto}
 .my-trips-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
 .badge{background:var(--blue);color:var(--white);border-radius:10px;padding:2px 8px;font-size:11px;font-weight:700}
@@ -98,36 +99,34 @@ button{cursor:pointer;border:none;background:none}
 .rate-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .currency-select{width:100%;padding:12px 14px;border:2px solid var(--gray-mid);border-radius:var(--radius-sm);font-size:14px;font-weight:500;color:var(--dark);background:var(--white);transition:border-color .2s;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px}
 .currency-select:focus{border-color:var(--blue)}
-.fetch-rate-btn{display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:var(--radius-sm);background:var(--blue-light);color:var(--blue);font-size:12px;font-weight:700;border:none;cursor:pointer;margin-top:6px;width:fit-content}
+.fetch-rate-btn{display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:var(--radius-sm);background:var(--blue-light);color:var(--blue);font-size:12px;font-weight:700;border:none;cursor:pointer;margin-top:6px}
 .fetch-rate-btn svg{width:14px;height:14px;stroke-width:2.5}
 .fetch-rate-btn.loading svg{animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .invite-preview{background:var(--blue-light);border-radius:var(--radius-sm);padding:12px;font-size:12px;color:var(--blue);font-family:var(--font2);margin-top:8px;word-break:break-all}
+.end-date-display{background:var(--gray-light);border:2px solid var(--gray-mid);border-radius:var(--radius-sm);padding:12px 14px;font-size:15px;font-weight:600;color:var(--blue);text-align:center}
 
 /* TRIP HEADER */
 .trip-header{background:linear-gradient(135deg,#1e40af,#2563eb);padding:48px 16px 16px;color:var(--white)}
-.trip-header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.trip-header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:0}
 .trip-header-back{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;opacity:.85;cursor:pointer}
 .trip-header-back svg{width:16px;height:16px;stroke-width:2.5}
 .trip-header-title{font-size:20px;font-weight:800;text-align:center;flex:1;letter-spacing:-.3px}
 .trip-header-settings{padding:6px;cursor:pointer;opacity:.85}
 .trip-header-settings svg{width:20px;height:20px;stroke-width:2}
 
-/* HERO BLOCKS — shown at bottom of new page, top of others */
-.hero-blocks{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px 16px 16px}
+/* HERO BLOCKS — shown on Expenses/Balances, hidden on New */
+.hero-blocks{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px 0 4px}
 .hero-block{background:rgba(255,255,255,.15);border-radius:12px;padding:12px;backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.2)}
 .hero-block-label{font-size:10px;font-weight:700;opacity:.7;text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px}
-.hero-block-value{font-size:15px;font-weight:800;color:var(--white);line-height:1.2}
-.hero-block-sub{font-size:10px;opacity:.7;margin-top:2px;word-break:break-word}
-/* hero inside trip-header has no extra padding */
-.trip-header .hero-blocks{padding:8px 0 0;margin:0}
+.hero-block-value{font-size:16px;font-weight:800;color:var(--white);line-height:1.2}
+.hero-block-sub{font-size:10px;opacity:.7;margin-top:2px}
 
 /* NEW EXPENSE */
+#page-new{padding:0 0 24px}
 .new-content{padding:14px 16px}
 .editing-badge{display:inline-flex;align-items:center;gap:6px;background:#fef3c7;color:#d97706;border-radius:20px;padding:6px 14px;font-size:12px;font-weight:700;margin-bottom:14px}
-
-/* DATE STRIP */
-.date-strip-wrap{overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.date-strip-wrap{overflow-x:auto;padding-bottom:4px;margin-bottom:12px;scrollbar-width:none}
 .date-strip-wrap::-webkit-scrollbar{display:none}
 .date-strip{display:flex;gap:8px;width:max-content;padding:2px 2px 4px}
 .date-card{display:flex;flex-direction:column;align-items:center;padding:10px 12px;border-radius:12px;border:2px solid var(--gray-mid);background:var(--white);cursor:pointer;transition:all .15s;min-width:52px;position:relative;flex-shrink:0}
@@ -135,13 +134,11 @@ button{cursor:pointer;border:none;background:none}
 .date-card.today-card{border-color:var(--orange);color:var(--orange)}
 .date-card.today-card.active{background:var(--orange);border-color:var(--orange);color:var(--white)}
 .date-card.has-expenses::after{content:'';position:absolute;bottom:5px;left:50%;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;background:var(--blue)}
-.date-card.active.has-expenses::after,.date-card.today-card.active.has-expenses::after{background:rgba(255,255,255,.8)}
-.date-card .wd{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;opacity:.6;margin-bottom:2px}
+.date-card.active.has-expenses::after,.date-card.today-card.active.has-expenses::after{background:var(--white)}
+.date-card .wd{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;opacity:.7;margin-bottom:2px}
 .date-card .dd{font-size:17px;font-weight:800;line-height:1}
-.date-card .mm{font-size:9px;font-weight:600;opacity:.6;margin-top:2px}
+.date-card .mm{font-size:9px;font-weight:600;opacity:.7;margin-top:2px}
 .date-card.active .wd,.date-card.active .mm{opacity:.7}
-
-/* CHIPS */
 .chips-row{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
 .chip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;border:2px solid var(--gray-mid);color:var(--gray);background:var(--white);cursor:pointer;transition:all .15s}
 .chip:hover{border-color:var(--blue);color:var(--blue)}
@@ -152,22 +149,16 @@ button{cursor:pointer;border:none;background:none}
 .chip.cat-activity.active{background:var(--cat-activity);border-color:var(--cat-activity);color:#fff}
 .chip.cat-other.active{background:var(--cat-other);border-color:var(--cat-other);color:#fff}
 .chip.cat-pending.active{background:var(--cat-pending);border-color:var(--cat-pending);color:#fff}
-
-/* AMOUNT */
 .amount-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start}
 .amount-input{font-size:26px;font-weight:800;letter-spacing:-.5px}
 .hkd-preview{background:var(--blue-light);border-radius:var(--radius-sm);padding:10px 12px;font-size:12px;color:var(--blue);font-weight:600;margin-top:8px}
-
-/* RECEIPT */
 .receipt-area{border:2px dashed var(--gray-mid);border-radius:var(--radius-sm);padding:20px;text-align:center;cursor:pointer;transition:border-color .2s;color:var(--gray);font-size:14px;font-weight:600}
 .receipt-area:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-light)}
 .receipt-preview{display:none;align-items:center;gap:10px;padding:10px;background:var(--gray-light);border-radius:var(--radius-sm);margin-top:8px}
 .receipt-preview.show{display:flex}
 .receipt-thumb{width:48px;height:48px;object-fit:cover;border-radius:6px;cursor:pointer}
+.receipt-actions{display:flex;gap:8px}
 .receipt-btn{padding:5px 10px;border-radius:6px;font-size:12px;font-weight:600;background:var(--white);border:1.5px solid var(--gray-mid);color:var(--dark);cursor:pointer}
-.storage-badge{display:inline-flex;align-items:center;gap:5px;background:#f0fdf4;border:1.5px solid #86efac;border-radius:8px;padding:4px 10px;font-size:11px;font-weight:600;color:#16a34a;margin-top:6px}
-
-/* SPLIT */
 .split-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
 .split-person{display:flex;align-items:center;gap:8px;padding:10px;border-radius:var(--radius-sm);border:2px solid var(--gray-mid);cursor:pointer;transition:all .15s}
 .split-person.included{border-color:var(--blue);background:var(--blue-light)}
@@ -175,13 +166,14 @@ button{cursor:pointer;border:none;background:none}
 .split-person-name{font-size:12px;font-weight:600;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .split-check{color:var(--blue);flex-shrink:0;transition:opacity .15s}
 .split-check svg{width:14px;height:14px;stroke-width:2.5}
+.storage-badge{display:inline-flex;align-items:center;gap:5px;background:#f0fdf4;border:1.5px solid #86efac;border-radius:8px;padding:4px 10px;font-size:11px;font-weight:600;color:#16a34a;margin-top:6px}
 
-/* EXPENSES PAGE */
+/* EXPENSES */
 .expenses-controls{display:flex;gap:8px;padding:14px 16px 0;align-items:center;flex-wrap:wrap}
-.search-box{flex:1;min-width:120px;padding:10px 14px;border:2px solid var(--gray-mid);border-radius:var(--radius-sm);font-size:14px;font-weight:500}
+.search-box{flex:1;min-width:140px;padding:10px 14px;border:2px solid var(--gray-mid);border-radius:var(--radius-sm);font-size:14px;font-weight:500}
 .search-box:focus{border-color:var(--blue)}
-.filter-select{padding:10px 28px 10px 10px;border:2px solid var(--gray-mid);border-radius:var(--radius-sm);font-size:13px;font-weight:500;color:var(--dark);background:var(--white);appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 6px center}
-.pending-btn{padding:10px 12px;border-radius:var(--radius-sm);border:2px solid var(--cat-pending);color:var(--cat-pending);font-size:12px;font-weight:700;background:var(--white);cursor:pointer;transition:all .15s;white-space:nowrap}
+.filter-select{padding:10px 30px 10px 12px;border:2px solid var(--gray-mid);border-radius:var(--radius-sm);font-size:13px;font-weight:500;color:var(--dark);background:var(--white);appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center}
+.pending-btn{padding:10px 14px;border-radius:var(--radius-sm);border:2px solid var(--cat-pending);color:var(--cat-pending);font-size:12px;font-weight:700;background:var(--white);cursor:pointer;transition:all .15s;white-space:nowrap}
 .pending-btn.active{background:var(--cat-pending);color:var(--white)}
 .date-group{margin:0 16px 4px}
 .date-group-header{display:flex;align-items:center;justify-content:space-between;padding:12px 0 8px;border-bottom:1.5px solid var(--gray-mid);margin-bottom:4px;position:sticky;top:0;background:#f8fafc;z-index:5}
@@ -189,7 +181,7 @@ button{cursor:pointer;border:none;background:none}
 .date-group-total{font-size:11px;color:var(--gray);font-family:var(--font2)}
 .expense-row{display:flex;align-items:center;gap:10px;padding:12px;background:var(--white);border-radius:var(--radius-sm);margin-bottom:6px;box-shadow:var(--shadow-sm);cursor:pointer;transition:transform .15s;position:relative;overflow:hidden}
 .expense-row:hover{transform:translateX(2px)}
-.expense-row::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px}
+.expense-row::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px 0 0 3px}
 .expense-row.cat-food::before{background:var(--cat-food)}
 .expense-row.cat-transport::before{background:var(--cat-transport)}
 .expense-row.cat-hotel::before{background:var(--cat-hotel)}
@@ -253,6 +245,7 @@ button{cursor:pointer;border:none;background:none}
 .settle-btn svg{width:16px;height:16px;stroke-width:2}
 
 /* SETTINGS */
+#page-settings{padding:0 0 24px}
 .settings-content{padding:14px 16px}
 .settings-block{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:18px;margin-bottom:14px}
 .settings-block h3{font-size:14px;font-weight:700;color:var(--dark);margin-bottom:14px;padding-bottom:8px;border-bottom:1.5px solid var(--gray-mid)}
@@ -295,7 +288,7 @@ button{cursor:pointer;border:none;background:none}
 
 /* UTILS */
 .hidden{display:none!important}
-.mt-8{margin-top:8px}.mt-12{margin-top:12px}
+.mt-8{margin-top:8px}.mt-12{margin-top:12px}.mt-16{margin-top:16px}
 .empty-state{text-align:center;padding:40px 20px;color:var(--gray)}
 .empty-state .icon{font-size:40px;margin-bottom:10px}
 .empty-state p{font-size:14px;font-weight:600}
@@ -308,7 +301,7 @@ button{cursor:pointer;border:none;background:none}
 </head>
 <body>
 
-<div class="loading-overlay" id="loading-overlay">
+<div class="loading-overlay" id="loading-overlay" style="display:none">
   <div class="spinner"></div>
   <p id="loading-text">Loading…</p>
 </div>
@@ -329,7 +322,7 @@ button{cursor:pointer;border:none;background:none}
 <!-- WHO AM I -->
 <div class="modal-overlay" id="who-modal">
   <div class="modal-box">
-    <div style="text-align:center">
+    <div style="text-align:center;margin-bottom:4px">
       <div style="font-size:28px">👋</div>
       <h2 style="font-size:20px;font-weight:800;margin:8px 0 4px">Who are you?</h2>
       <p style="font-size:13px;color:var(--gray)">Select your name from the trip members</p>
@@ -338,7 +331,7 @@ button{cursor:pointer;border:none;background:none}
   </div>
 </div>
 
-<!-- ADMIN MODAL -->
+<!-- ADMIN -->
 <div class="modal-overlay" id="admin-modal">
   <div class="modal-box">
     <h2 style="font-size:18px;font-weight:800;margin-bottom:6px">Admin Access</h2>
@@ -356,12 +349,12 @@ button{cursor:pointer;border:none;background:none}
   </div>
 </div>
 
-<!-- DELETE ALL MODAL -->
+<!-- DELETE ALL -->
 <div class="modal-overlay" id="delete-all-modal">
   <div class="modal-box">
     <h2 style="font-size:18px;font-weight:800;color:var(--danger);margin-bottom:6px">⚠️ Delete All Trips</h2>
     <p style="font-size:13px;color:var(--gray);margin-bottom:16px">Type <strong>DELETE ALL</strong> to confirm.</p>
-    <input type="text" id="delete-all-input" class="form-input" placeholder="DELETE ALL" style="margin-bottom:14px">
+    <input type="text" id="delete-all-input" class="form-input" placeholder="Type DELETE ALL" style="margin-bottom:14px">
     <div style="display:flex;gap:10px">
       <button class="btn btn-outline btn-sm" style="flex:1" onclick="closeModal('delete-all-modal')">Cancel</button>
       <button class="btn btn-danger btn-sm" style="flex:1" onclick="confirmDeleteAll()">Delete All</button>
@@ -369,7 +362,7 @@ button{cursor:pointer;border:none;background:none}
   </div>
 </div>
 
-<!-- PERSON DETAIL SHEET -->
+<!-- PERSON SHEET -->
 <div class="sheet-overlay" id="person-sheet">
   <div class="sheet-box">
     <div class="sheet-handle"></div>
@@ -401,7 +394,9 @@ button{cursor:pointer;border:none;background:none}
   </div>
 </div>
 
-<!-- ===================== APP ===================== -->
+<!-- ====================================================
+     APP
+     ==================================================== -->
 <div id="app">
 
 <!-- LOBBY -->
@@ -484,22 +479,28 @@ button{cursor:pointer;border:none;background:none}
           </button>
         </div>
       </div>
-      <!-- START DATE + NUMBER OF DAYS -->
+
+      <!-- Start date + Number of days → auto end date -->
       <div class="form-group">
         <label class="form-label">Start Date *</label>
-        <input type="date" id="c-start" class="form-input" onchange="recalcEndDate()">
+        <input type="date" id="c-start" class="form-input" oninput="calcEndDate()">
       </div>
-      <div class="form-group">
-        <label class="form-label">Number of Days *</label>
-        <select class="currency-select" id="c-days" onchange="recalcEndDate()">
-          <!-- filled by JS -->
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">End Date (auto-filled)</label>
-        <input type="date" id="c-end" class="form-input" style="background:var(--gray-light);color:var(--gray)" readonly>
+      <div class="rate-row">
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Number of Days *</label>
+          <select class="currency-select" id="c-numdays" onchange="calcEndDate()" style="padding:12px 36px 12px 14px">
+            <!-- filled by JS 1-30 -->
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">End Date (auto)</label>
+          <div class="end-date-display" id="c-end-display">—</div>
+          <!-- hidden real end date value -->
+          <input type="hidden" id="c-end">
+        </div>
       </div>
     </div>
+
     <div class="section-card">
       <div class="form-group">
         <label class="form-label">Currency</label>
@@ -518,7 +519,7 @@ button{cursor:pointer;border:none;background:none}
       </div>
       <div class="form-group">
         <label class="form-label">Exchange Rate to HKD</label>
-        <input type="number" id="c-rate" class="form-input" step="0.00001" placeholder="e.g. 0.0057">
+        <input type="number" id="c-rate" class="form-input" step="0.0001" placeholder="e.g. 0.0057">
         <button class="fetch-rate-btn" id="c-fetch-btn" onclick="fetchRateForCreate()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10"/><path d="M23 14l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
           Auto-fetch rate
@@ -529,6 +530,7 @@ button{cursor:pointer;border:none;background:none}
         <input type="text" id="c-members" class="form-input" placeholder="Alice, Bob, Charlie, Dana">
       </div>
     </div>
+
     <div class="section-card" style="background:var(--blue-light);border:2px solid var(--blue-mid)">
       <div style="font-size:12px;font-weight:700;color:var(--blue);margin-bottom:6px">📎 Invite Link</div>
       <div class="invite-preview" id="c-invite-preview">—</div>
@@ -537,7 +539,7 @@ button{cursor:pointer;border:none;background:none}
   </div>
 </div>
 
-<!-- NEW EXPENSE -->
+<!-- NEW EXPENSE — no hero blocks in header -->
 <div class="page" id="page-new">
   <div class="trip-header">
     <div class="trip-header-top">
@@ -549,21 +551,18 @@ button{cursor:pointer;border:none;background:none}
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       </button>
     </div>
-    <!-- NO hero blocks in header for new page — shown at bottom -->
+    <!-- NO hero blocks here on New page -->
   </div>
   <div class="new-content">
     <div id="editing-badge" class="editing-badge hidden">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="14" height="14" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
       EDITING EXPENSE
     </div>
-
     <div class="form-label">Date</div>
     <div class="date-strip-wrap mt-8"><div class="date-strip" id="date-strip"></div></div>
     <input type="date" id="exp-date" class="form-input" style="margin-bottom:14px" onchange="onManualDateChange()">
-
     <div class="form-label">Quick Fill</div>
     <div class="chips-row mt-8" id="quick-chips"></div>
-
     <div class="form-group">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
         <label class="form-label" style="margin-bottom:0">Description *</label>
@@ -572,7 +571,6 @@ button{cursor:pointer;border:none;background:none}
       <input type="text" id="exp-desc" class="form-input" placeholder="What was this expense?" maxlength="80"
         oninput="document.getElementById('desc-counter').textContent=this.value.length+'/80'">
     </div>
-
     <div class="form-group">
       <label class="form-label">Amount *</label>
       <div class="amount-row">
@@ -581,17 +579,14 @@ button{cursor:pointer;border:none;background:none}
       </div>
       <div class="hkd-preview" id="hkd-preview">—</div>
     </div>
-
     <div class="form-group">
       <label class="form-label">Paid By *</label>
       <select class="currency-select" id="exp-paidby" style="width:100%;padding:12px 36px 12px 14px"></select>
     </div>
-
     <div class="form-group">
       <label class="form-label">Category</label>
       <div class="chips-row mt-8" id="cat-chips"></div>
     </div>
-
     <div class="form-group">
       <label class="form-label">Receipt / Photo</label>
       <input type="file" id="receipt-file" accept="image/*" capture="environment" style="display:none" onchange="handleReceiptUpload(event)">
@@ -606,14 +601,13 @@ button{cursor:pointer;border:none;background:none}
         <img class="receipt-thumb" id="receipt-thumb" src="" alt="Receipt" onclick="viewReceipt()">
         <div style="flex:1;min-width:0">
           <div style="font-size:12px;font-weight:600;color:var(--dark);margin-bottom:6px">Receipt attached</div>
-          <div style="display:flex;gap:8px">
+          <div class="receipt-actions">
             <button class="receipt-btn" onclick="viewReceipt()">View</button>
             <button class="receipt-btn" style="color:var(--danger);border-color:var(--danger)" onclick="removeReceipt()">Remove</button>
           </div>
         </div>
       </div>
     </div>
-
     <div class="form-group">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
         <label class="form-label" style="margin-bottom:0">Split Among</label>
@@ -624,21 +618,14 @@ button{cursor:pointer;border:none;background:none}
       </div>
       <div class="split-grid" id="split-grid"></div>
     </div>
-
     <div style="display:flex;gap:10px;margin-top:16px" id="form-action-row">
       <button class="btn btn-outline hidden" id="cancel-edit-btn" onclick="cancelEdit()">Cancel</button>
       <button class="btn btn-primary" id="add-expense-btn" onclick="saveExpense()">Add Expense</button>
     </div>
-
-    <!-- HERO BLOCKS at bottom of new expense page -->
-    <div style="margin-top:24px">
-      <div style="font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">Trip Summary</div>
-      <div id="new-hero-blocks" style="display:grid;grid-template-columns:1fr 1fr;gap:10px"></div>
-    </div>
   </div>
 </div>
 
-<!-- EXPENSES -->
+<!-- EXPENSES — hero blocks in header -->
 <div class="page" id="page-expenses">
   <div class="trip-header">
     <div class="trip-header-top">
@@ -650,7 +637,7 @@ button{cursor:pointer;border:none;background:none}
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       </button>
     </div>
-    <div class="trip-header .hero-blocks" id="exp-hero-blocks" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:8px 0 0"></div>
+    <div class="hero-blocks" id="exp-hero-blocks"></div>
   </div>
   <div class="expenses-controls">
     <input type="text" class="search-box" id="exp-search" placeholder="🔍 Search…" oninput="onSearchFilter()">
@@ -669,7 +656,7 @@ button{cursor:pointer;border:none;background:none}
   <div class="pagination" id="pagination"></div>
 </div>
 
-<!-- BALANCES -->
+<!-- BALANCES — hero blocks in header -->
 <div class="page" id="page-balances">
   <div class="trip-header">
     <div class="trip-header-top">
@@ -681,7 +668,7 @@ button{cursor:pointer;border:none;background:none}
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       </button>
     </div>
-    <div id="bal-hero-blocks" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:8px 0 0"></div>
+    <div class="hero-blocks" id="bal-hero-blocks"></div>
   </div>
   <div class="balance-grid" id="balance-grid"></div>
   <div style="padding:0 16px 8px">
@@ -702,9 +689,9 @@ button{cursor:pointer;border:none;background:none}
       </div>
       <div style="flex:1;min-width:100px">
         <label class="form-label" style="margin-bottom:6px">Rate to HKD</label>
-        <input type="number" id="bal-rate" class="form-input" step="0.00001" placeholder="0.0057">
+        <input type="number" id="bal-rate" class="form-input" step="0.0001">
       </div>
-      <button class="fetch-rate-btn" id="bal-fetch-btn" onclick="fetchRateForBalances()" style="height:46px;margin-top:0">
+      <button class="fetch-rate-btn" id="bal-fetch-btn" onclick="fetchRateForBalances()" style="margin-top:0;height:46px">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10"/><path d="M23 14l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
         Auto
       </button>
@@ -789,7 +776,7 @@ button{cursor:pointer;border:none;background:none}
     </div>
     <div class="settings-block danger-zone">
       <h3>⚠️ Delete Trip</h3>
-      <p style="font-size:13px;color:var(--gray);margin-bottom:12px">Permanently deletes all expenses.</p>
+      <p style="font-size:13px;color:var(--gray);margin-bottom:12px">Permanently deletes all expenses for this trip.</p>
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;background:var(--gray-light);padding:10px;border-radius:8px">
         <span style="font-size:14px;font-weight:700;flex:1" id="s-trip-name-display"></span>
         <button class="copy-btn" onclick="copyTripNameForDelete()">Copy</button>
@@ -820,4 +807,1344 @@ button{cursor:pointer;border:none;background:none}
   </button>
   <button class="tab-btn" onclick="switchTab('settlement')" data-tab="settlement">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
-    
+    <span>Settle</span>
+  </button>
+</nav>
+
+<script src="firebase-config.js" onerror="console.warn('firebase-config.js not found')"></script>
+<script type="module">
+import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import {
+  getFirestore, enableIndexedDbPersistence,
+  collection, doc, getDoc, getDocs, setDoc, updateDoc,
+  deleteDoc, query, orderBy, onSnapshot, writeBatch
+} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+// ── STATE ──────────────────────────────────────────────────
+let db = null, firebaseOk = false;
+let currentTrip = null, currentCode = null, myIdentity = null;
+let expenses = [];
+let expensesUnsub = null;
+let editingExpenseId = null;
+let receiptDataURL = null;
+let selectedDate = null;
+let selectedCategory = 'Other';
+let pendingFilterActive = false;
+let currentExpPage = 1;
+let saveBusy = false;
+let personSheetName = null;
+let isAdminMode = false;
+const EXP_PER_PAGE = 10;
+
+// ── INDEXEDDB ──────────────────────────────────────────────
+let idb = null;
+function openIDB() {
+  return new Promise((resolve, reject) => {
+    if (idb) { resolve(idb); return; }
+    const req = indexedDB.open('TripSplitDB', 1);
+    req.onupgradeneeded = e => e.target.result.createObjectStore('receipts', { keyPath:'id' });
+    req.onsuccess = e => { idb = e.target.result; resolve(idb); };
+    req.onerror   = e => reject(e.target.error);
+  });
+}
+async function idbSave(id, data) {
+  try {
+    const d = await openIDB();
+    return new Promise((res,rej) => {
+      const tx = d.transaction('receipts','readwrite');
+      tx.objectStore('receipts').put({ id, data });
+      tx.oncomplete = () => res();
+      tx.onerror = e => rej(e.target.error);
+    });
+  } catch(e) { console.warn('IDB save:', e); }
+}
+async function idbGet(id) {
+  try {
+    const d = await openIDB();
+    return new Promise(res => {
+      const req = d.transaction('receipts','readonly').objectStore('receipts').get(id);
+      req.onsuccess = e => res(e.target.result?.data || null);
+      req.onerror   = () => res(null);
+    });
+  } catch(e) { return null; }
+}
+async function idbDel(id) {
+  try {
+    const d = await openIDB();
+    return new Promise(res => {
+      const tx = d.transaction('receipts','readwrite');
+      tx.objectStore('receipts').delete(id);
+      tx.oncomplete = () => res();
+      tx.onerror    = () => res();
+    });
+  } catch(e) {}
+}
+async function idbDelTrip(code) {
+  try {
+    const d = await openIDB();
+    return new Promise(res => {
+      const tx = d.transaction('receipts','readwrite');
+      const store = tx.objectStore('receipts');
+      const req = store.openCursor();
+      req.onsuccess = e => {
+        const c = e.target.result;
+        if (c) { if (String(c.key).startsWith(code+'_')) c.delete(); c.continue(); }
+      };
+      tx.oncomplete = () => res();
+      tx.onerror    = () => res();
+    });
+  } catch(e) {}
+}
+
+// ── CONSTANTS ──────────────────────────────────────────────
+const DEFAULT_RATES = {
+  HKD:1, THB:0.21, JPY:0.052, USD:7.8, EUR:8.5,
+  CNY:1.07, TWD:0.24, KRW:0.0057, SGD:5.8, MYR:1.67
+};
+const AVATAR_COLORS = [
+  '#ef4444','#f97316','#eab308','#22c55e','#3b82f6',
+  '#8b5cf6','#ec4899','#06b6d4','#10b981','#f59e0b'
+];
+const BC_CLASSES = ['bc-yellow','bc-green','bc-blue','bc-pink','bc-orange','bc-violet','bc-white','bc-black'];
+const CAT_COLORS = {
+  Food:'#f97316', Transport:'#3b82f6', Hotel:'#8b5cf6',
+  Activity:'#10b981', Other:'#64748b', 'Pending Update':'#ec4899'
+};
+const QUICK_CHIPS = [
+  {label:'Lunch',cat:'Food'},{label:'Dinner',cat:'Food'},
+  {label:'Breakfast',cat:'Food'},{label:'Taxi',cat:'Transport'},
+  {label:'Hotel',cat:'Hotel'},{label:'Drinks',cat:'Food'},
+  {label:'Groceries',cat:'Food'},{label:'Flight',cat:'Transport'}
+];
+const CATEGORIES = [
+  {label:'Food',cls:'cat-food'},{label:'Transport',cls:'cat-transport'},
+  {label:'Hotel',cls:'cat-hotel'},{label:'Activity',cls:'cat-activity'},
+  {label:'Other',cls:'cat-other'},{label:'Pending Update',cls:'cat-pending'}
+];
+
+// ── FIREBASE ───────────────────────────────────────────────
+async function initFirebase() {
+  try {
+    const cfg = window.FIREBASE_CONFIG;
+    if (!cfg || !cfg.apiKey || cfg.apiKey==='Axxx') throw new Error('no-config');
+    const app = getApps().length ? getApps()[0] : initializeApp(cfg);
+    db = getFirestore(app);
+    try { await enableIndexedDbPersistence(db); } catch(e) {}
+    await getDocs(query(collection(db,'trips')));
+    firebaseOk = true; setFirebaseBadge(true);
+  } catch(e) {
+    db=null; firebaseOk=false; setFirebaseBadge(false);
+  }
+}
+function setFirebaseBadge(ok) {
+  document.getElementById('firebase-badge').classList.toggle('offline',!ok);
+  document.getElementById('firebase-status-text').textContent = ok ? 'Live sync enabled' : 'Local mode • Works offline';
+}
+
+// ── SHA256 ─────────────────────────────────────────────────
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+// ── NAVIGATION ─────────────────────────────────────────────
+function navigateTo(page) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  const tabs = document.getElementById('bottom-tabs');
+  const tripPages = ['new','expenses','balances','settlement'];
+  if (tripPages.includes(page)) {
+    tabs.style.display = 'flex';
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===page));
+  } else {
+    tabs.style.display = 'none';
+  }
+  document.getElementById('app').scrollTo(0,0);
+  if (page==='create')  initCreatePage();
+  if (page==='settings') openSettings();
+}
+window.navigateTo = navigateTo;
+
+function switchTab(tab) {
+  navigateTo(tab);
+  if (tab==='expenses')   renderExpenses();
+  if (tab==='balances')   renderBalances();
+  if (tab==='settlement') renderSettlement();
+  if (tab==='new' && !editingExpenseId) resetNewForm();
+}
+window.switchTab = switchTab;
+
+// ── MODALS ─────────────────────────────────────────────────
+function openModal(id)  { document.getElementById(id).classList.add('show'); }
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+function openSheet(id)  { document.getElementById(id).classList.add('show'); }
+function closeSheet(id) { document.getElementById(id).classList.remove('show'); }
+window.openModal=openModal; window.closeModal=closeModal;
+window.openSheet=openSheet; window.closeSheet=closeSheet;
+document.querySelectorAll('.modal-overlay,.sheet-overlay').forEach(el=>{
+  el.addEventListener('click', function(e){ if(e.target===this) this.classList.remove('show'); });
+});
+
+// ── TOAST ──────────────────────────────────────────────────
+function toast(msg, type='', undoFn=null, duration=3500) {
+  const c = document.getElementById('toast-container');
+  const t = document.createElement('div');
+  t.className = 'toast'+(type?' '+type:'');
+  t.innerHTML = `<span>${msg}</span>`;
+  if (undoFn) {
+    const u = document.createElement('button');
+    u.className='toast-undo'; u.textContent='Undo';
+    u.onclick=()=>{ undoFn(); t.remove(); };
+    t.appendChild(u);
+  }
+  c.appendChild(t);
+  setTimeout(()=>t.remove(), duration);
+}
+window.toast = toast;
+
+function showLoading(show, msg='Loading…') {
+  document.getElementById('loading-overlay').style.display = show?'flex':'none';
+  document.getElementById('loading-text').textContent = msg;
+}
+
+function toggleEye(inputId, btn) {
+  const inp = document.getElementById(inputId);
+  const isText = inp.type==='text';
+  inp.type = isText?'password':'text';
+  btn.querySelector('svg').innerHTML = isText
+    ? '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>'
+    : '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>';
+}
+window.toggleEye = toggleEye;
+
+// ── LOCAL STORAGE ──────────────────────────────────────────
+function getMyTrips()  { try{return JSON.parse(localStorage.getItem('myTrips')||'[]')}catch(e){return[]} }
+function saveMyTrip(code,name,pw) {
+  let t=getMyTrips(), idx=t.findIndex(x=>x.code===code);
+  if(idx>=0) t[idx]={code,name,pw}; else t.unshift({code,name,pw});
+  localStorage.setItem('myTrips',JSON.stringify(t));
+}
+function removeMyTrip(code) { localStorage.setItem('myTrips',JSON.stringify(getMyTrips().filter(t=>t.code!==code))); }
+function getLocalTrips() { try{return JSON.parse(localStorage.getItem('localTrips')||'{}')}catch(e){return{}} }
+function saveLocalTrip(code,data) { const t=getLocalTrips(); t[code]=data; localStorage.setItem('localTrips',JSON.stringify(t)); }
+function getLocalExp(code) { try{return JSON.parse(localStorage.getItem('localExp_'+code)||'[]')}catch(e){return[]} }
+function saveLocalExp(code,exps) { localStorage.setItem('localExp_'+code,JSON.stringify(exps)); }
+
+// ── LOBBY ──────────────────────────────────────────────────
+function renderLobby() {
+  const trips = getMyTrips();
+  document.getElementById('my-trips-count').textContent = trips.length;
+  const list = document.getElementById('my-trips-list');
+  if (!trips.length) {
+    list.innerHTML='<div style="text-align:center;padding:20px;color:var(--gray);font-size:13px">No trips yet. Join one above!</div>';
+  } else {
+    list.innerHTML = trips.map(t=>`
+      <div class="trip-card" onclick="quickJoin('${esc(t.code)}')">
+        <div class="trip-card-icon">${(t.name||t.code).charAt(0).toUpperCase()}</div>
+        <div class="trip-card-info">
+          <div class="trip-card-name">${esc(t.name||t.code)}</div>
+          <div class="trip-card-code">${esc(t.code)}</div>
+        </div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="16" height="16" stroke-width="2.5" style="color:var(--gray);flex-shrink:0"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>`).join('');
+  }
+  document.getElementById('create-section').classList.toggle('hidden',!isAdminMode);
+}
+async function quickJoin(code) {
+  const saved = getMyTrips().find(t=>t.code===code);
+  document.getElementById('join-code').value = code;
+  if (saved?.pw) { document.getElementById('join-pw').value=saved.pw; await joinTrip(true); }
+  else { document.getElementById('join-pw').value=''; document.getElementById('join-pw').focus(); }
+}
+window.quickJoin = quickJoin;
+
+// ?join and ?admin
+(function(){
+  const p = new URLSearchParams(location.search);
+  const jc = p.get('join');
+  if (jc) { document.getElementById('join-code').value=jc.toUpperCase(); document.getElementById('join-pw').focus(); }
+  if (p.get('admin')==='1') isAdminMode=true;
+})();
+
+// ── ADMIN ──────────────────────────────────────────────────
+function promptAdmin() { openModal('admin-modal'); document.getElementById('admin-pw-input').value=''; }
+window.promptAdmin = promptAdmin;
+function checkAdminPassword() {
+  if (document.getElementById('admin-pw-input').value===(window.ADMIN_CREATE_PASSWORD||'ADMIN2026')) {
+    isAdminMode=true; closeModal('admin-modal'); renderLobby(); toast('Admin mode unlocked ✓','success');
+  } else toast('Wrong admin password','error');
+}
+window.checkAdminPassword = checkAdminPassword;
+
+// ── JOIN ───────────────────────────────────────────────────
+async function joinTrip(auto=false) {
+  const code = document.getElementById('join-code').value.trim().toUpperCase();
+  const pw   = document.getElementById('join-pw').value;
+  const rem  = document.getElementById('remember-me').checked;
+  if (code.length<6) { toast('Enter valid 6-char code','error'); return; }
+  if (!pw)           { toast('Enter password','error'); return; }
+  showLoading(true,'Joining…');
+  try {
+    let trip;
+    if (firebaseOk && db) {
+      const snap = await getDoc(doc(db,'trips',code));
+      if (!snap.exists()) throw new Error('Trip not found');
+      trip = { id:snap.id, ...snap.data() };
+    } else {
+      const local = getLocalTrips();
+      if (!local[code]) throw new Error('Trip not found');
+      trip = local[code];
+    }
+    if (await sha256(pw) !== trip.passwordHash) throw new Error('Wrong password');
+    currentTrip=trip; currentCode=code;
+    if (rem) { saveMyTrip(code,trip.name,pw); localStorage.setItem('trip_'+code+'_pw',pw); }
+    else      saveMyTrip(code,trip.name,'');
+    const who = localStorage.getItem('trip_'+code+'_who');
+    if (who && trip.friends?.includes(who)) {
+      myIdentity=who; showLoading(false);
+      toast(`Welcome back ${who} — remembered 👋`,'success');
+      enterTrip();
+    } else { showLoading(false); showWhoModal(); }
+  } catch(e) {
+    showLoading(false);
+    toast(e.message==='Trip not found'?'Trip not found — check code':'Wrong password ❌','error');
+  }
+}
+window.joinTrip = joinTrip;
+
+function showWhoModal() {
+  document.getElementById('who-grid').innerHTML = (currentTrip.friends||[]).map((name,i)=>`
+    <button class="who-btn" onclick="selectIdentity('${esc(name)}')">
+      <div class="who-avatar" style="background:${AVATAR_COLORS[i%AVATAR_COLORS.length]}">${name.charAt(0).toUpperCase()}</div>
+      <div class="who-name">${esc(name)}</div>
+    </button>`).join('');
+  openModal('who-modal');
+}
+function selectIdentity(name) {
+  myIdentity=name; localStorage.setItem('trip_'+currentCode+'_who',name);
+  closeModal('who-modal'); toast(`Welcome, ${name}! ✈️`,'success'); enterTrip();
+}
+window.selectIdentity = selectIdentity;
+
+function enterTrip() {
+  setupExpensesListener(); renderTripHeaders(); navigateTo('new'); resetNewForm();
+}
+
+// ── EXPENSES LISTENER ──────────────────────────────────────
+function setupExpensesListener() {
+  if (expensesUnsub) { expensesUnsub(); expensesUnsub=null; }
+  if (firebaseOk && db) {
+    expensesUnsub = onSnapshot(
+      query(collection(db,'trips',currentCode,'expenses'), orderBy('date','desc')),
+      snap => { expenses=snap.docs.map(d=>({id:d.id,...d.data()})); onExpensesUpdated(); },
+      err  => { console.error(err); loadLocalExp(); }
+    );
+  } else loadLocalExp();
+}
+function loadLocalExp() { expenses=getLocalExp(currentCode); onExpensesUpdated(); }
+function onExpensesUpdated() {
+  renderHeroBlocks(); renderDateStrip();
+  if (document.getElementById('page-expenses').classList.contains('active'))   renderExpenses();
+  if (document.getElementById('page-balances').classList.contains('active'))   renderBalances();
+  if (document.getElementById('page-settlement').classList.contains('active')) renderSettlement();
+}
+
+// ── TRIP HEADERS + HERO ────────────────────────────────────
+function renderTripHeaders() {
+  if (!currentTrip) return;
+  ['new-trip-title','exp-trip-title','bal-trip-title','set-trip-title'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.textContent=currentTrip.name||currentCode;
+  });
+  renderHeroBlocks();
+}
+function renderHeroBlocks() {
+  if (!currentTrip) return;
+  const trip = currentTrip;
+  const totalOrig = expenses.reduce((s,e)=>s+(parseFloat(e.amount)||0),0);
+  const totalHKD  = expenses.reduce((s,e)=>s+(parseFloat(e.amountHKD)||0),0);
+  const dates = expenses.map(e=>e.date).filter(Boolean).sort();
+  const dateRange = dates.length
+    ? (dates[0]===dates[dates.length-1]
+        ? fmtDateShort(dates[0])
+        : fmtDateShort(dates[0])+' → '+fmtDateShort(dates[dates.length-1]))
+    : '—';
+  const html = `
+    <div class="hero-block">
+      <div class="hero-block-label">Total Spent</div>
+      <div class="hero-block-value">HKD ${fmt2(totalHKD)}</div>
+      <div class="hero-block-sub">${trip.currency} ${fmt2(totalOrig)}</div>
+    </div>
+    <div class="hero-block">
+      <div class="hero-block-label">Entries</div>
+      <div class="hero-block-value">${expenses.length}</div>
+      <div class="hero-block-sub">${dateRange}</div>
+    </div>
+    <div class="hero-block">
+      <div class="hero-block-label">Currency</div>
+      <div class="hero-block-value">${trip.currency}</div>
+      <div class="hero-block-sub">→ HKD ${trip.exchangeRate}</div>
+    </div>
+    <div class="hero-block">
+      <div class="hero-block-label">Members</div>
+      <div class="hero-block-value">${(trip.friends||[]).length}</div>
+      <div class="hero-block-sub">${(trip.friends||[]).join(', ')}</div>
+    </div>`;
+  // Only update Expenses and Balances hero blocks (NOT New page)
+  ['exp-hero-blocks','bal-hero-blocks'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.innerHTML=html;
+  });
+}
+
+// ── CREATE TRIP ────────────────────────────────────────────
+function generateCode() {
+  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  return Array.from({length:6},()=>chars[Math.floor(Math.random()*chars.length)]).join('');
+}
+async function getUniqueCode() {
+  let code=generateCode();
+  if (firebaseOk&&db) {
+    for(let i=0;i<5;i++){
+      if(!(await getDoc(doc(db,'trips',code))).exists()) return code;
+      code=generateCode();
+    }
+  }
+  return code;
+}
+
+async function initCreatePage() {
+  // Fill number of days dropdown 1-30
+  const sel = document.getElementById('c-numdays');
+  if (!sel.options.length) {
+    for(let i=1;i<=30;i++) {
+      const o=document.createElement('option');
+      o.value=i; o.textContent=i+' day'+(i>1?'s':'');
+      sel.appendChild(o);
+    }
+    sel.value=5; // default 5 days
+  }
+  const code = await getUniqueCode();
+  document.getElementById('c-code').value = code;
+  document.getElementById('c-invite-preview').textContent =
+    location.origin+location.pathname+'?join='+code;
+  // Default start = today
+  const today = toDateStr(new Date());
+  document.getElementById('c-start').value = today;
+  calcEndDate();
+  onCreateCurrencyChange();
+}
+
+// ── FIX: calcEndDate uses local date arithmetic ─────────────
+function calcEndDate() {
+  const startVal = document.getElementById('c-start').value;
+  const days     = parseInt(document.getElementById('c-numdays').value) || 1;
+  if (!startVal) { document.getElementById('c-end-display').textContent='—'; return; }
+
+  // ✅ FIXED: split YYYY-MM-DD and use Date.UTC to avoid timezone shift
+  const [y,m,d] = startVal.split('-').map(Number);
+  const endMs   = Date.UTC(y, m-1, d) + (days-1)*86400000;
+  const endDate = new Date(endMs);
+  // format back to YYYY-MM-DD
+  const endStr  = endDate.toISOString().split('T')[0];
+
+  document.getElementById('c-end').value = endStr;
+  document.getElementById('c-end-display').textContent =
+    endDate.toLocaleDateString('en',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'});
+}
+window.calcEndDate = calcEndDate;
+
+function onCreateCurrencyChange() {
+  const cur = document.getElementById('c-currency').value;
+  document.getElementById('c-rate').value = DEFAULT_RATES[cur]||1;
+}
+window.onCreateCurrencyChange = onCreateCurrencyChange;
+
+async function fetchRateForCreate() {
+  await fetchRate(document.getElementById('c-currency').value,'c-rate','c-fetch-btn');
+}
+window.fetchRateForCreate = fetchRateForCreate;
+
+async function fetchRate(currency, rateId, btnId) {
+  if (currency==='HKD') { document.getElementById(rateId).value='1'; return; }
+  const btn=document.getElementById(btnId); btn.classList.add('loading');
+  try {
+    let rate=null;
+    try {
+      const r=await fetch('https://open.er-api.com/v6/latest/HKD');
+      const d=await r.json();
+      if(d.rates?.[currency]) rate=1/d.rates[currency];
+    } catch(e){}
+    if(!rate){
+      const r=await fetch(`https://api.frankfurter.app/latest?from=HKD&to=${currency}`);
+      const d=await r.json();
+      if(d.rates?.[currency]) rate=d.rates[currency];
+    }
+    if(rate){ document.getElementById(rateId).value=rate.toFixed(4); toast('Rate fetched ✓','success'); }
+    else throw new Error('no rate');
+  } catch(e){
+    document.getElementById(rateId).value=DEFAULT_RATES[currency]||'';
+    toast('Using default rate','warn');
+  } finally { btn.classList.remove('loading'); }
+}
+
+async function createTrip() {
+  const name    = document.getElementById('c-name').value.trim();
+  const code    = document.getElementById('c-code').value.trim();
+  const pw      = document.getElementById('c-pw').value;
+  const start   = document.getElementById('c-start').value;
+  const end     = document.getElementById('c-end').value;
+  const cur     = document.getElementById('c-currency').value;
+  const rate    = parseFloat(document.getElementById('c-rate').value)||1;
+  const members = document.getElementById('c-members').value.split(',').map(s=>s.trim()).filter(Boolean);
+  if(!name)             { toast('Trip name required','error'); return; }
+  if(pw.length<3)       { toast('Password min 3 chars','error'); return; }
+  if(!start||!end)      { toast('Select start date','error'); return; }
+  if(!members.length)   { toast('Add at least one member','error'); return; }
+  if(members.length>8)  { toast('Max 8 members','error'); return; }
+  if(firebaseOk&&db){
+    const all=await getDocs(collection(db,'trips'));
+    if(all.docs.some(d=>d.data().name?.toLowerCase()===name.toLowerCase())){
+      toast('Trip name already exists','error'); return;
+    }
+  }
+  showLoading(true,'Creating…');
+  document.getElementById('create-btn').disabled=true;
+  try {
+    const hash = await sha256(pw);
+    const tripData = {
+      name, code, passwordHash:hash, friends:members,
+      startDate:start, endDate:end,
+      currency:cur, exchangeRate:rate, baseCurrency:'HKD',
+      createdAt:new Date().toISOString()
+    };
+    if(firebaseOk&&db) await setDoc(doc(db,'trips',code),tripData);
+    else saveLocalTrip(code,tripData);
+    saveMyTrip(code,name,pw);
+    toast('Trip created! 🎉','success');
+    navigateTo('lobby'); renderLobby();
+  } catch(e){ toast('Error: '+e.message,'error'); }
+  finally{ showLoading(false); document.getElementById('create-btn').disabled=false; }
+}
+window.createTrip = createTrip;
+
+// ── NEW EXPENSE FORM ───────────────────────────────────────
+function buildQuickChips() {
+  document.getElementById('quick-chips').innerHTML = QUICK_CHIPS.map(q=>
+    `<div class="chip" onclick="applyQuickChip('${q.label}','${q.cat}')">${q.label}</div>`
+  ).join('');
+}
+function applyQuickChip(label,cat) {
+  const d=document.getElementById('exp-date').value||toDateStr(new Date());
+  document.getElementById('exp-desc').value = fmtDateShort(d)+' – '+label;
+  document.getElementById('desc-counter').textContent=document.getElementById('exp-desc').value.length+'/80';
+  selectCategory(cat);
+  document.querySelectorAll('#quick-chips .chip').forEach(c=>c.classList.toggle('active',c.textContent===label));
+}
+window.applyQuickChip = applyQuickChip;
+
+function buildCategoryChips() {
+  document.getElementById('cat-chips').innerHTML = CATEGORIES.map(c=>
+    `<div class="chip ${c.cls}" onclick="selectCategory('${c.label}')">${c.label}</div>`
+  ).join('');
+}
+function selectCategory(cat) {
+  selectedCategory=cat;
+  document.querySelectorAll('#cat-chips .chip').forEach(c=>c.classList.toggle('active',c.textContent===cat));
+}
+window.selectCategory = selectCategory;
+
+function buildSplitGrid() {
+  document.getElementById('split-grid').innerHTML = (currentTrip?.friends||[]).map((name,i)=>`
+    <div class="split-person included" data-name="${esc(name)}" onclick="toggleSplit(this)">
+      <div class="split-person-avatar" style="background:${AVATAR_COLORS[i%AVATAR_COLORS.length]}">${name.charAt(0).toUpperCase()}</div>
+      <div class="split-person-name">${esc(name)}</div>
+      <div class="split-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+    </div>`).join('');
+}
+function toggleSplit(el) {
+  el.classList.toggle('included');
+  el.querySelector('.split-check').style.opacity = el.classList.contains('included')?'1':'0';
+}
+window.toggleSplit = toggleSplit;
+function splitAll()  { document.querySelectorAll('.split-person').forEach(el=>{ el.classList.add('included');    el.querySelector('.split-check').style.opacity='1'; }); }
+function splitNone() { document.querySelectorAll('.split-person').forEach(el=>{ el.classList.remove('included'); el.querySelector('.split-check').style.opacity='0'; }); }
+window.splitAll=splitAll; window.splitNone=splitNone;
+function getSelectedSplit() { return [...document.querySelectorAll('.split-person.included')].map(el=>el.dataset.name); }
+
+function buildPaidByDropdown() {
+  const sel=document.getElementById('exp-paidby');
+  sel.innerHTML=(currentTrip?.friends||[]).map(f=>`<option value="${esc(f)}">${esc(f)}</option>`).join('');
+  if(myIdentity&&currentTrip?.friends?.includes(myIdentity)) sel.value=myIdentity;
+}
+function buildExpCurrencyDropdown() {
+  const sel=document.getElementById('exp-currency');
+  sel.innerHTML=Object.keys(DEFAULT_RATES).map(c=>`<option value="${c}">${c}</option>`).join('');
+  sel.value=currentTrip?.currency||'KRW';
+}
+function updateHKDPreview() {
+  const amount=parseFloat(document.getElementById('exp-amount').value)||0;
+  const cur=document.getElementById('exp-currency').value;
+  const tripRate=parseFloat(currentTrip?.exchangeRate||1);
+  const rate=cur===(currentTrip?.currency)?tripRate:(DEFAULT_RATES[cur]||1);
+  const hkd=amount*rate;
+  document.getElementById('hkd-preview').textContent =
+    amount>0?`≈ HKD ${fmt2(hkd)} (rate ${rate}) • Settle HKD`:'—';
+}
+window.updateHKDPreview = updateHKDPreview;
+
+// ── DATE STRIP — FIXED timezone bug ───────────────────────
+function renderDateStrip() {
+  if (!currentTrip) return;
+  const strip = document.getElementById('date-strip');
+  const { startDate, endDate } = currentTrip;
+  if (!startDate||!endDate) { strip.innerHTML=''; return; }
+
+  // ✅ FIXED: use Date.UTC to build date range — no timezone offset
+  function parseUTC(s) {
+    const [y,m,d]=s.split('-').map(Number);
+    return Date.UTC(y,m-1,d);
+  }
+  function utcToStr(ms) {
+    return new Date(ms).toISOString().split('T')[0];
+  }
+
+  const startMs = parseUTC(startDate);
+  const endMs   = parseUTC(endDate);
+  const diffDays = Math.round((endMs-startMs)/86400000)+1;
+
+  let dates=[];
+  if (diffDays<=12) {
+    for(let i=0;i<diffDays;i++) dates.push(utcToStr(startMs+i*86400000));
+  } else {
+    const selMs = selectedDate ? parseUTC(selectedDate) : parseUTC(toDateStr(new Date()));
+    const pivMs = selMs - 5*86400000;
+    for(let i=0;i<12;i++){
+      const ms=pivMs+i*86400000;
+      if(ms>=startMs&&ms<=endMs) dates.push(utcToStr(ms));
+    }
+    if(dates.length<6){
+      dates=[];
+      for(let i=0;i<Math.min(12,diffDays);i++) dates.push(utcToStr(startMs+i*86400000));
+    }
+  }
+
+  const today   = toDateStr(new Date());
+  const expDates= new Set(expenses.map(e=>e.date));
+
+  strip.innerHTML = dates.map(d=>{
+    // ✅ FIXED: parse display using UTC to avoid local day shift
+    const ms  = parseUTC(d);
+    const dt  = new Date(ms);
+    const wd  = dt.toLocaleDateString('en',{weekday:'short',timeZone:'UTC'});
+    const dd  = dt.toLocaleDateString('en',{day:'numeric',timeZone:'UTC'});
+    const mm  = dt.toLocaleDateString('en',{month:'short',timeZone:'UTC'});
+    const isToday  = d===today;
+    const isActive = d===selectedDate;
+    const hasDot   = expDates.has(d);
+    return `<div class="date-card${isActive?' active':''}${isToday?' today-card':''}${hasDot?' has-expenses':''}"
+      onclick="selectStripDate('${d}')">
+      <div class="wd">${wd}</div>
+      <div class="dd">${dd}</div>
+      <div class="mm">${mm}</div>
+    </div>`;
+  }).join('');
+
+  setTimeout(()=>{
+    const active=strip.querySelector('.date-card.active');
+    if(active) active.scrollIntoView({inline:'center',behavior:'smooth',block:'nearest'});
+  },50);
+}
+
+function selectStripDate(d) {
+  selectedDate=d; document.getElementById('exp-date').value=d; renderDateStrip();
+}
+window.selectStripDate = selectStripDate;
+function onManualDateChange() {
+  selectedDate=document.getElementById('exp-date').value; renderDateStrip();
+}
+window.onManualDateChange = onManualDateChange;
+
+// ── RESET FORM ─────────────────────────────────────────────
+function resetNewForm() {
+  editingExpenseId=null; receiptDataURL=null;
+  document.getElementById('editing-badge').classList.add('hidden');
+  document.getElementById('add-expense-btn').textContent='Add Expense';
+  document.getElementById('cancel-edit-btn').classList.add('hidden');
+  document.getElementById('exp-desc').value='';
+  document.getElementById('desc-counter').textContent='0/80';
+  document.getElementById('exp-amount').value='';
+  document.getElementById('hkd-preview').textContent='—';
+  document.getElementById('receipt-file').value='';
+  document.getElementById('receipt-preview').classList.remove('show');
+  document.getElementById('exp-desc').classList.remove('error');
+  document.getElementById('exp-amount').classList.remove('error');
+  const db2=document.getElementById('delete-exp-btn'); if(db2) db2.remove();
+
+  // ✅ FIXED: default date using UTC
+  const today=toDateStr(new Date());
+  const trip=currentTrip;
+  let defDate=today;
+  if(trip){
+    const [ty,tm,td]=today.split('-').map(Number);
+    const [sy,sm,sd]=trip.startDate.split('-').map(Number);
+    const [ey,em,ed]=trip.endDate.split('-').map(Number);
+    const todayMs=Date.UTC(ty,tm-1,td);
+    const startMs=Date.UTC(sy,sm-1,sd);
+    const endMs  =Date.UTC(ey,em-1,ed);
+    defDate=(todayMs>=startMs&&todayMs<=endMs)?today:trip.startDate;
+  }
+  selectedDate=defDate;
+  document.getElementById('exp-date').value=defDate;
+  buildQuickChips(); buildCategoryChips(); selectCategory('Other');
+  buildPaidByDropdown(); buildExpCurrencyDropdown(); buildSplitGrid(); splitAll(); renderDateStrip();
+}
+
+// ── RECEIPT ────────────────────────────────────────────────
+function handleReceiptUpload(e) {
+  const file=e.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    const img=new Image();
+    img.onload=()=>{
+      const MAX=800; let w=img.width,h=img.height;
+      if(w>MAX||h>MAX){ if(w>h){h=Math.round(h*MAX/w);w=MAX;}else{w=Math.round(w*MAX/h);h=MAX;} }
+      const canvas=document.createElement('canvas');
+      canvas.width=w; canvas.height=h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      receiptDataURL=canvas.toDataURL('image/jpeg',0.7);
+      document.getElementById('receipt-thumb').src=receiptDataURL;
+      document.getElementById('receipt-preview').classList.add('show');
+    };
+    img.src=ev.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+window.handleReceiptUpload=handleReceiptUpload;
+function viewReceipt() {
+  if(!receiptDataURL) return;
+  document.getElementById('receipt-modal-img').src=receiptDataURL;
+  openModal('receipt-modal');
+}
+window.viewReceipt=viewReceipt;
+function removeReceipt() {
+  receiptDataURL=null;
+  document.getElementById('receipt-preview').classList.remove('show');
+  document.getElementById('receipt-file').value='';
+}
+window.removeReceipt=removeReceipt;
+
+// ── SAVE EXPENSE ───────────────────────────────────────────
+async function saveExpense() {
+  if(saveBusy) return;
+  const desc   =document.getElementById('exp-desc').value.trim();
+  const amount =parseFloat(document.getElementById('exp-amount').value)||0;
+  const date   =document.getElementById('exp-date').value||selectedDate||toDateStr(new Date());
+  const paidBy =document.getElementById('exp-paidby').value;
+  const cur    =document.getElementById('exp-currency').value;
+  const split  =getSelectedSplit();
+  const isPend =selectedCategory==='Pending Update';
+  const hasRec =!!receiptDataURL;
+
+  let valid=true;
+  if(!desc&&!hasRec){ document.getElementById('exp-desc').classList.add('error'); valid=false; }
+  else document.getElementById('exp-desc').classList.remove('error');
+  if(amount<=0&&!isPend){ document.getElementById('exp-amount').classList.add('error'); valid=false; }
+  else document.getElementById('exp-amount').classList.remove('error');
+  if(!paidBy){ toast('Select who paid','error'); valid=false; }
+  if(split.length<1&&!isPend){ toast('Select at least 1 person to split','error'); valid=false; }
+  if(!valid) return;
+
+  saveBusy=true;
+  const btn=document.getElementById('add-expense-btn');
+  btn.disabled=true; btn.textContent=editingExpenseId?'Updating…':'Adding…';
+
+  const tripRate  =parseFloat(currentTrip?.exchangeRate||1);
+  const rateToHKD =cur===(currentTrip?.currency)?tripRate:(DEFAULT_RATES[cur]||1);
+  const amountHKD =parseFloat((amount*rateToHKD).toFixed(2));
+  const perPerson =split.length>0?parseFloat((amountHKD/split.length).toFixed(2)):0;
+  const expId     =editingExpenseId||(currentCode+'_'+Date.now());
+
+  const expData={
+    description:desc||'Receipt - pending update',
+    amount, currency:cur, amountHKD, date, paidBy,
+    category:selectedCategory, splitAmong:split, perPerson,
+    hasReceipt:hasRec, updatedAt:new Date().toISOString(),
+  };
+  if(!editingExpenseId) expData.createdAt=new Date().toISOString();
+
+  if(hasRec&&receiptDataURL){
+    await idbSave(expId,receiptDataURL);
+    expData.receiptBase64=(receiptDataURL.length<700000)?receiptDataURL:null;
+  } else expData.receiptBase64=null;
+
+  try {
+    if(firebaseOk&&db){
+      if(editingExpenseId) await updateDoc(doc(db,'trips',currentCode,'expenses',editingExpenseId),expData);
+      else await setDoc(doc(db,'trips',currentCode,'expenses',expId),expData);
+    } else {
+      let exps=getLocalExp(currentCode);
+      if(editingExpenseId){ const i=exps.findIndex(e=>e.id===editingExpenseId); if(i>=0) exps[i]={...exps[i],...expData}; }
+      else exps.unshift({id:expId,...expData});
+      saveLocalExp(currentCode,exps); loadLocalExp();
+    }
+    toast(editingExpenseId?'Updated ✓':'Added ✓','success');
+    resetNewForm();
+  } catch(e){ toast('Save failed: '+e.message,'error'); }
+  finally{
+    saveBusy=false;
+    setTimeout(()=>{ btn.disabled=false; btn.textContent=editingExpenseId?'Update Expense':'Add Expense'; },600);
+  }
+}
+window.saveExpense=saveExpense;
+function cancelEdit(){ editingExpenseId=null; resetNewForm(); }
+window.cancelEdit=cancelEdit;
+
+// ── EXPENSES PAGE ──────────────────────────────────────────
+function renderExpenses() {
+  const search=document.getElementById('exp-search').value.toLowerCase();
+  const filter=document.getElementById('exp-filter').value;
+  let filtered=expenses.filter(e=>{
+    if(pendingFilterActive&&e.category!=='Pending Update') return false;
+    if(filter&&e.category!==filter) return false;
+    if(search&&!e.description?.toLowerCase().includes(search)&&!e.paidBy?.toLowerCase().includes(search)) return false;
+    return true;
+  }).sort((a,b)=>(b.date||'').localeCompare(a.date||'')||0);
+
+  const total=filtered.length;
+  const pages=Math.ceil(total/EXP_PER_PAGE)||1;
+  if(currentExpPage>pages) currentExpPage=1;
+  const paged=filtered.slice((currentExpPage-1)*EXP_PER_PAGE,currentExpPage*EXP_PER_PAGE);
+
+  // Group by date
+  const groups={};
+  paged.forEach(e=>{ (groups[e.date||'']= groups[e.date||'']||[]).push(e); });
+
+  const list=document.getElementById('expenses-list');
+  if(!paged.length){
+    list.innerHTML='<div class="empty-state"><div class="icon">📭</div><p>No expenses found</p></div>';
+    document.getElementById('pagination').innerHTML=''; return;
+  }
+
+  list.innerHTML=Object.entries(groups).sort(([a],[b])=>b.localeCompare(a)).map(([date,exps])=>{
+    // ✅ FIXED: show HKD total for mixed-currency groups
+    const dayHKD=exps.reduce((s,e)=>s+(parseFloat(e.amountHKD)||0),0);
+    // Build per-currency subtotals for same-currency groups
+    const currencies=[...new Set(exps.map(e=>e.currency))];
+    let totalLabel;
+    if(currencies.length===1){
+      // Single currency — show original + HKD
+      const dayOrig=exps.reduce((s,e)=>s+(parseFloat(e.amount)||0),0);
+      totalLabel=`${currencies[0]} ${fmt2(dayOrig)} • HKD ${fmt2(dayHKD)}`;
+    } else {
+      // Mixed currencies — show HKD only
+      totalLabel=`HKD ${fmt2(dayHKD)}`;
+    }
+    return `<div class="date-group">
+      <div class="date-group-header">
+        <div class="date-group-label">${date?formatDateLong(date):'Unknown'}</div>
+        <div class="date-group-total">${totalLabel}</div>
+      </div>
+      ${exps.map(e=>buildExpRow(e)).join('')}
+    </div>`;
+  }).join('');
+
+  renderPagination(pages,total);
+}
+
+function buildExpRow(e) {
+  const catKey  =(e.category||'Other').replace(' ','').toLowerCase();
+  const catClass=catKey==='pendingupdate'?'cat-pending':'cat-'+(catKey||'other');
+  const catColor=CAT_COLORS[e.category]||'#64748b';
+  const friends =currentTrip?.friends||[];
+  const splitLbl=e.splitAmong?.length===friends.length?'All':(e.splitAmong?.join(', ')||'—');
+  return `<div class="expense-row ${catClass}" onclick="editExpense('${e.id}')">
+    <div class="expense-icon" style="background:${catColor}">${(e.description||'?').charAt(0).toUpperCase()}</div>
+    <div class="expense-info">
+      <div class="expense-title">${esc(e.description||'—')}${e.hasReceipt?' 📎':''}</div>
+      <div class="expense-meta">
+        <span class="meta-chip">👤 ${esc(e.paidBy||'?')}</span>
+        <span class="meta-chip">${esc(e.category||'Other')}</span>
+        <span class="meta-chip">Split: ${esc(splitLbl)}</span>
+      </div>
+    </div>
+    <div class="expense-right">
+      <div class="expense-amount">${esc(e.currency||'')} ${fmt2(e.amount||0)}</div>
+      <div class="expense-hkd">HKD ${fmt2(e.amountHKD||0)}</div>
+    </div>
+  </div>`;
+}
+
+function renderPagination(pages,total){
+  const p=document.getElementById('pagination');
+  if(pages<=1){p.innerHTML='';return;}
+  const start=Math.max(1,currentExpPage-2),end=Math.min(pages,start+4);
+  let html=`<button class="page-btn" onclick="goPage(${currentExpPage-1})" ${currentExpPage<=1?'disabled':''}>‹</button>`;
+  for(let i=start;i<=end;i++) html+=`<button class="page-btn${i===currentExpPage?' active':''}" onclick="goPage(${i})">${i}</button>`;
+  html+=`<button class="page-btn" onclick="goPage(${currentExpPage+1})" ${currentExpPage>=pages?'disabled':''}>›</button>`;
+  html+=`<span class="page-info">${currentExpPage}/${pages} • ${total} items</span>`;
+  p.innerHTML=html;
+}
+function goPage(n){currentExpPage=n;renderExpenses();document.getElementById('app').scrollTo(0,0);}
+window.goPage=goPage;
+function onSearchFilter(){currentExpPage=1;renderExpenses();}
+window.onSearchFilter=onSearchFilter;
+function togglePendingFilter(){
+  pendingFilterActive=!pendingFilterActive;
+  document.getElementById('pending-filter-btn').classList.toggle('active',pendingFilterActive);
+  currentExpPage=1;renderExpenses();
+}
+window.togglePendingFilter=togglePendingFilter;
+
+// ── EDIT / DELETE ──────────────────────────────────────────
+async function editExpense(id) {
+  const exp=expenses.find(e=>e.id===id); if(!exp) return;
+  editingExpenseId=id; navigateTo('new');
+  document.getElementById('editing-badge').classList.remove('hidden');
+  document.getElementById('add-expense-btn').textContent='Update Expense';
+  document.getElementById('cancel-edit-btn').classList.remove('hidden');
+  selectedDate=exp.date;
+  document.getElementById('exp-date').value=exp.date||'';
+  document.getElementById('exp-desc').value=exp.description||'';
+  document.getElementById('desc-counter').textContent=(exp.description||'').length+'/80';
+  document.getElementById('exp-amount').value=exp.amount||'';
+  buildExpCurrencyDropdown(); document.getElementById('exp-currency').value=exp.currency||currentTrip?.currency;
+  buildPaidByDropdown();      document.getElementById('exp-paidby').value=exp.paidBy||'';
+  buildCategoryChips(); selectCategory(exp.category||'Other');
+  buildSplitGrid();
+  const ss=new Set(exp.splitAmong||[]);
+  document.querySelectorAll('.split-person').forEach(el=>{
+    const inc=ss.has(el.dataset.name);
+    el.classList.toggle('included',inc);
+    el.querySelector('.split-check').style.opacity=inc?'1':'0';
+  });
+  receiptDataURL=null;
+  if(exp.hasReceipt){
+    const idbData=await idbGet(id);
+    receiptDataURL=idbData||exp.receiptBase64||null;
+    if(receiptDataURL){
+      document.getElementById('receipt-thumb').src=receiptDataURL;
+      document.getElementById('receipt-preview').classList.add('show');
+    }
+  } else document.getElementById('receipt-preview').classList.remove('show');
+
+  let delBtn=document.getElementById('delete-exp-btn');
+  if(!delBtn){
+    delBtn=document.createElement('button');
+    delBtn.id='delete-exp-btn'; delBtn.className='btn btn-danger'; delBtn.style.marginTop='8px';
+    document.getElementById('form-action-row').after(delBtn);
+  }
+  delBtn.textContent='Delete Expense'; delBtn.onclick=()=>deleteExpense(id);
+  updateHKDPreview(); renderDateStrip(); buildQuickChips();
+}
+window.editExpense=editExpense;
+
+async function deleteExpense(id){
+  if(!confirm('Delete this expense?')) return;
+  const exp=expenses.find(e=>e.id===id);
+  try{
+    if(firebaseOk&&db) await deleteDoc(doc(db,'trips',currentCode,'expenses',id));
+    else { let exps=getLocalExp(currentCode).filter(e=>e.id!==id); saveLocalExp(currentCode,exps); loadLocalExp(); }
+    await idbDel(id);
+    cancelEdit(); navigateTo('expenses'); renderExpenses();
+    toast('Expense deleted','warn',async()=>{
+      if(exp){
+        if(firebaseOk&&db){ const{id:_,...rest}=exp; await setDoc(doc(db,'trips',currentCode,'expenses',id),rest); }
+        else{ let exps=getLocalExp(currentCode); exps.unshift(exp); saveLocalExp(currentCode,exps); loadLocalExp(); }
+        if(receiptDataURL) await idbSave(id,receiptDataURL);
+        toast('Restored','success');
+      }
+    },4000);
+  } catch(e){ toast('Delete failed: '+e.message,'error'); }
+}
+window.deleteExpense=deleteExpense;
+
+// ── BALANCES ───────────────────────────────────────────────
+function computeBalances(){
+  const friends=currentTrip?.friends||[];
+  const paid={},share={},paidOrig={},shareOrig={};
+  friends.forEach(f=>{paid[f]=0;share[f]=0;paidOrig[f]=0;shareOrig[f]=0;});
+  expenses.forEach(e=>{
+    const hkd=parseFloat(e.amountHKD)||0, orig=parseFloat(e.amount)||0;
+    const split=(e.splitAmong||[]).filter(f=>friends.includes(f));
+    if(e.paidBy&&friends.includes(e.paidBy)){paid[e.paidBy]+=hkd;paidOrig[e.paidBy]+=orig;}
+    if(split.length){
+      const ph=hkd/split.length, po=orig/split.length;
+      split.forEach(f=>{if(friends.includes(f)){share[f]+=ph;shareOrig[f]+=po;}});
+    }
+  });
+  return friends.map((f,i)=>({
+    name:f,idx:i,paid:paid[f],share:share[f],paidOrig:paidOrig[f],shareOrig:shareOrig[f],
+    balance:parseFloat((paid[f]-share[f]).toFixed(2))
+  }));
+}
+
+function renderBalances(){
+  if(!currentTrip) return;
+  const balances=computeBalances();
+  document.getElementById('balance-grid').innerHTML=balances.map((b,i)=>{
+    const cls=BC_CLASSES[i%BC_CLASSES.length], color=AVATAR_COLORS[b.idx%AVATAR_COLORS.length];
+    const sign=b.balance>0?'+':'';
+    const status=Math.abs(b.balance)<0.01?'Settled':b.balance>0?'Gets back':'Owes';
+    const sc=b.balance>0.01?'#16a34a':b.balance<-0.01?'#dc2626':'#64748b';
+    return `<div class="balance-card ${cls}" onclick="openPersonSheet('${esc(b.name)}')">
+      <div class="bc-avatar" style="background:${color}">${b.name.charAt(0).toUpperCase()}</div>
+      <div class="bc-name">${esc(b.name)}</div>
+      <div class="bc-balance" style="color:${sc}">${sign}HKD ${fmt2(Math.abs(b.balance))}</div>
+      <div class="bc-status" style="color:${sc}">${status}</div>
+      <div class="bc-detail">Paid ${currentTrip.currency} ${fmt2(b.paidOrig)} / Share ${fmt2(b.shareOrig)}</div>
+    </div>`;
+  }).join('');
+
+  const catTotals={};
+  expenses.forEach(e=>{ catTotals[e.category]=(catTotals[e.category]||0)+(parseFloat(e.amountHKD)||0); });
+  const totalHKD=Object.values(catTotals).reduce((a,b)=>a+b,0)||1;
+  document.getElementById('cat-breakdown').innerHTML=Object.entries(catTotals).sort(([,a],[,b])=>b-a)
+    .map(([cat,total])=>`<div class="cat-row">
+      <div class="cat-dot" style="background:${CAT_COLORS[cat]||'#64748b'}"></div>
+      <div class="cat-name">${esc(cat)}</div>
+      <div class="cat-pct">${Math.round(total/totalHKD*100)}%</div>
+      <div class="cat-total">HKD ${fmt2(total)}</div>
+    </div>`).join('');
+
+  document.getElementById('bal-currency').value=currentTrip.currency||'KRW';
+  document.getElementById('bal-rate').value=currentTrip.exchangeRate||0.0057;
+}
+
+function onBalCurrencyChange(){
+  document.getElementById('bal-rate').value=DEFAULT_RATES[document.getElementById('bal-currency').value]||1;
+}
+window.onBalCurrencyChange=onBalCurrencyChange;
+async function fetchRateForBalances(){ await fetchRate(document.getElementById('bal-currency').value,'bal-rate','bal-fetch-btn'); }
+window.fetchRateForBalances=fetchRateForBalances;
+async function saveBalanceSettings(){
+  const cur=document.getElementById('bal-currency').value;
+  const rate=parseFloat(document.getElementById('bal-rate').value)||1;
+  currentTrip.currency=cur; currentTrip.exchangeRate=rate;
+  showLoading(true,'Recalculating…');
+  try{
+    if(firebaseOk&&db){
+      await updateDoc(doc(db,'trips',currentCode),{currency:cur,exchangeRate:rate});
+      const batch=writeBatch(db);
+      expenses.forEach(e=>{
+        const r=e.currency===cur?rate:(DEFAULT_RATES[e.currency]||1);
+        const nH=parseFloat(((parseFloat(e.amount)||0)*r).toFixed(2));
+        const nP=(e.splitAmong?.length||0)>0?parseFloat((nH/e.splitAmong.length).toFixed(2)):0;
+        batch.update(doc(db,'trips',currentCode,'expenses',e.id),{amountHKD:nH,perPerson:nP});
+      });
+      await batch.commit();
+    } else {
+      const lt=getLocalTrips();
+      if(lt[currentCode]){lt[currentCode].currency=cur;lt[currentCode].exchangeRate=rate;}
+      localStorage.setItem('localTrips',JSON.stringify(lt));
+      let exps=getLocalExp(currentCode).map(e=>{
+        const r=e.currency===cur?rate:(DEFAULT_RATES[e.currency]||1);
+        const nH=parseFloat(((parseFloat(e.amount)||0)*r).toFixed(2));
+        const nP=(e.splitAmong?.length||0)>0?parseFloat((nH/e.splitAmong.length).toFixed(2)):0;
+        return{...e,amountHKD:nH,perPerson:nP};
+      });
+      saveLocalExp(currentCode,exps); loadLocalExp();
+    }
+    toast('Saved & recalculated ✓','success');
+    renderHeroBlocks(); renderBalances(); renderSettlement();
+  } catch(e){ toast('Save failed: '+e.message,'error'); }
+  finally{ showLoading(false); }
+}
+window.saveBalanceSettings=saveBalanceSettings;
+
+// ── PERSON SHEET ───────────────────────────────────────────
+function openPersonSheet(name){
+  personSheetName=name;
+  const tc=currentTrip?.currency||'KRW';
+  document.getElementById('ps-currency-toggle').innerHTML=
+    `<option value="HKD">HKD</option><option value="${tc}">${tc}</option>`;
+  document.getElementById('ps-currency-toggle').value='HKD';
+  document.querySelectorAll('.tab-btn-inner').forEach((b,i)=>b.classList.toggle('active',i===0));
+  document.querySelectorAll('.tab-panel').forEach((p,i)=>p.classList.toggle('active',i===0));
+  renderPersonSheet(); openSheet('person-sheet');
+}
+window.openPersonSheet=openPersonSheet;
+function switchPersonTab(idx,btn){
+  document.querySelectorAll('.tab-btn-inner').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active'); document.querySelectorAll('.tab-panel')[idx].classList.add('active');
+}
+window.switchPersonTab=switchPersonTab;
+
+function renderPersonSheet(){
+  const name=personSheetName; if(!name||!currentTrip) return;
+  const friends=currentTrip.friends||[];
+  const idx=friends.indexOf(name);
+  const color=AVATAR_COLORS[idx<0?0:idx%AVATAR_COLORS.length];
+  const dispCur=document.getElementById('ps-currency-toggle').value;
+  const isHKD=dispCur==='HKD';
+  const tripCur=currentTrip.currency||'KRW';
+  let paid=0,share=0,paidOrig=0,shareOrig=0;
+  const paidExps=[],owesExps=[];
+  expenses.forEach(e=>{
+    const hkd=parseFloat(e.amountHKD)||0, orig=parseFloat(e.amount)||0;
+    const split=(e.splitAmong||[]).filter(f=>friends.includes(f));
+    if(e.paidBy===name){paid+=hkd;paidOrig+=orig;paidExps.push(e);}
+    if(split.includes(name)){
+      const ph=split.length?hkd/split.length:0, po=split.length?orig/split.length:0;
+      share+=ph; shareOrig+=po; owesExps.push({...e,perHKD:ph,perOrig:po});
+    }
+  });
+  const balance=parseFloat((paid-share).toFixed(2));
+  const sign=balance>0?'+':'';
+  const sc=balance>0.01?'#16a34a':balance<-0.01?'#dc2626':'#64748b';
+  const av=document.getElementById('ps-avatar');
+  av.style.background=color; av.textContent=name.charAt(0).toUpperCase();
+  document.getElementById('ps-name').textContent=name;
+  document.getElementById('ps-balance-big').textContent=`${sign}HKD ${fmt2(Math.abs(balance))}`;
+  document.getElementById('ps-balance-big').style.color=sc;
+  const v=(h,o)=>isHKD?'HKD '+fmt2(h):tripCur+' '+fmt2(o);
+  const vs=(h,o)=>isHKD?tripCur+' '+fmt2(o):'HKD '+fmt2(h);
+  document.getElementById('ps-tab-overview').innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+      <div style="background:#dbeafe;border-radius:12px;padding:14px;text-align:center">
+        <div style="font-size:11px;font-weight:700;color:#1d4ed8;margin-bottom:6px">PAID</div>
+        <div style="font-size:20px;font-weight:800;color:#1e40af">${v(paid,paidOrig)}</div>
+        <div style="font-size:11px;color:#64748b;margin-top:4px">${vs(paid,paidOrig)}</div>
+      </div>
+      <div style="background:#fef9c3;border-radius:12px;padding:14px;text-align:center">
+        <div style="font-size:11px;font-weight:700;color:#a16207;margin-bottom:6px">SHARE</div>
+        <div style="font-size:20px;font-weight:800;color:#92400e">${v(share,shareOrig)}</div>
+        <div style="font-size:11px;color:#64748b;margin-top:4px">${vs(share,shareOrig)}</div>
+      </div>
+    </div>
+    <div style="text-align:center;padding:16px;background:${balance>0.01?'#dcfce7':balance<-0.01?'#fee2e2':'#f1f5f9'};border-radius:12px">
+      <div style="font-size:12px;font-weight:700;color:var(--gray);margin-bottom:4px">NET BALANCE</div>
+      <div style="font-size:28px;font-weight:800;color:${sc}">${sign}HKD ${fmt2(Math.abs(balance))}</div>
+      <div style="font-size:13px;font-weight:600;color:${sc};margin-top:4px">${Math.abs(balance)<0.01?'Settled':balance>0?'Gets back':'Owes'}</div>
+    </div>`;
+  const eRow=(e,m,s,x='')=>`
+    <div style="padding:10px 0;border-bottom:1px solid var(--gray-mid);display:flex;justify-content:space-between;align-items:center">
+      <div><div style="font-size:13px;font-weight:700">${esc(e.description)}${e.hasReceipt?' 📎':''}</div>
+        <div style="font-size:11px;color:var(--gray);margin-top:2px">${fmtDateShort(e.date)}${x}</div></div>
+      <div style="text-align:right;flex-shrink:0">
+        <div style="font-size:14px;font-weight:800">${m}</div>
+        <div style="font-size:10px;color:var(--gray)">${s}</div>
+      </div>
+    </div>`;
+  document.getElementById('ps-tab-paid').innerHTML=paidExps.length
+    ?paidExps.map(e=>eRow(e,v(e.amountHKD,e.amount),vs(e.amountHKD,e.amount),` • Split ${e.splitAmong?.length||0}`)).join('')
+    :'<div style="text-align:center;padding:20px;color:var(--gray)">No expenses paid</div>';
+  document.getElementById('ps-tab-owes').innerHTML=owesExps.length
+    ?owesExps.map(e=>eRow(e,v(e.perHKD,e.perOrig),vs(e.perHKD,e.perOrig),` • Paid by ${esc(e.paidBy)}`)).join('')
+    :'<div style="text-align:center;padding:20px;color:var(--gray)">No shared expenses</div>';
+  const settlements=computeSettlements();
+  const relevant=settlements.filter(s=>s.from===name||s.to===name);
+  document.getElementById('ps-tab-settle').innerHTML=relevant.length
+    ?relevant.map(s=>{
+        const iF=s.from===name;
+        return`<div style="padding:12px;background:${iF?'#fee2e2':'#dcfce7'};border-radius:10px;margin-bottom:8px">
+          <div style="font-size:13px;font-weight:700;color:${iF?'#dc2626':'#16a34a'}">${iF?'You pay '+esc(s.to):esc(s.from)+' pays you'}</div>
+          <div style="font-size:18px;font-weight:800;margin-top:4px">HKD ${fmt2(s.amount)}</div>
+        </div>`;}).join('')
+    :'<div style="text-align:center;padding:20px;color:var(--gray)">No settlements needed ✅</div>';
+}
+window.renderPersonSheet=renderPersonSheet;
+
+// ── SETTLEMENT ─────────────────────────────────────────────
+function computeSettlements(){
+  const bal=computeBalances();
+  const deb=bal.filter(b=>b.balance<-0.01).sort((a,b)=>a.balance-b.balance).map(b=>({name:b.name,amount:-b.balance}));
+  const cred=bal.filter(b=>b.balance>0.01).sort((a,b)=>b.balance-a.balance).map(b=>({name:b.name,amount:b.balance}));
+  const trans=[]; let di=0,ci=0;
+  while(di<deb.length&&ci<cred.length){
+    const pay=Math.min(deb[di].amount,cred[ci].amount);
+    if(pay>0.01) trans.push({from:deb[di].name,to:cred[ci].name,amount:parseFloat(pay.toFixed(2))});
+    deb[di].amount-=pay; cred[ci].amount-=pay;
+    if(deb[di].amount<0.01) di++; if(cred[ci].amount<0.01) ci++;
+  }
+  return trans;
+}
+function renderSettlement(){
+  if(!currentTrip) return;
+  const trans=computeSettlements();
+  const friends=currentTrip.friends||[];
+  const totalHKD=trans.reduce((s,t)=>s+t.amount,0);
+  document.getElementById('settlement-summary').innerHTML=`
+    <div class="settle-stat"><div class="settle-stat-val">${trans.length}</div><div class="settle-stat-lbl">Transfers</div></div>
+    <div class="settle-stat"><div class="settle-stat-val">HKD ${fmt2(totalHKD)}</div><div class="settle-stat-lbl">Total</div></div>
+    <div class="settle-stat"><div class="settle-stat-val">HKD</div><div class="settle-stat-lbl">Currency</div></div>`;
+  if(!trans.length){
+    document.getElementById('settlement-list').innerHTML=
+      '<div class="empty-state"><div class="icon">✅</div><p>All settled!</p></div>'; return;
+  }
+  document.getElementById('settlement-list').innerHTML=trans.map(t=>{
+    const fi=friends.indexOf(t.from),ti=friends.indexOf(t.to);
+    const fc=AVATAR_COLORS[fi<0?0:fi%AVATAR_COLORS.length];
+    const tc=AVATAR_COLORS[ti<0?0:ti%AVATAR_COLORS.length];
+    return`<div class="transfer-row">
+      <div class="transfer-avatar" style="background:${fc}">${t.from.charAt(0).toUpperCase()}</div>
+      <div class="transfer-arrow">→</div>
+      <div class="transfer-avatar" style="background:${tc}">${t.to.charAt(0).toUpperCase()}</div>
+      <div class="transfer-info">
+        <div class="transfer-names">${esc(t.from)} → ${esc(t.to)}</div>
+        <div class="transfer-sub">${esc(t.from)} pays ${esc(t.to)}</div>
+      </div>
+      <div class="transfer-amount">HKD ${fmt2(t.amount)}</div>
+    </div>`;
+  }).join('');
+}
+function copySettlement(){
+  const trans=computeSettlements();
+  if(!trans.length){toast('All settled — nothing to copy');return;}
+  navigator.clipboard?.writeText(trans.map(t=>`${t.from} pays ${t.to}: HKD ${fmt2(t.amount)}`).join('\n'))
+    .then(()=>toast('Copied ✓','success')).catch(()=>toast('Copy failed','error'));
+}
+window.copySettlement=copySettlement;
+
+// ── EXCEL ──────────────────────────────────────────────────
+function exportExcel(){
+  if(!window.XLSX){toast('Excel library not loaded yet','warn');return;}
+  const trip=currentTrip, bal=computeBalances(), trans=computeSettlements();
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([
+    ['Date','Description','Category','Paid By',`Amount (${trip.currency})`,'Amount (HKD)','Shared With','Receipt'],
+    ...expenses.map(e=>[e.date||'',e.description||'',e.category||'',e.paidBy||'',e.amount||0,e.amountHKD||0,(e.splitAmong||[]).join(', '),e.hasReceipt?'Yes':'No'])
+  ]),'Expenses');
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([
+    ['Name',`Paid (${trip.currency})`,'Paid (HKD)',`Share (${trip.currency})`,'Share (HKD)','Balance (HKD)','Status'],
+    ...bal.map(b=>[b.name,fmt2(b.paidOrig),fmt2(b.paid),fmt2(b.shareOrig),fmt2(b.share),fmt2(b.balance),Math.abs(b.balance)<0.01?'Settled':b.balance>0?'Gets back':'Owes'])
+  ]),'Balances');
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([
+    ['From','To','Amount (HKD)'],
+    ...trans.map(t=>[t.from,t.to,fmt2(t.amount)])
+  ]),'Settlement');
+  XLSX.writeFile(wb,(trip.name||'TripSplit')+'_export.xlsx');
+  toast('Exported ✓','success');
+}
+window.exportExcel=exportExcel;
+
+// ── SETTINGS ───────────────────────────────────────────────
+function openSettings(){
+  if(!currentTrip) return;
+  document.getElementById('s-name').value=currentTrip.name||'';
+  document.getElementById('s-start').value=currentTrip.startDate||'';
+  document.getElementById('s-end').value=currentTrip.endDate||'';
+  document.getElementById('s-members').value=(currentTrip.friends||[]).join(', ');
+  document.getElementById('s-trip-name-display').textContent=currentTrip.name||'';
+  document.getElementById('s-confirm-delete').value='';
+  navigateTo('settings');
+}
+window.openSettings=openSettings;
+async function saveTripSettings(){
+  const name=document.getElementById('s-name').value.trim();
+  const start=document.getElementById('s-start').value;
+  const end=document.getElementById('s-end').value;
+  const members=document.getElementById('s-members').value.split(',').map(s=>s.trim()).filter(Boolean);
+  if(!name){toast('Name required','error');return;}
+  if(start>end){toast('Start ≤ end','error');return;}
+  if(!members.length||members.length>8){toast('1–8 members','error');return;}
+  showLoading(true,'Saving…');
+  try{
+    const u={name,startDate:start,endDate:end,friends:members};
+    if(firebaseOk&&db) await updateDoc(doc(db,'trips',currentCode),u);
+    else{ const lt=getLocalTrips(); if(lt[currentCode]) Object.assign(lt[currentCode],u); localStorage.setItem('localTrips',JSON.stringify(lt)); }
+    Object.assign(currentTrip,u);
+    saveMyTrip(currentCode,name,localStorage.getItem('trip_'+currentCode+'_pw')||'');
+    renderTripHeaders(); toast('Saved ✓','success');
+  } catch(e){ toast('Save failed: '+e.message,'error'); }
+  finally{ showLoading(false); }
+}
+window.saveTripSettings=saveTripSettings;
+async function updateTripPassword(){
+  const pw=document.getElementById('s-newpw').value;
+  if(pw.length<3){toast('Min 3 chars','error');return;}
+  showLoading(true,'Updating…');
+  try{
+    const hash=await sha256(pw);
+    if(firebaseOk&&db) await updateDoc(doc(db,'trips',currentCode),{passwordHash:hash});
+    else{ const lt=getLocalTrips(); if(lt[currentCode]) lt[currentCode].passwordHash=hash; localStorage.setItem('localTrips',JSON.stringify(lt)); }
+    currentTrip.passwordHash=hash;
+    document.getElementById('s-newpw').value='';
+    toast('Password updated ✓','success');
+  } catch(e){ toast('Failed: '+e.message,'error'); }
+  finally{ showLoading(false); }
+}
+window.updateTripPassword=updateTripPassword;
+function copyTripNameForDelete(){
+  const name=currentTrip?.name||'';
+  navigator.clipboard?.writeText(name).then(()=>toast('Copied','success'));
+  document.getElementById('s-confirm-delete').value=name;
+}
+window.copyTripNameForDelete=copyTripNameForDelete;
+async function deleteTripSettings(){
+  const typed=document.getElementById('s-confirm-delete').value;
+  if(typed!==currentTrip?.name){toast('Name does not match','error');return;}
+  if(!confirm(`Permanently delete "${currentTrip.name}"?`)) return;
+  showLoading(true,'Deleting…');
+  try{
+    if(firebaseOk&&db){
+      const snap=await getDocs(collection(db,'trips',currentCode,'expenses'));
+      const batch=writeBatch(db);
+      snap.docs.forEach(d=>batch.delete(d.ref));
+      batch.delete(doc(db,'trips',currentCode));
+      await batch.commit();
+    } else {
+      const lt=getLocalTrips(); delete lt[currentCode]; localStorage.setItem('localTrips',JSON.stringify(lt));
+      localStorage.removeItem('localExp_'+currentCode);
+    }
+    await idbDelTrip(currentCode);
+    removeMyTrip(currentCode);
+    localStorage.removeItem('trip_'+currentCode+'_who');
+    localStorage.removeItem('trip_'+currentCode+'_pw');
+    currentTrip=null;currentCode=null;myIdentity=null;expenses=[];
+    if(expensesUnsub){expensesUnsub();expensesUnsub=null;}
+    renderLobby(); navigateTo('lobby'); toast('Trip deleted','warn');
+  } catch(e){ toast('Delete failed: '+e.message,'error'); }
+  finally{ showLoading(false); }
+}
+window.deleteTripSettings=deleteTripSettings;
+
+// ── DELETE ALL ─────────────────────────────────────────────
+async function confirmDeleteAll(){
+  if(document.getElementById('delete-all-input').value!=='DELETE ALL'){toast('Type DELETE ALL exactly','error');return;}
+  closeModal('delete-all-modal'); showLoading(true,'Deleting all…');
+  try{
+    if(firebaseOk&&db){
+      const ts=await getDocs(collection(db,'trips'));
+      for(const td of ts.docs){
+        const es=await getDocs(collection(db,'trips',td.id,'expenses'));
+        const batch=writeBatch(db);
+        es.docs.forEach(d=>batch.delete(d.ref)); batch.delete(td.ref); await batch.commit();
+      }
+    }
+    Object.keys(localStorage).filter(k=>k.startsWith('localExp_')||k.startsWith('trip_')||k==='localTrips'||k==='myTrips')
+      .forEach(k=>localStorage.removeItem(k));
+    renderLobby(); toast('All trips deleted','warn');
+  } catch(e){ toast('Error: '+e.message,'error'); }
+  finally{ showLoading(false); }
+}
+window.confirmDeleteAll=confirmDeleteAll;
+
+// ── UTILS ──────────────────────────────────────────────────
+function esc(s){ const d=document.createElement('div');d.textContent=s||'';return d.innerHTML; }
+function fmt2(n){ return(Math.round((parseFloat(n)||0)*100)/100).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function toDateStr(d){ return d.toISOString().split('T')[0]; }
+function fmtDateShort(s){
+  if(!s) return '';
+  const[y,m,d]=s.split('-').map(Number);
+  return new Date(Date.UTC(y,m-1,d)).toLocaleDateString('en',{day:'numeric',month:'short',timeZone:'UTC'});
+}
+function formatDateLong(s){
+  if(!s) return '';
+  const[y,m,d]=s.split('-').map(Number);
+  return new Date(Date.UTC(y,m-1,d))
+    .toLocaleDateString('en',{weekday:'short',day:'numeric',month:'long',year:'numeric',timeZone:'UTC'})
+    .replace(',',' •');
+}
+
+// ── INIT ───────────────────────────────────────────────────
+(async function init(){
+  showLoading(true,'Loading TripSplit…');
+  await openIDB();
+  await initFirebase();
+  renderLobby();
+  showLoading(false);
+})();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</body>
+</html>
