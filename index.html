@@ -612,6 +612,10 @@ html[data-theme=dark] .toast-undo{color:#93c5fd}
           Auto-fetch rate
         </button>
       </div>
+      <div class="form-group">
+        <label class="form-label">Settlement Currency (what people pay each other in)</label>
+        <select class="currency-select" id="c-settle"><option value="HKD">HKD</option><option value="THB">THB</option><option value="JPY">JPY</option><option value="USD">USD</option><option value="EUR">EUR</option><option value="CNY">CNY</option><option value="TWD">TWD</option><option value="KRW">KRW</option><option value="SGD">SGD</option><option value="MYR">MYR</option></select>
+      </div>
       <div class="form-group" style="margin-bottom:0">
         <label class="form-label">Members (comma separated, max 8) *</label>
         <input type="text" id="c-members" class="form-input" placeholder="Alice, Bob, Charlie, Dana">
@@ -791,28 +795,7 @@ html[data-theme=dark] .toast-undo{color:#93c5fd}
     <div class="section-title">Spending by Category</div>
     <div id="cat-breakdown"></div>
   </div>
-  <div style="padding:0 16px 16px">
-    <div class="section-title">Trip Currency Settings</div>
-    <div style="display:flex;gap:8px;align-items:flex-end;margin-bottom:10px;flex-wrap:wrap">
-      <div style="flex:1;min-width:100px">
-        <label class="form-label" style="margin-bottom:6px">Currency</label>
-        <select class="currency-select" id="bal-currency" style="width:100%" onchange="onBalCurrencyChange()">
-          <option value="HKD">HKD</option><option value="THB">THB</option><option value="JPY">JPY</option>
-          <option value="USD">USD</option><option value="EUR">EUR</option><option value="CNY">CNY</option>
-          <option value="TWD">TWD</option><option value="KRW">KRW</option><option value="SGD">SGD</option><option value="MYR">MYR</option>
-        </select>
-      </div>
-      <div style="flex:1;min-width:100px">
-        <label class="form-label" style="margin-bottom:6px">Rate to HKD</label>
-        <input type="number" id="bal-rate" class="form-input" step="0.0001">
-      </div>
-      <button class="fetch-rate-btn" id="bal-fetch-btn" onclick="fetchRateForBalances()" style="margin-top:0;height:46px">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10"/><path d="M23 14l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>Auto
-      </button>
-    </div>
-    <button class="btn btn-primary" onclick="saveBalanceSettings()">Save & Recalculate</button>
   </div>
-</div>
 
 <!-- SETTLEMENT -->
 <div class="page" id="page-settlement">
@@ -861,22 +844,24 @@ html[data-theme=dark] .toast-undo{color:#93c5fd}
       <p style="font-size:12px;color:var(--gray);margin-bottom:14px">Check a price while shopping. Uses your trip rate, live rates when online, defaults offline.</p>
       <div class="form-group">
         <label class="form-label">Amount</label>
-        <input type="number" id="cv-amount" class="form-input" step="0.01" placeholder="0.00" oninput="renderConverter()">
-      </div>
-      <div class="rate-row" style="align-items:flex-end">
-        <div class="form-group" style="margin-bottom:0;min-width:0">
-          <label class="form-label">From</label>
-          <select class="currency-select" id="cv-from" onchange="renderConverter()"></select>
+        <div style="display:grid;grid-template-columns:2fr 1fr;gap:8px;align-items:stretch">
+          <input type="number" id="cv-amount" class="form-input" step="0.01" placeholder="0.00" oninput="renderConverter()">
+          <button class="btn btn-primary" style="white-space:nowrap;padding:12px 8px;font-size:13px" onclick="useConverterInForm()" title="Fill this price into the Add Expense form">➕ Add Expense</button>
         </div>
-        <button class="btn btn-outline btn-sm" style="margin-bottom:2px;padding:10px 12px" onclick="swapConverter()" title="Swap">⇄</button>
-        <div class="form-group" style="margin-bottom:0;min-width:0">
+      </div>
+      <div class="form-group" style="display:flex;gap:8px;align-items:flex-end;flex-wrap:nowrap">
+        <div style="flex:1;min-width:0">
+          <label class="form-label">From</label>
+          <select class="currency-select" id="cv-from" onchange="renderConverter()" style="width:100%"></select>
+        </div>
+        <button class="btn btn-outline btn-sm" style="padding:11px 12px;flex-shrink:0" onclick="swapConverter()" title="Swap">⇄</button>
+        <div style="flex:1;min-width:0">
           <label class="form-label">To</label>
-          <select class="currency-select" id="cv-to" onchange="renderConverter()"></select>
+          <select class="currency-select" id="cv-to" onchange="renderConverter()" style="width:100%"></select>
         </div>
       </div>
       <div id="cv-result" style="text-align:center;background:var(--accent-light);border-radius:12px;padding:16px;margin-top:14px"></div>
       <div id="cv-rate" style="font-size:11px;color:var(--gray);text-align:center;margin-top:8px"></div>
-      <button class="btn btn-primary" style="width:100%;margin-top:14px" onclick="useConverterInForm()">➕ Fill into Add Expense</button>
       <div class="rate-row" style="margin-top:14px;align-items:flex-end">
         <div class="form-group" style="margin-bottom:0;min-width:0">
           <label class="form-label">Product *</label>
@@ -960,6 +945,29 @@ html[data-theme=dark] .toast-undo{color:#93c5fd}
       <div class="invite-preview" id="s-invite-link">—</div>
       <button class="btn btn-outline btn-sm" style="margin-top:10px;padding:8px 14px" onclick="copyInviteLink()">📋 Copy Invite Link</button>
     </div>
+    <div class="settings-block">
+      <h3>💱 Currencies &amp; Rates</h3>
+      <p style="font-size:12px;color:var(--gray);margin-bottom:12px">Trip currency is what you enter prices in. Settlement currency is what debts are shown &amp; paid in.</p>
+      <div style="display:flex;gap:8px;align-items:flex-end;margin-bottom:10px;flex-wrap:wrap">
+        <div style="flex:1;min-width:100px">
+          <label class="form-label" style="margin-bottom:6px">Trip Currency</label>
+          <select class="currency-select" id="bal-currency" style="width:100%" onchange="onBalCurrencyChange()"><option value="HKD">HKD</option><option value="THB">THB</option><option value="JPY">JPY</option><option value="USD">USD</option><option value="EUR">EUR</option><option value="CNY">CNY</option><option value="TWD">TWD</option><option value="KRW">KRW</option><option value="SGD">SGD</option><option value="MYR">MYR</option></select>
+        </div>
+        <div style="flex:1;min-width:100px">
+          <label class="form-label" style="margin-bottom:6px">Rate to HKD</label>
+          <input type="number" id="bal-rate" class="form-input" step="0.0001">
+        </div>
+        <button class="fetch-rate-btn" id="bal-fetch-btn" onclick="fetchRateForBalances()" style="margin-top:0;height:46px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10"/><path d="M23 14l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>Auto
+        </button>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Settlement Currency (what people pay each other in)</label>
+        <select class="currency-select" id="bal-settle" style="width:100%"><option value="HKD">HKD</option><option value="THB">THB</option><option value="JPY">JPY</option><option value="USD">USD</option><option value="EUR">EUR</option><option value="CNY">CNY</option><option value="TWD">TWD</option><option value="KRW">KRW</option><option value="SGD">SGD</option><option value="MYR">MYR</option></select>
+      </div>
+      <button class="btn btn-primary" style="width:100%" onclick="saveBalanceSettings()">Save &amp; Recalculate</button>
+    </div>
+
     <div class="settings-block">
       <h3>🔑 Change Password</h3>
       <div class="form-group" style="margin-bottom:12px">
@@ -1491,7 +1499,7 @@ async function createTrip(){
   showLoading(true,'Creating…');document.getElementById('create-btn').disabled=true;
   try{
     const salt=await makeSalt();const hash=await hashPassword(pw,salt);
-    const tripData={name,code,passwordHash:hash,passwordSalt:salt,kdf:'PBKDF2-SHA256-60000',friends:members,startDate:start,endDate:end,currency:cur,exchangeRate:rate,baseCurrency:'HKD',createdAt:new Date().toISOString()};
+    const tripData={name,code,passwordHash:hash,passwordSalt:salt,kdf:'PBKDF2-SHA256-60000',friends:members,startDate:start,endDate:end,currency:cur,exchangeRate:rate,settleCurrency:(document.getElementById('c-settle')?.value||'HKD'),baseCurrency:'HKD',createdAt:new Date().toISOString()};
     if(firebaseOk&&db)await setDoc(doc(db,'trips',code),tripData);else saveLocalTrip(code,tripData);
     saveMyTrip(code,name,pw);localStorage.setItem('trip_'+code+'_pw',pw);
     toast('Trip created! 🎉','success');
@@ -2157,9 +2165,9 @@ function renderBalances(){
     return`<div class="balance-card ${cls}" onclick="openPersonSheet(${i})">
       <div class="bc-avatar" style="background:${color}">${b.name.charAt(0).toUpperCase()}</div>
       <div class="bc-name">${esc(b.name)}</div>
-      <div class="bc-balance" style="color:${sc}">${sign}HKD ${fmt2(Math.abs(b.balance))}</div>
+      <div class="bc-balance" style="color:${sc}">${sign}${settleTxt(Math.abs(b.balance))}</div>
       <div class="bc-status" style="color:${sc}">${status}</div>
-      <div class="bc-detail">Paid: ${paidDetail}<br>Share: ${shareDetail}${Math.abs(settledNet)>0.005?`<br>Settled: HKD ${fmt2(settledNet)}`:''}</div>
+      <div class="bc-detail">Paid: ${paidDetail}<br>Share: ${shareDetail}${Math.abs(settledNet)>0.005?`<br>Settled: ${settleTxt(settledNet)}`:''}</div>
     </div>`;
   }).join('');
 
@@ -2173,8 +2181,6 @@ function renderBalances(){
       <div class="cat-pct">${Math.round(total/totalHKD*100)}%</div>
       <div class="cat-total">HKD ${fmt2(total)}</div>
     </div>`).join('');
-  document.getElementById('bal-currency').value=currentTrip.currency||'KRW';
-  document.getElementById('bal-rate').value=currentTrip.exchangeRate||0.0057;
 }
 
 function onBalCurrencyChange(){document.getElementById('bal-rate').value=DEFAULT_RATES[document.getElementById('bal-currency').value]||1;}
@@ -2183,8 +2189,9 @@ async function fetchRateForBalances(){await fetchRate(document.getElementById('b
 window.fetchRateForBalances=fetchRateForBalances;
 async function saveBalanceSettings(){
   const cur=document.getElementById('bal-currency').value;const rate=parseFloat(document.getElementById('bal-rate').value)||1;
-  const oldCur=currentTrip.currency,oldRate=parseFloat(currentTrip.exchangeRate)||1;
-  currentTrip.currency=cur;currentTrip.exchangeRate=rate;
+  const settle=document.getElementById('bal-settle')?.value||'HKD';
+  const oldCur=currentTrip.currency,oldRate=parseFloat(currentTrip.exchangeRate)||1,oldSettle=currentTrip.settleCurrency||'HKD';
+  currentTrip.currency=cur;currentTrip.exchangeRate=rate;currentTrip.settleCurrency=settle;
   // Re-rate: expenses in the NEW trip currency use the new rate; all others keep the rate they were entered with
   const rateFor=e=>{
     if(e.currency===cur)return rate;
@@ -2195,17 +2202,17 @@ async function saveBalanceSettings(){
   showLoading(true,'Recalculating…');
   try{
     if(firebaseOk&&db){
-      await updateDoc(doc(db,'trips',currentCode),{currency:cur,exchangeRate:rate});
+      await updateDoc(doc(db,'trips',currentCode),{currency:cur,exchangeRate:rate,settleCurrency:settle});
       const batch=writeBatch(db);
       expenses.forEach(e=>{const r=rateFor(e);const nH=parseFloat(((parseFloat(e.amount)||0)*r).toFixed(2));const nP=(e.splitAmong?.length||0)>0?parseFloat((nH/e.splitAmong.length).toFixed(2)):0;batch.update(doc(db,'trips',currentCode,'expenses',e.id),{amountHKD:nH,perPerson:nP,rateUsed:r});});
       await batch.commit();
     }else{
-      const lt=getLocalTrips();if(lt[currentCode]){lt[currentCode].currency=cur;lt[currentCode].exchangeRate=rate;}localStorage.setItem('localTrips',JSON.stringify(lt));
+      const lt=getLocalTrips();if(lt[currentCode]){lt[currentCode].currency=cur;lt[currentCode].exchangeRate=rate;lt[currentCode].settleCurrency=settle;}localStorage.setItem('localTrips',JSON.stringify(lt));
       let exps=getLocalExp(currentCode).map(e=>{const r=rateFor(e);const nH=parseFloat(((parseFloat(e.amount)||0)*r).toFixed(2));const nP=(e.splitAmong?.length||0)>0?parseFloat((nH/e.splitAmong.length).toFixed(2)):0;return{...e,amountHKD:nH,perPerson:nP,rateUsed:r};});
       saveLocalExp(currentCode,exps);loadLocalExp();
     }
     toast('Saved & recalculated ✓','success');renderHeroBlocks();renderBalances();renderSettlement();
-  }catch(e){currentTrip.currency=oldCur;currentTrip.exchangeRate=oldRate;logError('recalculate trip currency',e);toast('Save failed: '+e.message,'error');}
+  }catch(e){currentTrip.currency=oldCur;currentTrip.exchangeRate=oldRate;currentTrip.settleCurrency=oldSettle;logError('recalculate trip currency',e);toast('Save failed: '+e.message,'error');}
   finally{showLoading(false);}
 }
 window.saveBalanceSettings=saveBalanceSettings;
@@ -2246,7 +2253,7 @@ function renderPersonSheet(){
   const balance=me.balance;const sign=balance>0.005?'+':balance<-0.005?'-':'';const sc=balance>0.005?'#16a34a':balance<-0.005?'#dc2626':'#64748b';
   const av=document.getElementById('ps-avatar');av.style.background=color;av.textContent=name.charAt(0).toUpperCase();
   document.getElementById('ps-name').textContent=name;
-  document.getElementById('ps-balance-big').textContent=`${sign}HKD ${fmt2(Math.abs(balance))}`;
+  document.getElementById('ps-balance-big').textContent=`${sign}${settleTxt(Math.abs(balance))}`;
   document.getElementById('ps-balance-big').style.color=sc;
   // build per-currency labels e.g. "KRW 50,000 + JPY 1,000"
   const curList=byCur=>{const ks=sortCurKeys(Object.keys(byCur));return ks.length?ks.map(c=>`${c} ${fmt2(byCur[c])}`).join(' + '):null;};
@@ -2268,9 +2275,9 @@ function renderPersonSheet(){
     </div>
     <div style="text-align:center;padding:16px;background:${balance>0.01?'#dcfce7':balance<-0.01?'#fee2e2':'#f1f5f9'};border-radius:12px">
       <div style="font-size:12px;font-weight:700;color:var(--gray);margin-bottom:4px">NET BALANCE</div>
-      <div style="font-size:28px;font-weight:800;color:${sc}">${sign}HKD ${fmt2(Math.abs(balance))}</div>
+      <div style="font-size:28px;font-weight:800;color:${sc}">${sign}${settleTxt(Math.abs(balance))}</div>
       <div style="font-size:13px;font-weight:600;color:${sc};margin-top:4px">${Math.abs(balance)<0.01?'Settled':balance>0?'Gets back':'Owes'}</div>
-      <div style="font-size:11px;color:var(--gray);margin-top:6px">Settlements are calculated in HKD</div>
+      <div style="font-size:11px;color:var(--gray);margin-top:6px">Settled in ${esc(settleCurrency())}</div>
     </div>`;
   // rows always show the expense's REAL currency + HKD equivalent (never relabel a foreign amount)
   const eRow=(e,main,sub,x='')=>`
@@ -2291,11 +2298,19 @@ function renderPersonSheet(){
     return eRow(e,m,s,` • Paid by ${esc(e.paidBy)}`);
   }).join(''):'<div style="text-align:center;padding:20px;color:var(--gray)">No shared expenses</div>';
   const settlements=computeSettlements();const relevant=settlements.filter(s=>s.from===name||s.to===name);
-  document.getElementById('ps-tab-settle').innerHTML=(relevant.length?relevant.map(s=>{const iF=s.from===name;return`<div style="padding:12px;background:${iF?'#fee2e2':'#dcfce7'};border-radius:10px;margin-bottom:8px"><div style="font-size:13px;font-weight:700;color:${iF?'#dc2626':'#16a34a'}">${iF?esc(name)+' pays '+esc(s.to):esc(s.from)+' pays '+esc(name)}</div><div style="font-size:18px;font-weight:800;margin-top:4px">HKD ${fmt2(s.amount)}</div></div>`;}).join(''):'<div style="text-align:center;padding:20px;color:var(--gray)">No settlements needed ✅</div>')+(relevant.length?`<div style="font-size:11px;color:var(--gray);text-align:center;margin-top:4px">All transfers settle in HKD</div>`:'');
+  document.getElementById('ps-tab-settle').innerHTML=(relevant.length?relevant.map(s=>{const iF=s.from===name;return`<div style="padding:12px;background:${iF?'#fee2e2':'#dcfce7'};border-radius:10px;margin-bottom:8px"><div style="font-size:13px;font-weight:700;color:${iF?'#dc2626':'#16a34a'}">${iF?esc(name)+' pays '+esc(s.to):esc(s.from)+' pays '+esc(name)}</div><div style="font-size:18px;font-weight:800;margin-top:4px">${settleTxt(s.amount)}${settleCurrency()!=='HKD'?`<div style="font-size:10px;color:var(--gray);font-weight:600">≈ HKD ${fmt2(s.amount)}</div>`:''}</div></div>`;}).join(''):'<div style="text-align:center;padding:20px;color:var(--gray)">No settlements needed ✅</div>')+(relevant.length?`<div style="font-size:11px;color:var(--gray);text-align:center;margin-top:4px">All transfers settle in ${esc(settleCurrency())}</div>`:'');
 }
 window.renderPersonSheet=renderPersonSheet;
 
 // ── SETTLEMENT
+function settleCurrency(){return currentTrip?.settleCurrency||'HKD';}
+function hkdToSettle(hkd){
+  const sc=settleCurrency();
+  if(sc==='HKD')return hkd;
+  const r=bestRate(sc).rate;
+  return r>0?hkd/r:hkd;
+}
+function settleTxt(hkd){const sc=settleCurrency();return `${sc} ${fmt2(hkdToSettle(hkd))}`;}
 function computeSettlements(){
   // effective balance = expense balance + payments made − payments received
   const bal=computeBalances();
@@ -2333,8 +2348,8 @@ function renderSettlement(){
   const paidTotal=payments.reduce((s,p)=>s+(parseFloat(p.amountHKD)||0),0);
   document.getElementById('settlement-summary').innerHTML=`
     <div class="settle-stat"><div class="settle-stat-val">${trans.length}</div><div class="settle-stat-lbl">Remaining</div></div>
-    <div class="settle-stat"><div class="settle-stat-val">HKD ${fmt2(totalHKD)}</div><div class="settle-stat-lbl">Still to move</div></div>
-    <div class="settle-stat"><div class="settle-stat-val">HKD ${fmt2(paidTotal)}</div><div class="settle-stat-lbl">Already paid</div></div>`;
+    <div class="settle-stat"><div class="settle-stat-val">${settleTxt(totalHKD)}</div><div class="settle-stat-lbl">Still to move</div></div>
+    <div class="settle-stat"><div class="settle-stat-val">${settleTxt(paidTotal)}</div><div class="settle-stat-lbl">Already paid</div></div>`;
   if(!trans.length){document.getElementById('settlement-list').innerHTML='<div class="empty-state"><div class="icon">✅</div><p>All settled!</p></div>';}
   else document.getElementById('settlement-list').innerHTML=trans.map(t=>{
     const fi=friends.indexOf(t.from),ti=friends.indexOf(t.to);
@@ -2344,7 +2359,7 @@ function renderSettlement(){
       <div class="transfer-arrow">→</div>
       <div class="transfer-avatar" style="background:${tc2}">${t.to.charAt(0).toUpperCase()}</div>
       <div class="transfer-info"><div class="transfer-names">${esc(t.from)} → ${esc(t.to)}</div><div class="transfer-sub">${esc(t.from)} pays ${esc(t.to)}</div></div>
-      <div class="transfer-amount">HKD ${fmt2(t.amount)}</div>
+      <div class="transfer-amount">${settleTxt(t.amount)}${settleCurrency()!=='HKD'?`<div style="font-size:10px;color:var(--gray);font-weight:600">≈ HKD ${fmt2(t.amount)}</div>`:''}</div>
       <button class="settle-paid-btn" onclick="recordSettlement(${trans.indexOf(t)})">✓ Paid</button>
     </div>`;
   }).join('');
@@ -2353,7 +2368,7 @@ function renderSettlement(){
     ${payments.map((p,i)=>`
     <div class="transfer-row" style="margin-bottom:8px">
       <div class="transfer-info"><div class="transfer-names">${esc(p.from)} → ${esc(p.to)}</div><div class="transfer-sub">${fmtDateShort(p.date)} · recorded</div></div>
-      <div class="transfer-amount">HKD ${fmt2(p.amountHKD)}</div>
+      <div class="transfer-amount">${settleTxt(p.amountHKD)}${settleCurrency()!=='HKD'?`<div style="font-size:10px;color:var(--gray);font-weight:600">≈ HKD ${fmt2(p.amountHKD)}</div>`:''}</div>
       <button class="settle-paid-btn" style="border-color:var(--danger);color:var(--danger)" onclick="deletePaymentIdx(${i})" title="Remove record">✕</button>
     </div>`).join('')}`:'';
 }
@@ -2364,7 +2379,7 @@ async function recordSettlement(i){
 window.recordSettlement=recordSettlement;
 async function savePayment(from,to,amount){
   if(!from||!to||from===to||!(amount>0))return;
-  if(!confirm(`${from} paid ${to} HKD ${fmt2(amount)}?`))return;
+  if(!confirm(`${from} paid ${to} ${settleTxt(amount)}${settleCurrency()!=='HKD'?` (≈ HKD ${fmt2(amount)})`:''}?`))return;
   showLoading(true,'Recording…');
   try{
     const id=currentCode+'_pay_'+Date.now();
@@ -2395,7 +2410,7 @@ async function deletePaymentIdx(i){
 window.deletePaymentIdx=deletePaymentIdx;
 function copySettlement(){
   const trans=computeSettlements();if(!trans.length){toast('All settled — nothing to copy');return;}
-  navigator.clipboard?.writeText(trans.map(t=>`${t.from} pays ${t.to}: HKD ${fmt2(t.amount)}`).join('\n')).then(()=>toast('Copied ✓','success')).catch(()=>toast('Copy failed','error'));
+  navigator.clipboard?.writeText(trans.map(t=>`${t.from} pays ${t.to}: ${settleTxt(t.amount)}${settleCurrency()!=='HKD'?` (≈ HKD ${fmt2(t.amount)})`:''}`).join('\n')).then(()=>toast('Copied ✓','success')).catch(()=>toast('Copy failed','error'));
 }
 window.copySettlement=copySettlement;
 
@@ -2432,6 +2447,9 @@ function _openSettingsForm(){
   document.getElementById('s-start').value=currentTrip.startDate||'';
   document.getElementById('s-end').value=currentTrip.endDate||'';
   document.getElementById('s-members').value=(currentTrip.friends||[]).join(', ');
+  document.getElementById('bal-currency').value=currentTrip.currency||'KRW';
+  document.getElementById('bal-rate').value=currentTrip.exchangeRate||0.0057;
+  document.getElementById('bal-settle').value=currentTrip.settleCurrency||'HKD';
   document.getElementById('s-identity-display').textContent=myIdentity||'Not set';
   computeStorageInfo();
   const abox=document.getElementById('s-activity-box');if(abox)abox.classList.add('hidden');
@@ -2730,17 +2748,14 @@ function renderConvHistory(){
     const bestShop=(g.quotes.find(x=>x.to===to&&x.result===cheapest)||{}).shop||'';
     return`
     <div style="border:1.5px solid var(--gray-mid);border-radius:12px;padding:10px 12px;margin-bottom:10px;background:var(--white)">
-      <div style="display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none" onclick="toggleConvCollapse('${escAttr(g.product)}')">
-        <span style="font-size:11px;color:var(--gray);display:inline-block;transition:transform .15s;transform:rotate(${collapsed?-90:0}deg)">▾</span>
-        <div style="flex:1;min-width:0;font-size:13px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(g.product)} <span style="font-weight:600;color:var(--gray);font-size:11px">(${g.quotes.length})</span></div>
-        <span style="font-size:9px;font-weight:800;border-radius:8px;padding:1px 6px;flex-shrink:0;${g.shared?'color:#1d4ed8;background:#dbeafe':'color:var(--gray);background:var(--gray-light)'}">${g.shared?'👁 PUBLIC':'🔒 PRIVATE'}</span>
+      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+        <span style="font-size:11px;color:var(--gray);display:inline-block;transition:transform .15s;transform:rotate(${collapsed?-90:0}deg);cursor:pointer;flex-shrink:0" onclick="toggleConvCollapse('${escAttr(g.product)}')">▾</span>
+        <div style="flex:1;min-width:0;font-size:13px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer" onclick="toggleConvCollapse('${escAttr(g.product)}')">${esc(g.product)} <span style="font-weight:600;color:var(--gray);font-size:11px">(${g.quotes.length})</span></div>
         ${collapsed?`<span style="font-size:11px;color:var(--gray);flex-shrink:0">best: ${esc(to)} ${fmt2(cheapest)} · ${esc(bestShop)}</span>`:''}
+        <button class="mini-toggle" style="flex-shrink:0;${g.shared?'color:#1d4ed8;border-color:#3b82f6':'color:var(--gray)'}" onclick="toggleProductShared('${escAttr(g.product)}')" title="Toggle sharing with members">${g.shared?'👁 Public':'🔒 Private'}</button>
+        <button class="settle-paid-btn" style="border-color:var(--danger);color:var(--danger);flex-shrink:0" onclick="deleteProductGroup('${escAttr(g.product)}')" title="Remove product">🗑</button>
       </div>
       ${collapsed?'':`
-      <div style="display:flex;justify-content:flex-end;gap:6px;margin-top:6px">
-        <button class="mini-toggle" onclick="toggleProductShared('${escAttr(g.product)}')" title="Toggle sharing with members">${g.shared?'👁 Shared':'🔒 Make public'}</button>
-        <button class="settle-paid-btn" style="border-color:var(--danger);color:var(--danger)" onclick="deleteProductGroup('${escAttr(g.product)}')" title="Remove product">🗑</button>
-      </div>
       ${g.quotes.map(qq=>{
         let tt='';try{tt=new Date(qq.ts).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}catch(e){}
         const best=qq.to===to&&qq.result===cheapest;
@@ -3039,5 +3054,5 @@ function formatDateLong(s){if(!s)return'';const[y,m,d]=s.split('-').map(Number);
   }
 })();
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a31a04813bd30671',t:'MTc4NzgyMjYwNw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a31a29529c840671',t:'MTc4NzgyNDExNQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
