@@ -536,6 +536,7 @@ html[data-theme=dark] .toast-undo{color:#93c5fd}
         <div class="section-title" style="margin-bottom:8px">📦 Device Storage</div>
         <div id="storage-info" style="font-size:12px;color:var(--gray);line-height:1.7">Calculating…</div>
         <p style="font-size:10px;color:var(--gray);margin-top:6px">Measures this device only (offline data, receipts, price photos). Cloud (Firebase) usage is not included.</p>
+        <a id="fs-usage-link" href="#" target="_blank" rel="noopener" style="display:none;font-size:12px;font-weight:700;color:var(--accent);text-decoration:underline;margin-top:4px" title="Opens the Firebase console — cloud reads/writes/deletes and costs">☁️ View Firestore usage in Firebase console →</a>
       </div>
     </div>
   </div>
@@ -1495,6 +1496,7 @@ async function createTrip(){
   if(!name){toast('Trip name required','error');return;}if(pw.length<3){toast('Password min 3 chars','error');return;}
   if(!start||!end){toast('Select start date','error');return;}if(!members.length){toast('Add at least one member','error');return;}
   if(members.length>8){toast('Max 8 members','error');return;}
+  if(!(rate>0)){toast('Exchange rate must be greater than 0','error');return;}
   if(firebaseOk&&db){const all=await getDocs(collection(db,'trips'));if(all.docs.some(d=>d.data().name?.toLowerCase()===name.toLowerCase())){toast('Trip name already exists','error');return;}}
   showLoading(true,'Creating…');document.getElementById('create-btn').disabled=true;
   try{
@@ -1554,8 +1556,11 @@ function buildSplitGrid(){
 }
 function setSplitMode(m){
   splitMode=m;
+  const inc=[...document.querySelectorAll('#split-grid .split-person.included')].map(el=>el.dataset.name);
   document.querySelectorAll('#split-mode-ctrl .seg-btn').forEach(b=>b.classList.toggle('active',b.dataset.mode===m));
   buildSplitGrid();
+  document.querySelectorAll('#split-grid .split-person').forEach(el=>{const on=inc.includes(el.dataset.name);el.classList.toggle('included',on);el.querySelector('.split-check').style.opacity=on?'1':'0';});
+  renderSplitHint();
 }
 window.setSplitMode=setSplitMode;
 function adjustShare(name,delta){
@@ -2189,6 +2194,7 @@ async function fetchRateForBalances(){await fetchRate(document.getElementById('b
 window.fetchRateForBalances=fetchRateForBalances;
 async function saveBalanceSettings(){
   const cur=document.getElementById('bal-currency').value;const rate=parseFloat(document.getElementById('bal-rate').value)||1;
+  if(!(rate>0)){toast('Exchange rate must be greater than 0','error');return;}
   const settle=document.getElementById('bal-settle')?.value||'HKD';
   const oldCur=currentTrip.currency,oldRate=parseFloat(currentTrip.exchangeRate)||1,oldSettle=currentTrip.settleCurrency||'HKD';
   currentTrip.currency=cur;currentTrip.exchangeRate=rate;currentTrip.settleCurrency=settle;
@@ -2317,9 +2323,12 @@ function computeSettlements(){
   const eff=bal.map(b=>({name:b.name,cents:Math.round(b.balance*100)}));
   const idx={};eff.forEach(e=>idx[e.name]=e);
   payments.forEach(p=>{
+    // ignore payments involving people who are no longer trip members —
+    // applying only one side would break the zero-sum invariant
+    if(idx[p.from]==null||idx[p.to]==null)return;
     const c=Math.round((parseFloat(p.amountHKD)||0)*100);
-    if(idx[p.from]!=null)idx[p.from].cents+=c;
-    if(idx[p.to]!=null)idx[p.to].cents-=c;
+    idx[p.from].cents+=c;
+    idx[p.to].cents-=c;
   });
   // rounding residual: keep Σ = 0 exactly (same rule as the cards)
   const residual=Math.round(-eff.reduce((s,e)=>s+e.cents,0));
@@ -2410,6 +2419,7 @@ async function deletePaymentIdx(i){
 window.deletePaymentIdx=deletePaymentIdx;
 function copySettlement(){
   const trans=computeSettlements();if(!trans.length){toast('All settled — nothing to copy');return;}
+  if(!navigator.clipboard||!navigator.clipboard.writeText){toast('Clipboard not available','warn');return;}
   navigator.clipboard?.writeText(trans.map(t=>`${t.from} pays ${t.to}: ${settleTxt(t.amount)}${settleCurrency()!=='HKD'?` (≈ HKD ${fmt2(t.amount)})`:''}`).join('\n')).then(()=>toast('Copied ✓','success')).catch(()=>toast('Copy failed','error'));
 }
 window.copySettlement=copySettlement;
@@ -2728,7 +2738,7 @@ function renderConvHistory(){
   const list=getConvHistory();
   const clr=document.getElementById('conv-clear-btn');if(clr)clr.style.display=list.length?'':'none';
   if(!list.length){wrap.innerHTML='<div style="font-size:12px;color:var(--gray);text-align:center;padding:14px">No saved quotes yet — convert a price, name the product &amp; shop, then “Save to compare”</div>';return;}
-  const q=(document.getElementById('conv-search')?.value||'').toLowerCase();
+  const q=(document.querySelector('#conv-search')?.value||'').toLowerCase();
   // group by product, groups ordered by newest quote
   const groups=[],gidx={};
   list.forEach(h=>{
@@ -2981,12 +2991,19 @@ async function computeStorageInfo(){
     }catch(e){}
   }
   el.innerHTML=`TripSplit data on this device:<br>Local data (trips, settings, comparisons): <b>${(lsBytes/1024).toFixed(1)} KB</b> across ${lsKeys} item(s)<br>Saved images (receipts &amp; price photos): <b>${imgCount}</b>${quotaLine}`;
+  const link=document.getElementById('fs-usage-link');
+  if(link){
+    const pid=window.FIREBASE_CONFIG&&window.FIREBASE_CONFIG.projectId;
+    if(pid){link.href=`https://console.firebase.google.com/project/${pid}/firestore/usage`;link.style.display='';}
+    else link.style.display='none';
+  }
 }
 window.computeStorageInfo=computeStorageInfo;
 function copyInviteLink(){
   const link=document.getElementById('s-invite-link').textContent||'';
   if(!link||link==='—')return;
-  navigator.clipboard?.writeText(link).then(()=>toast('Invite link copied ✓','success')).catch(()=>toast('Copy failed — long-press the link to copy','error'));
+  if(!navigator.clipboard||!navigator.clipboard.writeText){toast('Clipboard not available — long-press the link to copy','warn');return;}
+  navigator.clipboard.writeText(link).then(()=>toast('Invite link copied ✓','success')).catch(()=>toast('Copy failed — long-press the link to copy','error'));
 }
 window.copyInviteLink=copyInviteLink;
 function copyTripNameForDelete(){const name=currentTrip?.name||'';navigator.clipboard?.writeText(name).then(()=>toast('Copied','success'));document.getElementById('s-confirm-delete').value=name;}
@@ -3054,5 +3071,5 @@ function formatDateLong(s){if(!s)return'';const[y,m,d]=s.split('-').map(Number);
   }
 })();
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a31a29529c840671',t:'MTc4NzgyNDExNQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a31a87a4c94fe2e7',t:'MTc4NzgyNzk3OQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
