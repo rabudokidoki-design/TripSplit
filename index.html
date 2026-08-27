@@ -614,10 +614,7 @@ html[data-theme=dark] .who-btn{background:#1e293b;border-color:#334155;color:#e2
         <select class="currency-select" id="exp-currency" onchange="updateHKDPreview()" style="width:96px;padding:12px 12px"></select>
         <input type="number" id="exp-amount" class="form-input amount-input" placeholder="0.00" step="0.01" min="0" oninput="updateHKDPreview()">
       </div>
-      <div style="display:flex;gap:8px;align-items:stretch;margin-top:8px">
-        <div class="hkd-preview" id="hkd-preview" style="flex:1;margin-top:0">—</div>
-        <button type="button" class="conv-btn" onclick="openConverter()">💱 Convert</button>
-      </div>
+      <div class="hkd-preview" id="hkd-preview">—</div>
     </div>
     <div class="form-group">
       <label class="form-label">Receipt / Photo</label>
@@ -684,7 +681,8 @@ html[data-theme=dark] .who-btn{background:#1e293b;border-color:#334155;color:#e2
     </div>
     <div style="display:flex;gap:10px;margin-top:16px" id="form-action-row">
       <button class="btn btn-outline hidden" id="cancel-edit-btn" onclick="cancelEdit()">Cancel</button>
-      <button class="btn btn-primary" id="add-expense-btn" onclick="saveExpense()">Add Expense</button>
+      <button class="btn btn-outline" style="padding:12px 16px" onclick="openConverter()" title="Currency converter" aria-label="Currency converter">💱</button>
+      <button class="btn btn-primary" id="add-expense-btn" onclick="saveExpense()" style="flex:1">Add Expense</button>
     </div>
   </div>
 </div>
@@ -844,6 +842,21 @@ html[data-theme=dark] .who-btn{background:#1e293b;border-color:#334155;color:#e2
       <div id="cv-result" style="text-align:center;background:var(--accent-light);border-radius:12px;padding:16px;margin-top:14px"></div>
       <div id="cv-rate" style="font-size:11px;color:var(--gray);text-align:center;margin-top:8px"></div>
       <button class="btn btn-primary" style="width:100%;margin-top:14px" onclick="useConverterInForm()">➕ Fill into Add Expense</button>
+      <div class="rate-row" style="margin-top:14px;align-items:flex-end">
+        <div class="form-group" style="margin-bottom:0;min-width:0">
+          <label class="form-label">Label (optional)</label>
+          <input type="text" id="cv-note" class="form-input" placeholder="e.g. Shop A / Myeongdong stall" maxlength="40">
+        </div>
+        <button class="btn btn-outline" style="margin-bottom:2px;white-space:nowrap" onclick="saveConvEntry()">💾 Save to compare</button>
+      </div>
+    </div>
+    <div class="section-card" style="margin-top:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div class="section-title" style="margin-bottom:0">🛍 Price Comparison</div>
+        <button class="btn btn-outline btn-sm" id="conv-clear-btn" onclick="clearConvHistory()" style="display:none;padding:5px 10px;font-size:12px">🗑 Clear</button>
+      </div>
+      <p style="font-size:11px;color:var(--gray);margin:6px 0 4px">Convert a price at each shop, save it, and compare — cheapest is flagged 🥇</p>
+      <div id="conv-history"></div>
     </div>
   </div>
 </div>
@@ -2391,23 +2404,76 @@ function fillConvSelect(id,val){
   if(!s.options.length)s.innerHTML=Object.keys(DEFAULT_RATES).map(c=>`<option value="${c}">${c}</option>`).join('');
   s.value=val||'HKD';
 }
+// From defaults to the trip currency, To to the settlement (base) currency — and selects are
+// always populated no matter how the page is opened (tab switch included)
+function ensureConvSelects(){
+  const f=document.getElementById('cv-from'),t=document.getElementById('cv-to');
+  if(f&&!f.options.length)fillConvSelect('cv-from',currentTrip?.currency||'HKD');
+  if(t&&!t.options.length)fillConvSelect('cv-to',currentTrip?.baseCurrency||'HKD');
+}
 function openConverter(){
-  fillConvSelect('cv-from',document.getElementById('exp-currency')?.value||currentTrip?.currency||'HKD');
-  fillConvSelect('cv-to','HKD');
-  if(!document.getElementById('cv-amount').value)document.getElementById('cv-amount').value=document.getElementById('exp-amount')?.value||'';
+  ensureConvSelects();
+  const amt=document.getElementById('exp-amount')?.value;
+  if(amt)document.getElementById('cv-amount').value=amt;
+  const fromCur=document.getElementById('exp-currency')?.value;
+  if(amt&&fromCur)document.getElementById('cv-from').value=fromCur; // contextual: convert what's being typed
   renderConverter();navigateTo('convert');
   ['cv-from','cv-to'].forEach(id=>{const c=document.getElementById(id).value;if(c&&c!=='HKD')fetchLiveRate(c).then(()=>renderConverter()).catch(()=>{});});
 }
 window.openConverter=openConverter;
 function renderConverter(){
+  ensureConvSelects();
   const amt=parseFloat(document.getElementById('cv-amount').value)||0;
   const f=document.getElementById('cv-from').value,t=document.getElementById('cv-to').value;
   const rf=bestRate(f),rt=bestRate(t);
   const res=amt*rf.rate/rt.rate;
   document.getElementById('cv-result').innerHTML=amt>0?`<div style="font-size:26px;font-weight:800;color:var(--navy)">${t} ${fmt2(res)}</div>`:'<div style="color:var(--gray);font-size:13px">Enter an amount</div>';
   document.getElementById('cv-rate').textContent=amt>0?`1 ${f} = ${fmt2(rf.rate/rt.rate)} ${t} · ${f} ${rf.src} rate · ${t} ${rt.src} rate`:'';
+  renderConvHistory();
 }
 window.renderConverter=renderConverter;
+// ── PRICE COMPARISON HISTORY (shopping scratchpad, stored per trip)
+function getConvHistory(){try{return JSON.parse(localStorage.getItem('localConv_'+currentCode)||'[]');}catch(e){return[];}}
+function saveConvHistoryList(l){try{localStorage.setItem('localConv_'+currentCode,JSON.stringify(l));}catch(e){}}
+function saveConvEntry(){
+  const amt=parseFloat(document.getElementById('cv-amount').value)||0;
+  if(amt<=0){toast('Enter an amount first','error');return;}
+  const from=document.getElementById('cv-from').value,to=document.getElementById('cv-to').value;
+  const br=bestRate(from),bt=bestRate(to);
+  const entry={label:document.getElementById('cv-note').value.trim(),amount:amt,from,to,result:parseFloat((amt*br.rate/bt.rate).toFixed(2)),ts:new Date().toISOString()};
+  const list=getConvHistory();list.unshift(entry);saveConvHistoryList(list.slice(0,50));
+  document.getElementById('cv-note').value='';
+  renderConvHistory();toast('Saved to comparison ✓','success');
+}
+window.saveConvEntry=saveConvEntry;
+function deleteConvEntry(i){const l=getConvHistory();l.splice(i,1);saveConvHistoryList(l);renderConvHistory();}
+window.deleteConvEntry=deleteConvEntry;
+function clearConvHistory(){
+  if(!getConvHistory().length)return;
+  if(!confirm('Clear all saved conversions?'))return;
+  saveConvHistoryList([]);renderConvHistory();toast('Comparison cleared','warn');
+}
+window.clearConvHistory=clearConvHistory;
+function renderConvHistory(){
+  const wrap=document.getElementById('conv-history');if(!wrap)return;
+  const list=getConvHistory();
+  const clr=document.getElementById('conv-clear-btn');if(clr)clr.style.display=list.length?'':'none';
+  if(!list.length){wrap.innerHTML='<div style="font-size:12px;color:var(--gray);text-align:center;padding:14px">No saved conversions yet — convert a price and tap “Save to compare”</div>';return;}
+  const to=list[0].to; // compare within the newest entry's target currency
+  const cheapest=Math.min(...list.filter(x=>x.to===to).map(x=>x.result));
+  let timeStr='';try{timeStr=new Date(list[0].ts).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}catch(e){}
+  wrap.innerHTML=list.map((h,i)=>{
+    let tt='';try{tt=new Date(h.ts).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}catch(e){}
+    const best=h.to===to&&h.result===cheapest;
+    return`
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--gray-mid)">
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(h.label||('Item '+(i+1)))}${best?' <span style="font-size:9px;font-weight:800;color:#15803d;background:#dcfce7;border-radius:8px;padding:1px 6px">🥇 CHEAPEST</span>':''}</div>
+        <div style="font-size:11px;color:var(--gray);margin-top:2px">${esc(h.from)} ${fmt2(h.amount)} → <b style="color:var(--dark)">${esc(h.to)} ${fmt2(h.result)}</b> · ${tt}</div>
+      </div>
+      <button class="settle-paid-btn" style="border-color:var(--danger);color:var(--danger)" onclick="deleteConvEntry(${i})" title="Remove">✕</button>
+    </div>`;}).join('');
+}
 function swapConverter(){const f=document.getElementById('cv-from'),t=document.getElementById('cv-to');const a=f.value;f.value=t.value;t.value=a;renderConverter();}
 window.swapConverter=swapConverter;
 function useConverterInForm(){
@@ -2545,7 +2611,7 @@ async function deleteTripSettings(){
   showLoading(true,'Deleting…');
   try{
     if(firebaseOk&&db){const snap=await getDocs(collection(db,'trips',currentCode,'expenses'));const batch=writeBatch(db);snap.docs.forEach(d=>batch.delete(d.ref));const psnap=await getDocs(collection(db,'trips',currentCode,'payments'));psnap.docs.forEach(d=>batch.delete(d.ref));batch.delete(doc(db,'trips',currentCode));await batch.commit();}
-    else{const lt=getLocalTrips();delete lt[currentCode];localStorage.setItem('localTrips',JSON.stringify(lt));localStorage.removeItem('localExp_'+currentCode);localStorage.removeItem('localPay_'+currentCode);}
+    else{const lt=getLocalTrips();delete lt[currentCode];localStorage.setItem('localTrips',JSON.stringify(lt));localStorage.removeItem('localExp_'+currentCode);localStorage.removeItem('localPay_'+currentCode);localStorage.removeItem('localConv_'+currentCode);}
     await idbDelTrip(currentCode);removeMyTrip(currentCode);
     localStorage.removeItem('trip_'+currentCode+'_who');localStorage.removeItem('trip_'+currentCode+'_pw');
     currentTrip=null;currentCode=null;myIdentity=null;expenses=[];
@@ -2568,7 +2634,7 @@ async function confirmDeleteAll(){
         const batch=writeBatch(db);es.docs.forEach(dd=>batch.delete(dd.ref));ps.docs.forEach(dd=>batch.delete(dd.ref));batch.delete(doc(db,'trips',c));await batch.commit();
       }
     }
-    const lt=getLocalTrips();mine.forEach(c=>{delete lt[c];localStorage.removeItem('localExp_'+c);localStorage.removeItem('localPay_'+c);});
+    const lt=getLocalTrips();mine.forEach(c=>{delete lt[c];localStorage.removeItem('localExp_'+c);localStorage.removeItem('localPay_'+c);localStorage.removeItem('localConv_'+c);});
     localStorage.setItem('localTrips',JSON.stringify(lt));
     await idbClearAll();
     mine.forEach(c=>{removeMyTrip(c);localStorage.removeItem('trip_'+c+'_who');localStorage.removeItem('trip_'+c+'_pw');});
@@ -2598,5 +2664,5 @@ function formatDateLong(s){if(!s)return'';const[y,m,d]=s.split('-').map(Number);
   }
 })();
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a31959f31cfb0705',t:'MTc4NzgxNTYyMQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3197d0adfab0705',t:'MTc4NzgxNzA1OQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
