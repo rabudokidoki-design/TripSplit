@@ -1,41 +1,2019 @@
-rules_version = '2';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>TripSplit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  /* Navy blue theme inspired by reference */
+  --navy:#0d1b3e;
+  --navy-mid:#1a2f5e;
+  --navy-light:#243870;
+  --blue:#2563eb;--blue-light:#eff6ff;--blue-mid:#3b82f6;
+  --accent:#4f8ef7;--accent-light:#e8f0fe;
+  --dark:#0a1628;--gray:#64748b;--gray-light:#f1f5f9;--gray-mid:#e2e8f0;
+  --white:#ffffff;--danger:#ef4444;--warn:#f59e0b;
+  --orange:#f97316;--violet:#8b5cf6;--green:#10b981;--pink:#ec4899;
+  --radius:14px;--radius-sm:8px;
+  --shadow:0 4px 24px rgba(0,0,0,.12);--shadow-sm:0 2px 8px rgba(0,0,0,.08);
+  --font:'Plus Jakarta Sans',sans-serif;--font2:'Inter',sans-serif;
+  --cat-food:#f97316;--cat-transport:#3b82f6;--cat-hotel:#8b5cf6;
+  --cat-activity:#10b981;--cat-other:#64748b;--cat-pending:#ec4899;
+}
+html,body{height:100%;overflow:hidden}
+body{font-family:var(--font);background:#f0f4ff;color:var(--dark);display:flex;flex-direction:column;padding-bottom:100px;-webkit-font-smoothing:antialiased}
+input,select,textarea,button{font-family:var(--font);outline:none}
+button{cursor:pointer;border:none;background:none}
+#app{flex:1;overflow-y:auto;overflow-x:hidden;scroll-behavior:smooth;-webkit-overflow-scrolling:touch}
 
-// TripSplit — Firestore security rules
-// Deploy: Firebase Console → Firestore Database → Rules → paste → Publish
-// (or: firebase deploy --only firestore:rules)
+/* TABS */
+#bottom-tabs{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:480px;background:var(--navy);border-radius:20px;display:none;align-items:center;justify-content:space-around;padding:10px 8px;z-index:40;box-shadow:0 8px 32px rgba(13,27,62,.4)}
 
-service cloud.firestore {
-  match /databases/{database}/documents {
+/* FAB: draggable circular add-expense button */
+#fab-add{position:fixed;width:58px;height:58px;border-radius:50%;display:none;align-items:center;justify-content:center;z-index:50;border:none;padding:0;background:linear-gradient(135deg,var(--blue-mid),var(--blue));color:#fff;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;outline:none;box-shadow:0 10px 26px rgba(37,99,235,.45),0 3px 8px rgba(10,22,40,.25);transition:transform .16s ease,box-shadow .16s ease}
+#fab-add.show{display:flex;animation:fabPop .22s ease}
+#fab-add:active{transform:scale(.92)}
+#fab-add.dragging{cursor:grabbing;transform:scale(1.1);transition:none;box-shadow:0 16px 34px rgba(37,99,235,.55),0 5px 12px rgba(10,22,40,.3)}
+#fab-add:focus-visible{box-shadow:0 0 0 3px #fff,0 10px 26px rgba(37,99,235,.45)}
+#fab-add svg{pointer-events:none;display:block}
+#fab-add .fab-ring{position:absolute;inset:-5px;border-radius:50%;border:2px dashed rgba(79,142,247,.45);animation:fabFlow 2.8s linear infinite;pointer-events:none}
+#fab-add .fab-ico-edit{display:none}
+#fab-add.editing .fab-ico-add{display:none}
+#fab-add.editing .fab-ico-edit{display:block}
+@keyframes fabPop{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes fabFlow{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.tab-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 4px;border-radius:12px;transition:all .2s;color:rgba(255,255,255,.4)}
+.tab-btn.active{color:var(--white);background:rgba(255,255,255,.15)}
+.tab-btn svg{width:20px;height:20px;stroke-width:2}
+.tab-btn span{font-size:10px;font-weight:600;letter-spacing:.3px}
 
-    // ── Trip data ──────────────────────────────────────────────────────────
-    // The app protects trips with a trip password at the application layer
-    // (PBKDF2-salted hashes) because it doesn't use Firebase Auth.
-    // Anyone who has the app URL can technically read/write trip documents —
-    // the trip password gates the UI, not the API. If you need true
-    // per-user isolation, add Firebase Auth and tighten these rules.
-    match /trips/{tripId} {
-      allow read, write: if true;
-      match /expenses/{expenseId} {
-        allow read, write: if true;
-      }
-    }
+/* PAGES */
+.page{display:none;min-height:100%;animation:fadeIn .18s ease}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
-    // ── Admin config ───────────────────────────────────────────────────────
-    // config/admin holds the admin password hash (set on first unlock).
-    //   read:   anyone (the app must verify the password client-side)
-    //   create: anyone — but only ONCE (first-run initialization)
-    //   update/delete: NOBODY — the admin password can never be hijacked
-    //                  from the client once set. Change it via the
-    //                  Firebase console if ever needed.
-    match /config/{docId} {
-      allow read: if true;
-      allow create: if true;
-      allow update, delete: if false;
-    }
+/* LOBBY */
+#page-lobby{padding:0 0 24px}
+.lobby-hero{
+  background:linear-gradient(160deg,var(--navy) 0%,var(--navy-mid) 50%,var(--navy-light) 100%);
+  padding:60px 24px 44px;color:var(--white);text-align:center;position:relative;overflow:hidden;
+}
+.lobby-hero::before{content:'';position:absolute;top:-60px;right:-60px;width:240px;height:240px;border-radius:50%;background:rgba(79,142,247,.12)}
+.lobby-hero::after{content:'';position:absolute;bottom:-80px;left:-40px;width:200px;height:200px;border-radius:50%;background:rgba(79,142,247,.08)}
+.lobby-logo{font-size:36px;margin-bottom:10px;filter:drop-shadow(0 4px 8px rgba(0,0,0,.3))}
+.lobby-title{font-size:30px;font-weight:800;letter-spacing:-.5px;margin-bottom:4px;text-shadow:0 2px 8px rgba(0,0,0,.2)}
+.firebase-badge{display:inline-flex;align-items:center;gap:6px;margin-top:16px;background:rgba(255,255,255,.12);border-radius:20px;padding:6px 16px;font-size:12px;font-weight:600;backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.15)}
+.firebase-badge .dot{width:7px;height:7px;border-radius:50%;background:#4ade80;animation:pulse 2s infinite}
+.firebase-badge.offline .dot{background:#fbbf24;animation:none}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.lobby-content{padding:20px 16px 8px}
+.section-card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:20px;margin-bottom:14px;border:1px solid rgba(79,142,247,.08)}
+.section-title{font-size:13px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.8px;margin-bottom:14px}
+.form-group{margin-bottom:14px}
+.form-label{font-size:13px;font-weight:600;color:var(--dark);margin-bottom:6px;display:block}
+.form-input{width:100%;padding:12px 14px;border:2px solid var(--gray-mid);border-radius:var(--radius-sm);font-size:15px;font-weight:500;color:var(--dark);background:var(--white);transition:border-color .2s}
+.form-input:focus{border-color:var(--accent)}
+.form-input.error{border-color:var(--danger)!important}
+.input-wrap{position:relative}
+.input-wrap .form-input{padding-right:44px}
+.eye-btn{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--gray);padding:4px}
+.eye-btn svg{width:18px;height:18px;stroke-width:2}
+.checkbox-row{display:flex;align-items:center;gap:8px;margin-top:10px}
+.checkbox-row input[type=checkbox]{width:16px;height:16px;accent-color:var(--accent)}
+.checkbox-row label{font-size:13px;font-weight:500;color:var(--gray)}
+.btn{width:100%;padding:14px;border-radius:var(--radius-sm);font-size:15px;font-weight:700;letter-spacing:.3px;transition:all .15s}
+.btn-primary{background:linear-gradient(135deg,var(--navy-mid),var(--accent));color:var(--white);box-shadow:0 4px 14px rgba(37,99,235,.3)}
+.btn-primary:hover{opacity:.92}
+.btn-primary:active{transform:scale(.98)}
+.btn-danger{background:var(--danger);color:var(--white)}
+.btn-outline{border:2px solid var(--gray-mid);color:var(--dark);background:var(--white)}
+.btn-sm{padding:8px 14px;font-size:13px;width:auto}
+.my-trips-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.badge{background:var(--navy-mid);color:var(--white);border-radius:10px;padding:2px 8px;font-size:11px;font-weight:700}
+.trip-card{display:flex;align-items:center;padding:12px 14px;border-radius:var(--radius-sm);border:2px solid var(--gray-mid);margin-bottom:8px;cursor:pointer;transition:all .2s;gap:12px}
+.trip-card:hover{border-color:var(--accent);background:var(--accent-light)}
+.trip-card-icon{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--navy),var(--navy-mid));display:flex;align-items:center;justify-content:center;color:var(--white);font-weight:800;font-size:15px;flex-shrink:0}
+.trip-card-info{flex:1;min-width:0}
+.trip-card-name{font-size:14px;font-weight:700;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.trip-card-code{font-size:12px;color:var(--gray);font-family:var(--font2);margin-top:2px}
+.admin-footer{text-align:center;padding:20px 16px 8px}
+.admin-link{font-size:13px;color:var(--gray);text-decoration:underline;cursor:pointer}
 
-    // Everything else: denied (Firestore default-deny is implicit; kept explicit)
-    match /{document=**} {
-      allow read, write: if false;
-    }
+/* PAGE HEADER — navy */
+.page-header{background:linear-gradient(160deg,var(--navy),var(--navy-mid));padding:48px 20px 24px;color:var(--white)}
+.page-header-back{display:flex;align-items:center;gap:8px;margin-bottom:16px;font-size:13px;font-weight:600;opacity:.8;cursor:pointer;width:fit-content}
+.page-header-back svg{width:16px;height:16px;stroke-width:2.5}
+.page-header h1{font-size:24px;font-weight:800;letter-spacing:-.3px}
+.page-header p{font-size:13px;opacity:.7;margin-top:4px}
+.create-content{padding:20px 16px}
+.code-field{background:var(--gray-light);font-family:var(--font2);font-size:20px;font-weight:700;letter-spacing:3px;text-align:center;color:var(--navy-mid)}
+.rate-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.currency-select{width:100%;padding:12px 14px;border:2px solid var(--gray-mid);border-radius:var(--radius-sm);font-size:14px;font-weight:500;color:var(--dark);background:var(--white);transition:border-color .2s;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px}
+.currency-select:focus{border-color:var(--accent)}
+.fetch-rate-btn{display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:var(--radius-sm);background:var(--accent-light);color:var(--navy-mid);font-size:12px;font-weight:700;border:none;cursor:pointer;margin-top:6px}
+.fetch-rate-btn svg{width:14px;height:14px;stroke-width:2.5}
+.fetch-rate-btn.loading svg{animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.invite-preview{background:var(--accent-light);border-radius:var(--radius-sm);padding:12px;font-size:12px;color:var(--navy-mid);font-family:var(--font2);margin-top:8px;word-break:break-all}
+.end-date-display{background:var(--gray-light);border:2px solid var(--gray-mid);border-radius:var(--radius-sm);padding:12px 14px;font-size:15px;font-weight:600;color:var(--navy-mid);text-align:center}
+
+/* TRIP HEADER — navy */
+.trip-header{background:linear-gradient(160deg,var(--navy),var(--navy-mid));padding:48px 16px 16px;color:var(--white)}
+.trip-header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:0}
+.trip-header-back{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;opacity:.8;cursor:pointer}
+.trip-header-back svg{width:16px;height:16px;stroke-width:2.5}
+.trip-header-title{font-size:20px;font-weight:800;text-align:center;flex:1;letter-spacing:-.3px}
+.trip-header-settings{padding:6px;cursor:pointer;opacity:.8}
+.trip-header-settings svg{width:20px;height:20px;stroke-width:2}
+.hero-blocks{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px 0 4px}
+.hero-block{background:rgba(255,255,255,.1);border-radius:12px;padding:12px;backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.15)}
+.hero-block-label{font-size:10px;font-weight:700;opacity:.65;text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px}
+.hero-block-value{font-size:15px;font-weight:800;color:var(--white);line-height:1.2}
+.hero-block-sub{font-size:10px;opacity:.65;margin-top:2px;line-height:1.4;word-break:break-word}
+
+/* NEW EXPENSE */
+#page-new{padding:0 0 24px}
+.new-content{padding:14px 16px}
+.editing-badge{display:inline-flex;align-items:center;gap:6px;background:#fef3c7;color:#d97706;border-radius:20px;padding:6px 14px;font-size:12px;font-weight:700;margin-bottom:14px}
+.date-strip-wrap{overflow-x:auto;padding-bottom:4px;margin-bottom:12px;scrollbar-width:none;position:relative}
+.date-strip-wrap::-webkit-scrollbar{display:none}
+.date-strip{display:flex;gap:8px;width:max-content;padding:2px 2px 4px}
+.date-card{display:flex;flex-direction:column;align-items:center;padding:10px 12px;border-radius:12px;border:2px solid var(--gray-mid);background:var(--white);cursor:pointer;transition:all .15s;min-width:52px;position:relative;flex-shrink:0}
+.date-card.active{background:var(--navy);border-color:var(--navy);color:var(--white)}
+.date-card.today-card{border-color:var(--orange);color:var(--orange)}
+.date-card.today-card.active{background:var(--orange);border-color:var(--orange);color:var(--white)}
+.date-card.has-expenses::after{content:'';position:absolute;bottom:5px;left:50%;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;background:var(--accent)}
+.date-card.active.has-expenses::after,.date-card.today-card.active.has-expenses::after{background:rgba(255,255,255,.8)}
+.date-card .wd{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;opacity:.7;margin-bottom:2px}
+.date-card .dd{font-size:17px;font-weight:800;line-height:1}
+.date-card .mm{font-size:9px;font-weight:600;opacity:.7;margin-top:2px}
+.date-card.active .wd,.date-card.active .mm{opacity:.65}
+.chips-row{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+.chips-scroll{display:flex;gap:7px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:2px 0 4px}
+.chips-scroll::-webkit-scrollbar{display:none}
+.chips-scroll .chip{flex:0 0 auto}
+.chip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;border:2px solid var(--gray-mid);color:var(--gray);background:var(--white);cursor:pointer;transition:all .15s}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
+.chip.active{border-color:var(--accent);background:var(--accent);color:var(--white)}
+.chip.cat-food.active{background:var(--cat-food);border-color:var(--cat-food);color:#fff}
+.chip.cat-transport.active{background:var(--cat-transport);border-color:var(--cat-transport);color:#fff}
+.chip.cat-hotel.active{background:var(--cat-hotel);border-color:var(--cat-hotel);color:#fff}
+.chip.cat-activity.active{background:var(--cat-activity);border-color:var(--cat-activity);color:#fff}
+.chip.cat-other.active{background:var(--cat-other);border-color:var(--cat-other);color:#fff}
+.chip.cat-pending.active{background:var(--cat-pending);border-color:var(--cat-pending);color:#fff}
+.amount-row{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:stretch}
+.amount-input{font-size:26px;font-weight:800;letter-spacing:-.5px}
+.hkd-preview{background:var(--accent-light);border-radius:var(--radius-sm);padding:10px 12px;font-size:12px;color:var(--navy-mid);font-weight:600;margin-top:8px}
+.receipt-area{border:2px dashed var(--gray-mid);border-radius:var(--radius-sm);padding:20px;text-align:center;cursor:pointer;transition:border-color .2s;color:var(--gray);font-size:14px;font-weight:600}
+.receipt-area:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-light)}
+.receipt-preview{display:none;align-items:center;gap:10px;padding:10px;background:var(--gray-light);border-radius:var(--radius-sm);margin-top:8px}
+.receipt-preview.show{display:flex}
+.receipt-thumb{width:48px;height:48px;object-fit:cover;border-radius:6px;cursor:pointer}
+.receipt-actions{display:flex;gap:8px}
+.receipt-btn{padding:5px 10px;border-radius:6px;font-size:12px;font-weight:600;background:var(--white);border:1.5px solid var(--gray-mid);color:var(--dark);cursor:pointer}
+.storage-badge{display:inline-flex;align-items:center;gap:5px;background:#f0fdf4;border:1.5px solid #86efac;border-radius:8px;padding:4px 10px;font-size:11px;font-weight:600;color:#16a34a;margin-top:6px}
+.split-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.split-person{display:flex;align-items:center;gap:8px;padding:10px;border-radius:var(--radius-sm);border:2px solid var(--gray-mid);cursor:pointer;transition:all .15s}
+.split-person.included{border-color:var(--accent);background:var(--accent-light)}
+.split-person-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--white);flex-shrink:0}
+.split-person-name{font-size:12px;font-weight:600;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.split-check{color:var(--accent);flex-shrink:0;transition:opacity .15s}
+.paid-tag{display:none;font-size:9px;font-weight:800;letter-spacing:.4px;color:#92400e;background:#fef3c7;border:1.5px solid #fcd34d;border-radius:8px;padding:1px 7px;width:max-content;margin-top:2px}
+.split-person.is-payer .paid-tag{display:inline-block}
+.split-person.is-payer .split-person-avatar{box-shadow:0 0 0 2.5px #f59e0b}
+.split-check svg{width:14px;height:14px;stroke-width:2.5}
+
+/* EXPENSES */
+.expenses-controls{display:flex;gap:8px;padding:14px 16px 0;align-items:center;flex-wrap:wrap}
+.search-box{flex:1;min-width:140px;padding:10px 14px;border:2px solid var(--gray-mid);border-radius:var(--radius-sm);font-size:14px;font-weight:500}
+.search-box:focus{border-color:var(--accent)}
+.filter-select{padding:10px 30px 10px 12px;border:2px solid var(--gray-mid);border-radius:var(--radius-sm);font-size:13px;font-weight:500;color:var(--dark);background:var(--white);appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center}
+.pending-btn{padding:10px 14px;border-radius:var(--radius-sm);border:2px solid var(--cat-pending);color:var(--cat-pending);font-size:12px;font-weight:700;background:var(--white);cursor:pointer;transition:all .15s;white-space:nowrap}
+.pending-btn.active{background:var(--cat-pending);color:var(--white)}
+.select-img-btn{padding:10px 14px;border-radius:var(--radius-sm);border:2px solid var(--accent);color:var(--accent);font-size:12px;font-weight:700;background:var(--white);cursor:pointer;white-space:nowrap}
+.select-img-btn.active{background:var(--accent);color:var(--white)}
+.pending-banner{margin:10px 16px 0;background:#fdf2f8;border:1.5px solid var(--cat-pending);border-radius:var(--radius-sm);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.pending-banner-text{font-size:13px;font-weight:700;color:var(--cat-pending)}
+.pending-banner-count{background:var(--cat-pending);color:#fff;border-radius:20px;padding:2px 10px;font-size:12px;font-weight:800}
+.bulk-bar{display:none;align-items:center;justify-content:space-between;padding:10px 16px;background:var(--navy);color:#fff;position:sticky;top:0;z-index:10;gap:10px}
+.bulk-bar.show{display:flex}
+.bulk-bar-left{font-size:13px;font-weight:700;flex:1}
+.bulk-bar-actions{display:flex;gap:8px;flex-shrink:0}
+.bulk-btn{padding:7px 14px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;border:none}
+.bulk-btn-danger{background:var(--danger);color:#fff}
+.bulk-btn-cancel{background:rgba(255,255,255,.15);color:#fff}
+.date-group{margin:0 16px 4px}
+.date-group-header{display:flex;align-items:center;justify-content:space-between;padding:12px 0 8px;border-bottom:1.5px solid var(--gray-mid);margin-bottom:4px;position:sticky;top:0;background:#f0f4ff;z-index:5}
+.date-group-label{font-size:12px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.6px}
+.date-group-total{font-size:11px;color:var(--gray);font-family:var(--font2);text-align:right;max-width:55%}
+.expense-row{display:flex;align-items:center;gap:10px;padding:12px;background:var(--white);border-radius:var(--radius-sm);margin-bottom:6px;box-shadow:var(--shadow-sm);cursor:pointer;transition:transform .15s;position:relative;overflow:hidden;border:1px solid rgba(79,142,247,.06)}
+.expense-row:hover{transform:translateX(2px)}
+.expense-row::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px 0 0 3px}
+.expense-row.cat-food::before{background:var(--cat-food)}
+.expense-row.cat-transport::before{background:var(--cat-transport)}
+.expense-row.cat-hotel::before{background:var(--cat-hotel)}
+.expense-row.cat-activity::before{background:var(--cat-activity)}
+.expense-row.cat-other::before{background:var(--cat-other)}
+.expense-row.cat-pending::before{background:var(--cat-pending)}
+.exp-select-cb{width:18px;height:18px;accent-color:var(--accent);cursor:pointer;flex-shrink:0;display:none}
+.select-mode .exp-select-cb{display:block}
+.expense-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:var(--white);flex-shrink:0}
+.expense-info{flex:1;min-width:0}
+.expense-title{font-size:14px;font-weight:700;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.expense-meta{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.meta-chip{padding:2px 7px;border-radius:10px;font-size:10px;font-weight:600;background:var(--gray-light);color:var(--gray)}
+.meta-chip.pending-chip{background:#fdf2f8;color:var(--cat-pending);border:1px solid var(--cat-pending)}
+.expense-right{text-align:right;flex-shrink:0}
+.expense-amount{font-size:15px;font-weight:800;color:var(--dark)}
+.expense-hkd{font-size:10px;color:var(--gray);margin-top:2px}
+.pagination{display:flex;align-items:center;justify-content:center;gap:6px;padding:16px;flex-wrap:wrap}
+.page-btn{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;border:2px solid var(--gray-mid);color:var(--dark);background:var(--white);cursor:pointer;transition:all .15s}
+.page-btn.active{background:var(--navy-mid);border-color:var(--navy-mid);color:var(--white)}
+.page-btn:disabled{opacity:.35;cursor:not-allowed}
+.page-info{font-size:12px;color:var(--gray);font-weight:600;padding:0 4px}
+
+/* BALANCES */
+.balance-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px 16px}
+.balance-card{border-radius:var(--radius);padding:14px;cursor:pointer;transition:transform .15s}
+.balance-card:hover{transform:translateY(-2px)}
+.bc-yellow{background:#fef9c3;border:2px solid #fde047}.bc-green{background:#dcfce7;border:2px solid #86efac}
+.bc-blue{background:#dbeafe;border:2px solid #93c5fd}.bc-pink{background:#fce7f3;border:2px solid #f9a8d4}
+.bc-orange{background:#ffedd5;border:2px solid #fdba74}.bc-violet{background:#ede9fe;border:2px solid #c4b5fd}
+.bc-white{background:#f8fafc;border:2px solid #e2e8f0}.bc-dark{background:var(--navy);border:2px solid var(--navy-mid)}
+.bc-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;color:var(--white);margin-bottom:10px}
+.bc-name{font-size:14px;font-weight:700;margin-bottom:4px}.bc-balance{font-size:20px;font-weight:800;line-height:1}
+.bc-status{font-size:11px;font-weight:600;margin-top:4px}.bc-detail{font-size:10px;opacity:.7;margin-top:4px;line-height:1.4;word-break:break-word}
+.bc-dark .bc-name,.bc-dark .bc-balance,.bc-dark .bc-status,.bc-dark .bc-detail{color:var(--white)}
+.cat-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--gray-mid)}
+.cat-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.cat-name{flex:1;font-size:13px;font-weight:600}.cat-pct{font-size:12px;color:var(--gray)}.cat-total{font-size:13px;font-weight:700}
+
+/* SETTLEMENT */
+.settlement-content{padding:14px 16px}
+.settlement-summary{background:var(--accent-light);border-radius:var(--radius);padding:14px 16px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;border:1px solid rgba(79,142,247,.2)}
+.settle-stat{text-align:center}.settle-stat-val{font-size:20px;font-weight:800;color:var(--navy-mid)}
+.settle-stat-lbl{font-size:10px;color:var(--gray);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.transfer-row{background:var(--white);border-radius:var(--radius);padding:16px;margin-bottom:10px;box-shadow:var(--shadow-sm);display:flex;align-items:center;gap:12px;border:1px solid rgba(79,142,247,.08)}
+.transfer-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:var(--white);flex-shrink:0}
+.transfer-arrow{color:var(--gray);font-size:18px;margin:0 4px}
+.transfer-info{flex:1;min-width:0}.transfer-names{font-size:14px;font-weight:700}.transfer-sub{font-size:12px;color:var(--gray)}
+.transfer-amount{background:var(--navy);color:var(--white);border-radius:20px;padding:6px 14px;font-size:15px;font-weight:800;white-space:nowrap}
+.settle-actions{display:flex;gap:10px;margin-top:16px}
+.settle-btn{flex:1;padding:12px;border-radius:var(--radius-sm);font-size:13px;font-weight:700;border:2px solid var(--gray-mid);color:var(--dark);background:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .15s}
+.settle-btn:hover{border-color:var(--accent);color:var(--accent)}
+.settle-btn svg{width:16px;height:16px;stroke-width:2}
+
+/* SETTINGS */
+#page-settings{padding:0 0 24px}
+.settings-content{padding:14px 16px}
+.settings-block{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:18px;margin-bottom:14px;border:1px solid rgba(79,142,247,.08)}
+.settings-block h3{font-size:14px;font-weight:700;color:var(--dark);margin-bottom:14px;padding-bottom:8px;border-bottom:1.5px solid var(--gray-mid)}
+.danger-zone{border:2px solid var(--danger)!important}.danger-zone h3{color:var(--danger)!important}
+
+/* MODALS */
+.modal-overlay{position:fixed;inset:0;background:rgba(10,22,40,.6);z-index:100;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .2s}
+.modal-overlay.show{opacity:1;pointer-events:all}
+.modal-box{background:var(--white);border-radius:20px;padding:24px;max-width:380px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.3);transform:translateY(16px);transition:transform .2s}
+.modal-overlay.show .modal-box{transform:none}
+.sheet-overlay{position:fixed;inset:0;background:rgba(10,22,40,.6);z-index:100;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+.sheet-overlay.show{opacity:1;pointer-events:all}
+.sheet-box{background:var(--white);border-radius:20px 20px 0 0;width:100%;max-width:480px;max-height:85vh;overflow-y:auto;transform:translateY(100%);transition:transform .3s cubic-bezier(.32,.72,0,1);padding-bottom:24px}
+.sheet-overlay.show .sheet-box{transform:none}
+.sheet-handle{width:40px;height:4px;border-radius:2px;background:var(--gray-mid);margin:12px auto 0}
+.sheet-header{padding:16px 20px 0;display:flex;align-items:center;gap:12px}
+.sheet-close{color:var(--gray);padding:4px;cursor:pointer}
+.sheet-close svg{width:20px;height:20px;stroke-width:2}
+.sheet-content{padding:16px 20px 24px}
+.who-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0}
+.who-btn{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:12px;border:2px solid var(--gray-mid);cursor:pointer;transition:all .15s;background:var(--white)}
+.who-btn:hover{border-color:var(--accent);background:var(--accent-light)}
+.who-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;color:var(--white)}
+.who-name{font-size:11px;font-weight:600;color:var(--dark);text-align:center;line-height:1.2}
+.tab-bar{display:flex;gap:4px;background:var(--gray-light);border-radius:10px;padding:4px;margin-bottom:16px}
+.tab-btn-inner{flex:1;padding:8px 4px;border-radius:8px;font-size:12px;font-weight:700;color:var(--gray);background:none;cursor:pointer;transition:all .15s;text-align:center;border:none}
+.tab-btn-inner.active{background:var(--white);color:var(--navy);box-shadow:var(--shadow-sm)}
+.tab-panel{display:none}.tab-panel.active{display:block}
+
+/* TOAST */
+.toast-container{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);z-index:200;display:flex;flex-direction:column;gap:8px;pointer-events:none;width:calc(100% - 32px);max-width:360px}
+.toast{background:var(--navy);color:var(--white);border-radius:12px;padding:12px 16px;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 8px 32px rgba(13,27,62,.4);pointer-events:all;animation:toastIn .25s ease}
+.toast.success{background:#065f46}.toast.error{background:#991b1b}.toast.warn{background:#92400e}
+.toast-undo{padding:4px 10px;background:rgba(255,255,255,.2);border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;border:none;color:var(--white);white-space:nowrap}
+@keyframes toastIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+/* UTILS */
+.hidden{display:none!important}
+.mt-8{margin-top:8px}.mt-12{margin-top:12px}.mt-16{margin-top:16px}
+.empty-state{text-align:center;padding:40px 20px;color:var(--gray)}
+.empty-state .icon{font-size:40px;margin-bottom:10px}
+.empty-state p{font-size:14px;font-weight:600}
+.copy-btn{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600;border:1.5px solid var(--gray-mid);color:var(--dark);background:var(--white);cursor:pointer}
+.spinner{width:20px;height:20px;border:2.5px solid rgba(255,255,255,.3);border-top-color:var(--white);border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+.loading-overlay{position:fixed;inset:0;background:rgba(255,255,255,.9);z-index:150;display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px}
+.loading-overlay .spinner{width:40px;height:40px;border-color:rgba(26,47,94,.2);border-top-color:var(--navy-mid)}
+.loading-overlay p{font-size:14px;font-weight:600;color:var(--gray)}
+</style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loading-overlay" style="display:none">
+  <div class="spinner"></div><p id="loading-text">Loading…</p>
+</div>
+<div class="toast-container" id="toast-container"></div>
+
+<!-- RECEIPT VIEWER -->
+<div class="modal-overlay" id="receipt-modal">
+  <div class="modal-box" style="max-width:440px;padding:16px">
+    <div style="display:flex;justify-content:flex-end;margin-bottom:10px">
+      <button onclick="closeModal('receipt-modal')" style="color:var(--gray)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="22" height="22" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <img id="receipt-modal-img" src="" alt="Receipt" style="width:100%;border-radius:12px;max-height:70vh;object-fit:contain">
+  </div>
+</div>
+
+<!-- WHO AM I -->
+<div class="modal-overlay" id="who-modal">
+  <div class="modal-box">
+    <div style="text-align:center;margin-bottom:4px">
+      <div style="font-size:28px">👋</div>
+      <h2 style="font-size:20px;font-weight:800;margin:8px 0 4px">Who are you?</h2>
+      <p style="font-size:13px;color:var(--gray)">Select your name from the trip members</p>
+    </div>
+    <div class="who-grid" id="who-grid"></div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div class="modal-overlay" id="admin-modal">
+  <div class="modal-box">
+    <h2 style="font-size:18px;font-weight:800;margin-bottom:6px">Admin Access</h2>
+    <p style="font-size:13px;color:var(--gray);margin-bottom:16px">Enter the admin password to create trips.<br><span style="font-size:11px;color:var(--gray)">First time? The password you enter will be saved as the admin password (salted &amp; hashed).</span></p>
+    <div class="input-wrap" style="margin-bottom:14px">
+      <input type="password" id="admin-pw-input" class="form-input" placeholder="Admin password">
+      <button class="eye-btn" onclick="toggleEye('admin-pw-input',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      </button>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-outline btn-sm" style="flex:1" onclick="closeModal('admin-modal')">Cancel</button>
+      <button class="btn btn-primary btn-sm" style="flex:1" onclick="checkAdminPassword()">Enter</button>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE ALL -->
+<div class="modal-overlay" id="delete-all-modal">
+  <div class="modal-box">
+    <h2 style="font-size:18px;font-weight:800;color:var(--danger);margin-bottom:6px">⚠️ Delete All My Trips</h2>
+    <p style="font-size:13px;color:var(--gray);margin-bottom:16px">Deletes every trip saved on this device (including its cloud data). Other people's trips are not touched. Type <strong>DELETE ALL</strong> to confirm.</p>
+    <input type="text" id="delete-all-input" class="form-input" placeholder="Type DELETE ALL" style="margin-bottom:14px">
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-outline btn-sm" style="flex:1" onclick="closeModal('delete-all-modal')">Cancel</button>
+      <button class="btn btn-danger btn-sm" style="flex:1" onclick="confirmDeleteAll()">Delete All</button>
+    </div>
+  </div>
+</div>
+
+<!-- PERSON SHEET -->
+<div class="sheet-overlay" id="person-sheet">
+  <div class="sheet-box">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header">
+      <div id="ps-avatar" class="who-avatar" style="width:48px;height:48px;font-size:20px;flex-shrink:0"></div>
+      <div style="flex:1;min-width:0">
+        <div id="ps-name" style="font-size:20px;font-weight:800"></div>
+        <div id="ps-balance-big" style="font-size:15px;font-weight:700;margin-top:2px"></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+        <select class="currency-select" id="ps-currency-toggle" onchange="renderPersonSheet()" style="width:auto;padding:6px 28px 6px 8px;font-size:12px"></select>
+        <button class="sheet-close" onclick="closeSheet('person-sheet')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="sheet-content">
+      <div class="tab-bar">
+        <button class="tab-btn-inner active" onclick="switchPersonTab(0,this)">Overview</button>
+        <button class="tab-btn-inner" onclick="switchPersonTab(1,this)">Paid</button>
+        <button class="tab-btn-inner" onclick="switchPersonTab(2,this)">Owes</button>
+        <button class="tab-btn-inner" onclick="switchPersonTab(3,this)">Settlement</button>
+      </div>
+      <div id="ps-tab-overview" class="tab-panel active"></div>
+      <div id="ps-tab-paid" class="tab-panel"></div>
+      <div id="ps-tab-owes" class="tab-panel"></div>
+      <div id="ps-tab-settle" class="tab-panel"></div>
+    </div>
+  </div>
+</div>
+
+<div id="app">
+
+<!-- LOBBY -->
+<div class="page active" id="page-lobby">
+  <div class="lobby-hero">
+    <div class="lobby-logo">✈️</div>
+    <div class="lobby-title">TripSplit</div>
+    <div class="firebase-badge" id="firebase-badge">
+      <div class="dot"></div><span id="firebase-status-text">Connecting…</span>
+    </div>
+  </div>
+  <div class="lobby-content">
+    <div class="section-card">
+      <div class="section-title">Join a Trip</div>
+      <div class="form-group">
+        <label class="form-label">Trip Code</label>
+        <input type="text" id="join-code" class="form-input" placeholder="e.g. 7X9P2K"
+          oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9]/g,'')" maxlength="6" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <div class="input-wrap">
+          <input type="password" id="join-pw" class="form-input" placeholder="Trip password" autocomplete="off">
+          <button class="eye-btn" onclick="toggleEye('join-pw',this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="checkbox-row">
+        <input type="checkbox" id="remember-me" checked>
+        <label for="remember-me">Remember me on this device</label>
+      </div>
+      <button class="btn btn-primary mt-12" onclick="joinTrip()">Join Trip →</button>
+    </div>
+    <div class="section-card">
+      <div class="my-trips-header">
+        <div class="section-title" style="margin-bottom:0">My Trips</div>
+        <span class="badge" id="my-trips-count">0</span>
+      </div>
+      <div id="my-trips-list"></div>
+    </div>
+    <div class="section-card hidden" id="create-section">
+      <div class="section-title">Admin Actions</div>
+      <button class="btn btn-primary" onclick="navigateTo('create')">+ Create New Trip</button>
+      <button class="btn btn-danger mt-8" onclick="openModal('delete-all-modal');document.getElementById('delete-all-input').value=''">⚠️ Delete All My Trips</button>
+    </div>
+  </div>
+  <div class="admin-footer">
+    <button class="admin-link" onclick="promptAdmin()">Admin: Create trip</button>
+  </div>
+</div>
+
+<!-- CREATE -->
+<div class="page" id="page-create">
+  <div class="page-header">
+    <div class="page-header-back" onclick="navigateTo('lobby')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>Back
+    </div>
+    <h1>Create New Trip</h1><p>Fill in details for your group trip</p>
+  </div>
+  <div class="create-content">
+    <div class="section-card">
+      <div class="form-group">
+        <label class="form-label">Trip Name *</label>
+        <input type="text" id="c-name" class="form-input" placeholder="e.g. Seoul Trip 2026" maxlength="50">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Trip Code (auto-generated)</label>
+        <input type="text" id="c-code" class="form-input code-field" readonly>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password for Members *</label>
+        <div class="input-wrap">
+          <input type="password" id="c-pw" class="form-input" placeholder="Min 3 characters" autocomplete="new-password">
+          <button class="eye-btn" onclick="toggleEye('c-pw',this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Start Date *</label>
+        <input type="date" id="c-start" class="form-input" oninput="calcEndDate()">
+      </div>
+      <div class="rate-row">
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Number of Days *</label>
+          <select class="currency-select" id="c-numdays" onchange="calcEndDate()" style="padding:12px 36px 12px 14px"></select>
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">End Date (auto)</label>
+          <div class="end-date-display" id="c-end-display">—</div>
+          <input type="hidden" id="c-end">
+        </div>
+      </div>
+    </div>
+    <div class="section-card">
+      <div class="form-group">
+        <label class="form-label">Currency</label>
+        <select class="currency-select" id="c-currency" onchange="onCreateCurrencyChange()">
+          <option value="HKD">HKD – Hong Kong Dollar</option>
+          <option value="THB">THB – Thai Baht</option>
+          <option value="JPY">JPY – Japanese Yen</option>
+          <option value="USD">USD – US Dollar</option>
+          <option value="EUR">EUR – Euro</option>
+          <option value="CNY">CNY – Chinese Yuan</option>
+          <option value="TWD">TWD – Taiwan Dollar</option>
+          <option value="KRW" selected>KRW – Korean Won</option>
+          <option value="SGD">SGD – Singapore Dollar</option>
+          <option value="MYR">MYR – Malaysian Ringgit</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Exchange Rate to HKD</label>
+        <input type="number" id="c-rate" class="form-input" step="0.0001" placeholder="e.g. 0.0057">
+        <button class="fetch-rate-btn" id="c-fetch-btn" onclick="fetchRateForCreate()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10"/><path d="M23 14l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+          Auto-fetch rate
+        </button>
+      </div>
+      <div class="form-group" style="margin-bottom:0">
+        <label class="form-label">Members (comma separated, max 8) *</label>
+        <input type="text" id="c-members" class="form-input" placeholder="Alice, Bob, Charlie, Dana">
+      </div>
+    </div>
+    <div class="section-card" style="background:var(--accent-light);border:1.5px solid rgba(79,142,247,.3)">
+      <div style="font-size:12px;font-weight:700;color:var(--navy-mid);margin-bottom:6px">📎 Invite Link</div>
+      <div class="invite-preview" id="c-invite-preview">—</div>
+    </div>
+    <button class="btn btn-primary" onclick="createTrip()" id="create-btn">Create Trip</button>
+  </div>
+</div>
+
+<!-- NEW EXPENSE -->
+<div class="page" id="page-new">
+  <div class="trip-header">
+    <div class="trip-header-top">
+      <div class="trip-header-back" onclick="navigateTo('lobby')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>Trips
+      </div>
+      <div class="trip-header-title" id="new-trip-title">New Expense</div>
+      <button class="trip-header-settings" onclick="openSettings()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="new-content">
+    <div id="editing-badge" class="editing-badge hidden">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="14" height="14" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      EDITING EXPENSE
+    </div>
+    <div class="form-group">
+      <label class="form-label">Amount *</label>
+      <div class="amount-row">
+        <select class="currency-select" id="exp-currency" onchange="updateHKDPreview()" style="width:96px;padding:12px 12px"></select>
+        <input type="number" id="exp-amount" class="form-input amount-input" placeholder="0.00" step="0.01" min="0" oninput="updateHKDPreview()">
+      </div>
+      <div class="hkd-preview" id="hkd-preview">—</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Receipt / Photo</label>
+      <input type="file" id="receipt-file" accept="image/*" capture="environment" style="display:none" onchange="handleReceiptUpload(event)">
+      <div class="receipt-area" onclick="document.getElementById('receipt-file').click()">
+        📎 Upload receipt / Take photo
+      </div>
+      <div class="storage-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="12" height="12" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Stored locally on device · Free · Works offline
+      </div>
+      <div class="receipt-preview" id="receipt-preview">
+        <img class="receipt-thumb" id="receipt-thumb" src="" alt="Receipt" onclick="viewReceipt()">
+        <div style="flex:1;min-width:0">
+          <div style="font-size:12px;font-weight:600;color:var(--dark);margin-bottom:6px">Receipt attached</div>
+          <div class="receipt-actions">
+            <button class="receipt-btn" onclick="viewReceipt()">View</button>
+            <button class="receipt-btn" style="color:var(--danger);border-color:var(--danger)" onclick="removeReceipt()">Remove</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <label class="form-label" style="margin-bottom:0">Description</label>
+        <span id="desc-counter" style="font-size:11px;color:var(--gray)">0/80</span>
+      </div>
+      <input type="text" id="exp-desc" class="form-input" placeholder="What was this expense? (optional if upload receipt)" maxlength="80"
+        oninput="onDescInput(this)">
+      <div class="chips-scroll mt-8" id="quick-chips"></div>
+    </div>
+    <div class="form-group">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <label class="form-label" style="margin-bottom:0">Split Among</label>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-outline btn-sm" style="padding:5px 10px;font-size:12px" onclick="splitAll()">All</button>
+          <button class="btn btn-outline btn-sm" style="padding:5px 10px;font-size:12px" onclick="splitNone()">None</button>
+        </div>
+      </div>
+      <div class="split-grid" id="split-grid"></div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Category</label>
+      <div class="chips-row mt-8" id="cat-chips"></div>
+    </div>
+    <div class="form-group" style="margin-bottom:0">
+      <div class="rate-row">
+        <div style="min-width:0">
+          <label class="form-label">Paid By *</label>
+          <select class="currency-select" id="exp-paidby" style="width:100%;padding:12px 36px 12px 14px" onchange="updatePaidByBadge()"></select>
+        </div>
+        <div style="min-width:0">
+          <label class="form-label">Date</label>
+          <input type="date" id="exp-date" class="form-input" style="width:100%" onchange="onManualDateChange()">
+        </div>
+      </div>
+      <div class="date-strip-wrap" style="margin-top:10px"><div class="date-strip" id="date-strip"></div></div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:16px" id="form-action-row">
+      <button class="btn btn-outline hidden" id="cancel-edit-btn" onclick="cancelEdit()">Cancel</button>
+      <button class="btn btn-primary" id="add-expense-btn" onclick="saveExpense()">Add Expense</button>
+    </div>
+  </div>
+</div>
+
+<!-- EXPENSES -->
+<div class="page" id="page-expenses">
+  <div class="trip-header">
+    <div class="trip-header-top">
+      <div class="trip-header-back" onclick="navigateTo('lobby')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>Trips
+      </div>
+      <div class="trip-header-title" id="exp-trip-title">Expenses</div>
+      <button class="trip-header-settings" onclick="openSettings()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+    </div>
+    <div class="hero-blocks" id="exp-hero-blocks"></div>
+  </div>
+  <div class="pending-banner hidden" id="pending-banner">
+    <span class="pending-banner-text">⏳ Pending expenses need updating</span>
+    <span class="pending-banner-count" id="pending-banner-count">0</span>
+  </div>
+  <div class="bulk-bar" id="bulk-bar">
+    <div class="bulk-bar-left" id="bulk-bar-label">Tap image expenses to select</div>
+    <div class="bulk-bar-actions">
+      <button class="bulk-btn bulk-btn-danger" onclick="bulkRemoveImages()">🗑 Remove Images</button>
+      <button class="bulk-btn bulk-btn-cancel" onclick="exitSelectMode()">Cancel</button>
+    </div>
+  </div>
+  <div class="expenses-controls">
+    <input type="text" class="search-box" id="exp-search" placeholder="🔍 Search…" oninput="onSearchFilter()">
+    <select class="filter-select" id="exp-filter" onchange="onSearchFilter()">
+      <option value="">All</option>
+      <option value="Food">Food</option>
+      <option value="Transport">Transport</option>
+      <option value="Hotel">Hotel</option>
+      <option value="Activity">Activity</option>
+      <option value="Other">Other</option>
+      <option value="Pending Update">Pending</option>
+    </select>
+    <select class="filter-select" id="exp-sort" onchange="onSortChange()" style="min-width:118px">
+      <option value="newest">⬇ Newest</option>
+      <option value="oldest">⬆ Oldest</option>
+      <option value="biggest">💰 Largest</option>
+      <option value="smallest">🪙 Smallest</option>
+    </select>
+    <button class="pending-btn" id="pending-filter-btn" onclick="togglePendingFilter()">⏳</button>
+    <button class="select-img-btn" id="select-images-btn" onclick="enterSelectMode()">🖼 Select</button>
+  </div>
+  <div id="expenses-list" style="padding:10px 0 4px"></div>
+  <div class="pagination" id="pagination"></div>
+</div>
+
+<!-- BALANCES -->
+<div class="page" id="page-balances">
+  <div class="trip-header">
+    <div class="trip-header-top">
+      <div class="trip-header-back" onclick="navigateTo('lobby')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>Trips
+      </div>
+      <div class="trip-header-title" id="bal-trip-title">Balances</div>
+      <button class="trip-header-settings" onclick="openSettings()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+    </div>
+    <div class="hero-blocks" id="bal-hero-blocks"></div>
+  </div>
+  <div class="balance-grid" id="balance-grid"></div>
+  <div style="padding:0 16px 8px">
+    <div class="section-title">Spending by Category</div>
+    <div id="cat-breakdown"></div>
+  </div>
+  <div style="padding:0 16px 16px">
+    <div class="section-title">Trip Currency Settings</div>
+    <div style="display:flex;gap:8px;align-items:flex-end;margin-bottom:10px;flex-wrap:wrap">
+      <div style="flex:1;min-width:100px">
+        <label class="form-label" style="margin-bottom:6px">Currency</label>
+        <select class="currency-select" id="bal-currency" style="width:100%" onchange="onBalCurrencyChange()">
+          <option value="HKD">HKD</option><option value="THB">THB</option><option value="JPY">JPY</option>
+          <option value="USD">USD</option><option value="EUR">EUR</option><option value="CNY">CNY</option>
+          <option value="TWD">TWD</option><option value="KRW">KRW</option><option value="SGD">SGD</option><option value="MYR">MYR</option>
+        </select>
+      </div>
+      <div style="flex:1;min-width:100px">
+        <label class="form-label" style="margin-bottom:6px">Rate to HKD</label>
+        <input type="number" id="bal-rate" class="form-input" step="0.0001">
+      </div>
+      <button class="fetch-rate-btn" id="bal-fetch-btn" onclick="fetchRateForBalances()" style="margin-top:0;height:46px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10"/><path d="M23 14l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>Auto
+      </button>
+    </div>
+    <button class="btn btn-primary" onclick="saveBalanceSettings()">Save & Recalculate</button>
+  </div>
+</div>
+
+<!-- SETTLEMENT -->
+<div class="page" id="page-settlement">
+  <div class="trip-header">
+    <div class="trip-header-top">
+      <div class="trip-header-back" onclick="navigateTo('lobby')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>Trips
+      </div>
+      <div class="trip-header-title" id="set-trip-title">Settlement</div>
+      <button class="trip-header-settings" onclick="openSettings()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="settlement-content">
+    <div class="settlement-summary" id="settlement-summary"></div>
+    <div id="settlement-list"></div>
+    <div class="settle-actions">
+      <button class="settle-btn" onclick="copySettlement()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy
+      </button>
+      <button class="settle-btn" onclick="exportExcel()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Excel
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div class="page" id="page-settings">
+  <div class="page-header">
+    <div class="page-header-back" onclick="navigateTo('expenses')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>Back
+    </div>
+    <h1>Trip Settings</h1><p>Manage your trip details</p>
+  </div>
+  <div class="settings-content">
+    <div class="settings-block">
+      <h3>📋 Trip Details</h3>
+      <div class="form-group">
+        <label class="form-label">Trip Name</label>
+        <input type="text" id="s-name" class="form-input" maxlength="50">
+      </div>
+      <div class="rate-row">
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Start Date</label>
+          <input type="date" id="s-start" class="form-input">
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">End Date</label>
+          <input type="date" id="s-end" class="form-input">
+        </div>
+      </div>
+      <div class="form-group mt-12">
+        <label class="form-label">Members (comma separated, max 8)</label>
+        <input type="text" id="s-members" class="form-input">
+      </div>
+      <div class="form-group mt-12">
+        <label class="form-label">You are</label>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span id="s-identity-display" style="flex:1;font-size:14px;font-weight:700">—</span>
+          <button class="btn btn-outline btn-sm" style="padding:5px 12px;font-size:12px" onclick="showWhoModal()">Change</button>
+        </div>
+      </div>
+      <button class="btn btn-primary mt-8" onclick="saveTripSettings()">Save Changes</button>
+    </div>
+    <div class="settings-block">
+      <h3>🔗 Invite Members</h3>
+      <p style="font-size:13px;color:var(--gray);margin-bottom:12px">Share this link — friends enter the trip password to join.</p>
+      <div class="invite-preview" id="s-invite-link">—</div>
+      <button class="btn btn-outline btn-sm" style="margin-top:10px;padding:8px 14px" onclick="copyInviteLink()">📋 Copy Invite Link</button>
+    </div>
+    <div class="settings-block">
+      <h3>🔑 Change Password</h3>
+      <div class="form-group" style="margin-bottom:12px">
+        <label class="form-label">New Password</label>
+        <div class="input-wrap">
+          <input type="password" id="s-newpw" class="form-input" placeholder="Min 3 characters">
+          <button class="eye-btn" onclick="toggleEye('s-newpw',this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="updateTripPassword()">Update Password</button>
+    </div>
+    <div class="settings-block danger-zone">
+      <h3>⚠️ Delete Trip</h3>
+      <p style="font-size:13px;color:var(--gray);margin-bottom:12px">Permanently deletes all expenses for this trip.</p>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;background:var(--gray-light);padding:10px;border-radius:8px">
+        <span style="font-size:14px;font-weight:700;flex:1" id="s-trip-name-display"></span>
+        <button class="copy-btn" onclick="copyTripNameForDelete()">Copy</button>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Paste trip name to confirm</label>
+        <input type="text" id="s-confirm-delete" class="form-input" placeholder="Paste exact trip name">
+      </div>
+      <button class="btn btn-danger" onclick="deleteTripSettings()">Delete This Trip</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- /app -->
+
+<!-- DRAGGABLE ADD-EXPENSE FAB -->
+<button id="fab-add" aria-label="Add expense">
+  <span class="fab-ring"></span>
+  <svg class="fab-ico-add" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" width="26" height="26"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+  <svg class="fab-ico-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><polyline points="20 6 9 17 4 12"/></svg>
+</button>
+
+<nav id="bottom-tabs">
+  <button class="tab-btn active" onclick="switchTab('new')" data-tab="new">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg><span>New</span>
+  </button>
+  <button class="tab-btn" onclick="switchTab('expenses')" data-tab="expenses">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg><span>Expenses</span>
+  </button>
+  <button class="tab-btn" onclick="switchTab('balances')" data-tab="balances">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><span>Balances</span>
+  </button>
+  <button class="tab-btn" onclick="switchTab('settlement')" data-tab="settlement">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg><span>Settle</span>
+  </button>
+</nav>
+
+<script src="firebase-config.js" onerror="console.warn('firebase-config.js not found')"></script>
+<script type="module">
+import{initializeApp,getApps}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import{getFirestore,enableIndexedDbPersistence,collection,doc,getDoc,getDocs,setDoc,updateDoc,deleteDoc,query,orderBy,onSnapshot,writeBatch}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+// ── STATE
+let db=null,firebaseOk=false;
+let currentTrip=null,currentCode=null,myIdentity=null;
+let expenses=[],expensesUnsub=null;
+let editingExpenseId=null,receiptDataURL=null;
+let selectedDate=null,selectedCategory='Other';
+let pendingFilterActive=false,selectMode=false,selectedForBulk=new Set();
+let chipDescActive=false;
+let currentExpPage=1,saveBusy=false,personSheetName=null,isAdminMode=false;
+const EXP_PER_PAGE=10;
+
+// ── INDEXEDDB
+let idb=null;
+function openIDB(){return new Promise((res,rej)=>{if(idb){res(idb);return;}const r=indexedDB.open('TripSplitDB',1);r.onupgradeneeded=e=>e.target.result.createObjectStore('receipts',{keyPath:'id'});r.onsuccess=e=>{idb=e.target.result;res(idb);};r.onerror=e=>rej(e.target.error);});}
+async function idbSave(id,data){try{const d=await openIDB();return new Promise((res,rej)=>{const tx=d.transaction('receipts','readwrite');tx.objectStore('receipts').put({id,data});tx.oncomplete=()=>res();tx.onerror=e=>rej(e.target.error);});}catch(e){console.warn('IDB save:',e);}}
+async function idbGet(id){try{const d=await openIDB();return new Promise(res=>{const r=d.transaction('receipts','readonly').objectStore('receipts').get(id);r.onsuccess=e=>res(e.target.result?.data||null);r.onerror=()=>res(null);});}catch(e){return null;}}
+async function idbDel(id){try{const d=await openIDB();return new Promise(res=>{const tx=d.transaction('receipts','readwrite');tx.objectStore('receipts').delete(id);tx.oncomplete=()=>res();tx.onerror=()=>res();});}catch(e){}}
+async function idbDelTrip(code){try{const d=await openIDB();return new Promise(res=>{const tx=d.transaction('receipts','readwrite');const s=tx.objectStore('receipts');const r=s.openCursor();r.onsuccess=e=>{const c=e.target.result;if(c){if(String(c.key).startsWith(code+'_'))c.delete();c.continue();}};tx.oncomplete=()=>res();tx.onerror=()=>res();});}catch(e){}}
+async function idbClearAll(){try{const d=await openIDB();return new Promise(res=>{const tx=d.transaction('receipts','readwrite');tx.objectStore('receipts').clear();tx.oncomplete=()=>res();tx.onerror=()=>res();});}catch(e){}}
+
+// ── CONSTANTS
+const DEFAULT_RATES={HKD:1,THB:0.21,JPY:0.052,USD:7.8,EUR:8.5,CNY:1.07,TWD:0.24,KRW:0.0057,SGD:5.8,MYR:1.67};
+const AVATAR_COLORS=['#ef4444','#f97316','#eab308','#22c55e','#3b82f6','#8b5cf6','#ec4899','#06b6d4','#10b981','#f59e0b'];
+function sortCurKeys(ks){const tc=currentTrip?.currency;return [...ks].sort((a,b)=>{if(a===tc)return -1;if(b===tc)return 1;return a.localeCompare(b);});}
+const BC_CLASSES=['bc-yellow','bc-green','bc-blue','bc-pink','bc-orange','bc-violet','bc-white','bc-dark'];
+const CAT_COLORS={Food:'#f97316',Transport:'#3b82f6',Hotel:'#8b5cf6',Activity:'#10b981',Other:'#64748b','Pending Update':'#ec4899'};
+const QUICK_CHIPS=[{label:'Lunch',cat:'Food'},{label:'Dinner',cat:'Food'},{label:'Breakfast',cat:'Food'},{label:'Taxi',cat:'Transport'},{label:'Hotel',cat:'Hotel'},{label:'Drinks',cat:'Food'},{label:'Groceries',cat:'Food'},{label:'Flight',cat:'Transport'}];
+const CATEGORIES=[{label:'Food',cls:'cat-food'},{label:'Transport',cls:'cat-transport'},{label:'Hotel',cls:'cat-hotel'},{label:'Activity',cls:'cat-activity'},{label:'Other',cls:'cat-other'},{label:'Pending Update',cls:'cat-pending'}];
+
+// ── CURRENCY TOTAL HELPER — builds "KRW 1,000 + HKD 3,000 • HKD 3,005.70"
+function buildCurrencyLabel(exps,showHKDTotal=true){
+  const byCur={};
+  exps.forEach(e=>{const c=e.currency||'HKD';byCur[c]=(byCur[c]||0)+(parseFloat(e.amount)||0);});
+  const dayHKD=exps.reduce((s,e)=>s+(parseFloat(e.amountHKD)||0),0);
+  const curKeys=sortCurKeys(Object.keys(byCur));
+  let parts=curKeys.map(c=>`${c} ${fmt2(byCur[c])}`).join(' + ');
+  if(showHKDTotal){
+    // only append HKD total if there are non-HKD currencies or multiple currencies
+    const onlyHKD=curKeys.length===1&&curKeys[0]==='HKD';
+    return onlyHKD?`HKD ${fmt2(dayHKD)}`:`${parts} • HKD ${fmt2(dayHKD)}`;
+  }
+  return parts;
+}
+
+// ── FIREBASE
+async function initFirebase(){
+  try{
+    const cfg=window.FIREBASE_CONFIG;
+    if(!cfg||!cfg.apiKey||cfg.apiKey==='Axxx')throw new Error('no-config');
+    const app=getApps().length?getApps()[0]:initializeApp(cfg);
+    db=getFirestore(app);
+    try{await enableIndexedDbPersistence(db);}catch(e){}
+    await getDocs(query(collection(db,'trips')));
+    firebaseOk=true;setFirebaseBadge(true);
+  }catch(e){db=null;firebaseOk=false;setFirebaseBadge(false);}
+}
+function setFirebaseBadge(ok){
+  document.getElementById('firebase-badge').classList.toggle('offline',!ok);
+  document.getElementById('firebase-status-text').textContent=ok?'Live sync enabled':'Local mode • Works offline';
+}
+
+// ── PASSWORD HASHING (PBKDF2-SHA256, 60k iterations, per-trip random salt)
+async function sha256(str){const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');}
+function bytesToHex(b){return Array.from(b).map(x=>x.toString(16).padStart(2,'0')).join('');}
+function hexToBytes(h){const a=new Uint8Array(h.length/2);for(let i=0;i<a.length;i++)a[i]=parseInt(h.substr(i*2,2),16);return a;}
+async function makeSalt(){return bytesToHex(crypto.getRandomValues(new Uint8Array(16)));}
+async function hashPassword(pw,saltHex){
+  const key=await crypto.subtle.importKey('raw',new TextEncoder().encode(pw),'PBKDF2',false,['deriveBits']);
+  const bits=await crypto.subtle.deriveBits({name:'PBKDF2',hash:'SHA-256',salt:hexToBytes(saltHex),iterations:60000},key,256);
+  return bytesToHex(new Uint8Array(bits));
+}
+async function verifyPassword(pw,trip){
+  if(trip.passwordSalt&&trip.passwordHash)return(await hashPassword(pw,trip.passwordSalt))===trip.passwordHash;
+  if(trip.passwordHash)return(await sha256(pw))===trip.passwordHash; // legacy (pre-PBKDF2 trips)
+  return false;
+}
+
+// ── NAVIGATION
+function navigateTo(page){
+  cleanUrlParams();
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  const tabs=document.getElementById('bottom-tabs');
+  const tripPages=['new','expenses','balances','settlement'];
+  if(tripPages.includes(page)){tabs.style.display='flex';document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===page));}
+  else tabs.style.display='none';
+  document.getElementById('app').scrollTo(0,0);
+  fabUpdate();
+  if(page==='create')initCreatePage();
+  if(page==='settings')_openSettingsForm();
+}
+window.navigateTo=navigateTo;
+function cleanUrlParams(){try{if(location.search)history.replaceState(null,'',location.pathname);}catch(e){}}
+function switchTab(tab){
+  navigateTo(tab);
+  if(tab==='expenses')renderExpenses();
+  if(tab==='balances')renderBalances();
+  if(tab==='settlement')renderSettlement();
+  if(tab==='new'&&!editingExpenseId)resetNewForm();
+}
+window.switchTab=switchTab;
+
+// ── DRAGGABLE ADD-EXPENSE FAB
+const FAB=document.getElementById('fab-add');
+let fabDrag=null,fabSuppressClick=false;
+function fabClamp(x,y){
+  const w=window.innerWidth||360,h=window.innerHeight||640,s=FAB.offsetWidth||58;
+  return{x:Math.min(Math.max(0,x),Math.max(0,w-s)),y:Math.min(Math.max(0,y),Math.max(0,h-s))};
+}
+function fabSetPos(x,y,save){
+  const p=fabClamp(x,y);
+  FAB.style.left=p.x+'px';FAB.style.top=p.y+'px';
+  if(save){try{localStorage.setItem('fabAddPos',JSON.stringify(p));}catch(e){}}
+}
+function fabDefault(){const w=window.innerWidth||360,h=window.innerHeight||640;fabSetPos(w-78,h-150,false);}
+function focusAmountInput(){
+  try{
+    if(document.querySelector('.modal-overlay.show,.sheet-overlay.show'))return; // don't pop the keyboard behind a dialog
+    const el=document.getElementById('exp-amount');
+    if(el&&document.getElementById('page-new').classList.contains('active'))el.focus({preventScroll:true});
+  }catch(e){}
+}
+function fabUpdate(){
+  const show=!!currentTrip&&document.getElementById('page-new').classList.contains('active');
+  if(show&&!FAB.style.left)fabDefault();
+  FAB.classList.toggle('show',show);
+  FAB.classList.toggle('editing',!!editingExpenseId);
+  FAB.setAttribute('aria-label',editingExpenseId?'Update expense':'Add expense');
+}
+(function(){try{const p=JSON.parse(localStorage.getItem('fabAddPos')||'null');if(p&&typeof p.x==='number'&&typeof p.y==='number')fabSetPos(p.x,p.y,false);else fabDefault();}catch(e){fabDefault();}})();
+FAB.addEventListener('pointerdown',e=>{
+  if(!FAB.classList.contains('show'))return;
+  e.preventDefault();
+  try{FAB.setPointerCapture(e.pointerId);}catch(err){}
+  const r=FAB.getBoundingClientRect();
+  fabDrag={dx:e.clientX-r.left,dy:e.clientY-r.top,sx:e.clientX,sy:e.clientY,lx:null,ly:null,moved:false};
+  FAB.classList.add('dragging');
+});
+FAB.addEventListener('pointermove',e=>{
+  if(!fabDrag)return;
+  if(Math.hypot(e.clientX-fabDrag.sx,e.clientY-fabDrag.sy)>6)fabDrag.moved=true;
+  if(fabDrag.moved){fabDrag.lx=e.clientX-fabDrag.dx;fabDrag.ly=e.clientY-fabDrag.dy;fabSetPos(fabDrag.lx,fabDrag.ly,false);}
+});
+function fabPointerEnd(){
+  if(!fabDrag)return;
+  const d=fabDrag;fabDrag=null;
+  FAB.classList.remove('dragging');
+  if(d.moved){
+    if(typeof d.lx==='number')fabSetPos(d.lx,d.ly,true);
+    fabSuppressClick=true;
   }
 }
+FAB.addEventListener('pointerup',fabPointerEnd);
+FAB.addEventListener('pointercancel',fabPointerEnd);
+FAB.addEventListener('click',()=>{
+  if(fabSuppressClick){fabSuppressClick=false;return;}
+  saveExpense();
+});
+window.addEventListener('resize',()=>{if(FAB.classList.contains('show')&&FAB.style.left){const p=fabClamp(parseFloat(FAB.style.left)||0,parseFloat(FAB.style.top)||0);FAB.style.left=p.x+'px';FAB.style.top=p.y+'px';}});
+
+// ── MODALS
+function openModal(id){document.getElementById(id).classList.add('show');}
+function closeModal(id){document.getElementById(id).classList.remove('show');}
+function openSheet(id){document.getElementById(id).classList.add('show');}
+function closeSheet(id){document.getElementById(id).classList.remove('show');}
+window.openModal=openModal;window.closeModal=closeModal;window.openSheet=openSheet;window.closeSheet=closeSheet;
+document.querySelectorAll('.modal-overlay,.sheet-overlay').forEach(el=>{el.addEventListener('click',function(e){if(e.target===this)this.classList.remove('show');});});
+
+// ── TOAST
+function toast(msg,type='',undoFn=null,duration=3500){
+  const c=document.getElementById('toast-container');const t=document.createElement('div');
+  t.className='toast'+(type?' '+type:'');
+  const ts=document.createElement('span');ts.textContent=msg;t.appendChild(ts);
+  if(undoFn){const u=document.createElement('button');u.className='toast-undo';u.textContent='Undo';u.onclick=()=>{undoFn();t.remove();};t.appendChild(u);}
+  c.appendChild(t);setTimeout(()=>t.remove(),duration);
+}
+window.toast=toast;
+function showLoading(show,msg='Loading…'){document.getElementById('loading-overlay').style.display=show?'flex':'none';document.getElementById('loading-text').textContent=msg;}
+function toggleEye(inputId,btn){
+  const inp=document.getElementById(inputId);const isText=inp.type==='text';inp.type=isText?'password':'text';
+  btn.querySelector('svg').innerHTML=isText?'<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>':'<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>';
+}
+window.toggleEye=toggleEye;
+
+// ── LOCAL STORAGE
+function getMyTrips(){try{return JSON.parse(localStorage.getItem('myTrips')||'[]');}catch(e){return[];}}
+function saveMyTrip(code,name,pw){let t=getMyTrips(),idx=t.findIndex(x=>x.code===code);if(idx>=0)t[idx]={code,name,pw};else t.unshift({code,name,pw});localStorage.setItem('myTrips',JSON.stringify(t));}
+function removeMyTrip(code){localStorage.setItem('myTrips',JSON.stringify(getMyTrips().filter(t=>t.code!==code)));}
+function getLocalTrips(){try{return JSON.parse(localStorage.getItem('localTrips')||'{}');}catch(e){return{};}}
+function saveLocalTrip(code,data){const t=getLocalTrips();t[code]=data;localStorage.setItem('localTrips',JSON.stringify(t));}
+function getLocalExp(code){try{return JSON.parse(localStorage.getItem('localExp_'+code)||'[]');}catch(e){return[];}}
+function saveLocalExp(code,exps){localStorage.setItem('localExp_'+code,JSON.stringify(exps));}
+
+// ── LOBBY
+function renderLobby(){
+  const trips=getMyTrips();
+  document.getElementById('my-trips-count').textContent=trips.length;
+  const list=document.getElementById('my-trips-list');
+  if(!trips.length){list.innerHTML='<div style="text-align:center;padding:20px;color:var(--gray);font-size:13px">No trips yet. Join one above!</div>';}
+  else{list.innerHTML=trips.map(t=>`
+    <div class="trip-card" onclick="quickJoin('${esc(t.code)}')">
+      <div class="trip-card-icon">${(t.name||t.code).charAt(0).toUpperCase()}</div>
+      <div class="trip-card-info">
+        <div class="trip-card-name">${esc(t.name||t.code)}</div>
+        <div class="trip-card-code">${esc(t.code)}</div>
+      </div>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="16" height="16" stroke-width="2.5" style="color:var(--gray);flex-shrink:0"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>`).join('');}
+  document.getElementById('create-section').classList.toggle('hidden',!isAdminMode);
+}
+async function quickJoin(code){
+  const saved=getMyTrips().find(t=>t.code===code);
+  document.getElementById('join-code').value=code;
+  if(saved?.pw){document.getElementById('join-pw').value=saved.pw;await joinTrip(true);}
+  else{document.getElementById('join-pw').value='';document.getElementById('join-pw').focus();}
+}
+window.quickJoin=quickJoin;
+
+// ── ?join ?admin
+(function(){
+  const p=new URLSearchParams(location.search);
+  const jc=p.get('join');
+  if(jc){
+    const code=jc.toUpperCase().replace(/[^A-Z0-9]/g,'');
+    document.getElementById('join-code').value=code;
+    const saved=getMyTrips().find(t=>t.code===code);
+    if(saved?.pw){document.getElementById('join-pw').value=saved.pw;setTimeout(()=>joinTrip(true),800);}
+    else document.getElementById('join-pw').focus();
+  }
+})();
+
+// ── ADMIN
+function promptAdmin(){openModal('admin-modal');document.getElementById('admin-pw-input').value='';}
+window.promptAdmin=promptAdmin;
+async function getAdminRecord(){
+  if(firebaseOk&&db){const snap=await getDoc(doc(db,'config','admin'));return snap.exists()?snap.data():null;}
+  try{return JSON.parse(localStorage.getItem('adminPw')||'null');}catch(e){return null;}
+}
+async function checkAdminPassword(){
+  const pw=document.getElementById('admin-pw-input').value;
+  if(!pw){toast('Enter a password','error');return;}
+  showLoading(true,'Checking…');
+  try{
+    const rec=await getAdminRecord();
+    if(rec&&rec.hash){
+      if(await hashPassword(pw,rec.salt)!==rec.hash)throw new Error('wrong');
+      isAdminMode=true;closeModal('admin-modal');renderLobby();toast('Admin mode unlocked ✓','success');
+    }else{
+      // first run: this password becomes the admin password (stored salted+hashed; immutable once security rules are deployed)
+      const salt=await makeSalt();const hash=await hashPassword(pw,salt);
+      const data={hash,salt,kdf:'PBKDF2-SHA256-60000',createdAt:new Date().toISOString()};
+      if(firebaseOk&&db)await setDoc(doc(db,'config','admin'),data);
+      else try{localStorage.setItem('adminPw',JSON.stringify(data));}catch(e){}
+      isAdminMode=true;closeModal('admin-modal');renderLobby();toast('Admin password set & admin mode unlocked ✓','success');
+    }
+  }catch(e){toast('Wrong admin password','error');}
+  finally{showLoading(false);}
+}
+window.checkAdminPassword=checkAdminPassword;
+
+// ── JOIN
+async function joinTrip(auto=false){
+  const code=document.getElementById('join-code').value.trim().toUpperCase();
+  const pw=document.getElementById('join-pw').value;
+  const rem=document.getElementById('remember-me').checked;
+  if(code.length<6){toast('Enter valid 6-char code','error');return;}
+  if(!pw){toast('Enter password','error');return;}
+  showLoading(true,'Joining…');
+  try{
+    let trip;
+    if(firebaseOk&&db){const snap=await getDoc(doc(db,'trips',code));if(!snap.exists())throw new Error('Trip not found');trip={id:snap.id,...snap.data()};}
+    else{const local=getLocalTrips();if(!local[code])throw new Error('Trip not found');trip=local[code];}
+    if(!await verifyPassword(pw,trip))throw new Error('Wrong password');
+    currentTrip=trip;currentCode=code;
+    cleanUrlParams(); // invite link consumed — don't keep ?join=CODE in the address bar
+    if(rem){saveMyTrip(code,trip.name,pw);localStorage.setItem('trip_'+code+'_pw',pw);}
+    else saveMyTrip(code,trip.name,'');
+    const who=localStorage.getItem('trip_'+code+'_who');
+    if(who&&trip.friends?.includes(who)){myIdentity=who;showLoading(false);toast(`Welcome back ${who} 👋`,'success');enterTrip();}
+    else{showLoading(false);showWhoModal();}
+  }catch(e){showLoading(false);toast(e.message==='Trip not found'?'Trip not found — check code':'Wrong password ❌','error');}
+}
+window.joinTrip=joinTrip;
+
+window.showWhoModal=showWhoModal;
+function showWhoModal(){
+  document.getElementById('who-grid').innerHTML=(currentTrip.friends||[]).map((name,i)=>`
+    <button class="who-btn" onclick="selectIdentity(${i})">
+      <div class="who-avatar" style="background:${AVATAR_COLORS[i%AVATAR_COLORS.length]}">${name.charAt(0).toUpperCase()}</div>
+      <div class="who-name">${esc(name)}</div>
+    </button>`).join('');
+  openModal('who-modal');
+}
+function selectIdentity(who){
+  const friends=currentTrip?.friends||[];
+  const name=typeof who==='number'?friends[who]:who;
+  if(!name||!friends.includes(name))return;
+  myIdentity=name;localStorage.setItem('trip_'+currentCode+'_who',name);closeModal('who-modal');toast(`Welcome, ${name}! ✈️`,'success');enterTrip();
+}
+window.selectIdentity=selectIdentity;
+function enterTrip(){setupExpensesListener();renderTripHeaders();navigateTo('new');resetNewForm();}
+
+// ── LISTENER
+function setupExpensesListener(){
+  if(expensesUnsub){expensesUnsub();expensesUnsub=null;}
+  if(firebaseOk&&db){
+    expensesUnsub=onSnapshot(query(collection(db,'trips',currentCode,'expenses'),orderBy('date','desc')),
+      snap=>{expenses=snap.docs.map(d=>({id:d.id,...d.data()}));onExpensesUpdated();},
+      err=>{console.error(err);loadLocalExp();});
+  }else loadLocalExp();
+}
+function loadLocalExp(){expenses=getLocalExp(currentCode);onExpensesUpdated();}
+function onExpensesUpdated(){
+  renderHeroBlocks();renderDateStrip();
+  if(document.getElementById('page-expenses').classList.contains('active'))renderExpenses();
+  if(document.getElementById('page-balances').classList.contains('active'))renderBalances();
+  if(document.getElementById('page-settlement').classList.contains('active'))renderSettlement();
+  if(document.getElementById('person-sheet').classList.contains('show'))renderPersonSheet();
+}
+
+// ── HEADERS
+function renderTripHeaders(){
+  if(!currentTrip)return;
+  ['new-trip-title','exp-trip-title','bal-trip-title','set-trip-title'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=currentTrip.name||currentCode;});
+  renderHeroBlocks();
+}
+
+// ── HERO BLOCKS — FIXED: show each currency amount
+function renderHeroBlocks(){
+  if(!currentTrip)return;
+  const trip=currentTrip;
+  const totalHKD=expenses.reduce((s,e)=>s+(parseFloat(e.amountHKD)||0),0);
+
+  // Build per-currency totals
+  const byCur={};
+  expenses.forEach(e=>{const c=e.currency||'HKD';byCur[c]=(byCur[c]||0)+(parseFloat(e.amount)||0);});
+  const curKeys=sortCurKeys(Object.keys(byCur));
+  let origSubLine;
+  if(curKeys.length===0)origSubLine='—';
+  else if(curKeys.length===1&&curKeys[0]==='HKD')origSubLine=''; // HKD only, no sub needed
+  else origSubLine=sortCurKeys(curKeys).map(c=>`${c} ${fmt2(byCur[c])}`).join(' · ');
+
+  const dates=expenses.map(e=>e.date).filter(Boolean).sort();
+  const dateRange=dates.length?(dates[0]===dates[dates.length-1]?fmtDateShort(dates[0]):fmtDateShort(dates[0])+' → '+fmtDateShort(dates[dates.length-1])):'—';
+  const html=`
+    <div class="hero-block">
+      <div class="hero-block-label">Total Spent</div>
+      <div class="hero-block-value">HKD ${fmt2(totalHKD)}</div>
+      ${origSubLine?`<div class="hero-block-sub">${origSubLine}</div>`:''}
+    </div>
+    <div class="hero-block">
+      <div class="hero-block-label">Entries</div>
+      <div class="hero-block-value">${expenses.length}</div>
+      <div class="hero-block-sub">${dateRange}</div>
+    </div>
+    <div class="hero-block">
+      <div class="hero-block-label">Currency</div>
+      <div class="hero-block-value">${trip.currency}</div>
+      <div class="hero-block-sub">→ HKD ${trip.exchangeRate}</div>
+    </div>
+    <div class="hero-block">
+      <div class="hero-block-label">Members</div>
+      <div class="hero-block-value">${(trip.friends||[]).length}</div>
+      <div class="hero-block-sub">${(trip.friends||[]).map(f=>esc(f)).join(', ')}</div>
+    </div>`;
+  ['exp-hero-blocks','bal-hero-blocks'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=html;});
+}
+
+// ── CREATE TRIP
+function generateCode(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';return Array.from({length:6},()=>c[Math.floor(Math.random()*c.length)]).join('');}
+async function getUniqueCode(){let code=generateCode();
+  if(firebaseOk&&db){for(let i=0;i<5;i++){if(!(await getDoc(doc(db,'trips',code))).exists())return code;code=generateCode();}}
+  else{const local=getLocalTrips();for(let i=0;i<5;i++){if(!local[code])return code;code=generateCode();}}
+  return code;}
+async function initCreatePage(){
+  const sel=document.getElementById('c-numdays');
+  if(!sel.options.length){for(let i=1;i<=30;i++){const o=document.createElement('option');o.value=i;o.textContent=i+' day'+(i>1?'s':'');sel.appendChild(o);}sel.value=5;}
+  const code=await getUniqueCode();
+  document.getElementById('c-code').value=code;
+  document.getElementById('c-invite-preview').textContent=location.origin+location.pathname+'?join='+code;
+  document.getElementById('c-start').value=toDateStr(new Date());
+  calcEndDate();onCreateCurrencyChange();
+}
+function calcEndDate(){
+  const sv=document.getElementById('c-start').value;const days=parseInt(document.getElementById('c-numdays').value)||1;
+  if(!sv){document.getElementById('c-end-display').textContent='—';return;}
+  const[y,m,d]=sv.split('-').map(Number);const endMs=Date.UTC(y,m-1,d)+(days-1)*86400000;
+  const endStr=new Date(endMs).toISOString().split('T')[0];
+  document.getElementById('c-end').value=endStr;
+  document.getElementById('c-end-display').textContent=new Date(endMs).toLocaleDateString('en',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'});
+}
+window.calcEndDate=calcEndDate;
+function onCreateCurrencyChange(){document.getElementById('c-rate').value=DEFAULT_RATES[document.getElementById('c-currency').value]||1;}
+window.onCreateCurrencyChange=onCreateCurrencyChange;
+async function fetchRateForCreate(){await fetchRate(document.getElementById('c-currency').value,'c-rate','c-fetch-btn');}
+window.fetchRateForCreate=fetchRateForCreate;
+async function fetchRate(currency,rateId,btnId){
+  if(currency==='HKD'){document.getElementById(rateId).value='1';return;}
+  const btn=document.getElementById(btnId);btn.classList.add('loading');
+  try{
+    let rate=null;
+    try{const r=await fetch('https://open.er-api.com/v6/latest/HKD');const d=await r.json();if(d.rates?.[currency])rate=1/d.rates[currency];}catch(e){}
+    if(!rate){const r=await fetch(`https://api.frankfurter.app/latest?from=HKD&to=${currency}`);const d=await r.json();if(d.rates?.[currency])rate=d.rates[currency];}
+    if(rate){document.getElementById(rateId).value=rate.toFixed(4);toast('Rate fetched ✓','success');}
+    else throw new Error('no rate');
+  }catch(e){document.getElementById(rateId).value=DEFAULT_RATES[currency]||'';toast('Using default rate','warn');}
+  finally{btn.classList.remove('loading');}
+}
+async function createTrip(){
+  const name=document.getElementById('c-name').value.trim();const code=document.getElementById('c-code').value.trim();
+  const pw=document.getElementById('c-pw').value;const start=document.getElementById('c-start').value;const end=document.getElementById('c-end').value;
+  const cur=document.getElementById('c-currency').value;const rate=parseFloat(document.getElementById('c-rate').value)||1;
+  let members=document.getElementById('c-members').value.split(',').map(s=>s.trim()).filter(Boolean);
+  // dedupe case-insensitively — duplicate names break balance math
+  const seen=new Set();members=members.filter(m=>{const k=m.toLowerCase();if(seen.has(k))return false;seen.add(k);return true;});
+  if(!name){toast('Trip name required','error');return;}if(pw.length<3){toast('Password min 3 chars','error');return;}
+  if(!start||!end){toast('Select start date','error');return;}if(!members.length){toast('Add at least one member','error');return;}
+  if(members.length>8){toast('Max 8 members','error');return;}
+  if(firebaseOk&&db){const all=await getDocs(collection(db,'trips'));if(all.docs.some(d=>d.data().name?.toLowerCase()===name.toLowerCase())){toast('Trip name already exists','error');return;}}
+  showLoading(true,'Creating…');document.getElementById('create-btn').disabled=true;
+  try{
+    const salt=await makeSalt();const hash=await hashPassword(pw,salt);
+    const tripData={name,code,passwordHash:hash,passwordSalt:salt,kdf:'PBKDF2-SHA256-60000',friends:members,startDate:start,endDate:end,currency:cur,exchangeRate:rate,baseCurrency:'HKD',createdAt:new Date().toISOString()};
+    if(firebaseOk&&db)await setDoc(doc(db,'trips',code),tripData);else saveLocalTrip(code,tripData);
+    saveMyTrip(code,name,pw);localStorage.setItem('trip_'+code+'_pw',pw);
+    toast('Trip created! 🎉','success');
+    // enter the new trip right away instead of bouncing back to the lobby
+    currentTrip=tripData;currentCode=code;myIdentity=null;expenses=[];
+    renderLobby();showWhoModal();enterTrip();
+  }catch(e){toast('Error: '+e.message,'error');}
+  finally{showLoading(false);document.getElementById('create-btn').disabled=false;}
+}
+window.createTrip=createTrip;
+
+// ── FORM BUILDERS
+function buildQuickChips(){document.getElementById('quick-chips').innerHTML=QUICK_CHIPS.map(q=>`<div class="chip" onclick="applyQuickChip('${q.label}','${q.cat}')">${q.label}</div>`).join('');}
+function applyQuickChip(label,cat){
+  const d=document.getElementById('exp-date').value||toDateStr(new Date());
+  const auto=fmtDateShort(d)+' – '+label;
+  const inp=document.getElementById('exp-desc');
+  // only auto-fill the description if empty or previously chip-generated — never clobber typed text
+  if(!inp.value.trim()||chipDescActive){inp.value=auto;chipDescActive=true;}
+  document.getElementById('desc-counter').textContent=inp.value.length+'/80';
+  selectCategory(cat);document.querySelectorAll('#quick-chips .chip').forEach(c=>c.classList.toggle('active',c.textContent===label));
+}
+window.onDescInput=function(el){document.getElementById('desc-counter').textContent=el.value.length+'/80';chipDescActive=false;};
+window.applyQuickChip=applyQuickChip;
+function buildCategoryChips(){document.getElementById('cat-chips').innerHTML=CATEGORIES.map(c=>`<div class="chip ${c.cls}" onclick="selectCategory('${c.label}')">${c.label}</div>`).join('');}
+function selectCategory(cat){selectedCategory=cat;document.querySelectorAll('#cat-chips .chip').forEach(c=>c.classList.toggle('active',c.textContent===cat));}
+window.selectCategory=selectCategory;
+function buildSplitGrid(){
+  document.getElementById('split-grid').innerHTML=(currentTrip?.friends||[]).map((name,i)=>`
+    <div class="split-person included" data-name="${escAttr(name)}" onclick="toggleSplit(this)">
+      <div class="split-person-avatar" style="background:${AVATAR_COLORS[i%AVATAR_COLORS.length]}">${esc(name.charAt(0).toUpperCase())}</div>
+      <div style="flex:1;min-width:0">
+        <div class="split-person-name">${esc(name)}</div>
+        <span class="paid-tag">💰 PAID</span>
+      </div>
+      <div class="split-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+    </div>`).join('');
+  updatePaidByBadge();
+}
+function updatePaidByBadge(){
+  const payer=document.getElementById('exp-paidby')?.value||'';
+  document.querySelectorAll('#split-grid .split-person').forEach(el=>el.classList.toggle('is-payer',el.dataset.name===payer));
+}
+window.updatePaidByBadge=updatePaidByBadge;
+function toggleSplit(el){el.classList.toggle('included');el.querySelector('.split-check').style.opacity=el.classList.contains('included')?'1':'0';}
+window.toggleSplit=toggleSplit;
+function splitAll(){document.querySelectorAll('.split-person').forEach(el=>{el.classList.add('included');el.querySelector('.split-check').style.opacity='1';});}
+function splitNone(){document.querySelectorAll('.split-person').forEach(el=>{el.classList.remove('included');el.querySelector('.split-check').style.opacity='0';});}
+window.splitAll=splitAll;window.splitNone=splitNone;
+function getSelectedSplit(){return[...document.querySelectorAll('.split-person.included')].map(el=>el.dataset.name);}
+function buildPaidByDropdown(){
+  const sel=document.getElementById('exp-paidby');
+  sel.innerHTML=(currentTrip?.friends||[]).map(f=>`<option value="${escAttr(f)}">${esc(f)}</option>`).join('');
+  if(myIdentity&&currentTrip?.friends?.includes(myIdentity))sel.value=myIdentity;
+}
+function buildExpCurrencyDropdown(){
+  const sel=document.getElementById('exp-currency');
+  sel.innerHTML=Object.keys(DEFAULT_RATES).map(c=>`<option value="${c}">${c}</option>`).join('');
+  sel.value=currentTrip?.currency||'KRW';
+}
+function rateForCurrency(cur){
+  if(!cur||cur==='HKD')return 1;
+  if(cur===currentTrip?.currency)return parseFloat(currentTrip.exchangeRate)||1;
+  return DEFAULT_RATES[cur]||1;
+}
+function updateHKDPreview(){
+  const amount=parseFloat(document.getElementById('exp-amount').value)||0;
+  const cur=document.getElementById('exp-currency').value;
+  const rate=rateForCurrency(cur);
+  document.getElementById('hkd-preview').textContent=amount>0?`≈ HKD ${fmt2(amount*rate)} (rate ${rate}) • Settle in HKD`:'—';
+}
+window.updateHKDPreview=updateHKDPreview;
+
+// ── DATE STRIP
+function renderDateStrip(){
+  if(!currentTrip)return;
+  const strip=document.getElementById('date-strip');const{startDate,endDate}=currentTrip;
+  if(!startDate||!endDate){strip.innerHTML='';return;}
+  function parseUTC(s){const[y,m,d]=s.split('-').map(Number);return Date.UTC(y,m-1,d);}
+  function utcStr(ms){return new Date(ms).toISOString().split('T')[0];}
+  const startMs=parseUTC(startDate),endMs=parseUTC(endDate);
+  const diffDays=Math.round((endMs-startMs)/86400000)+1;
+  let dates=[];
+  if(diffDays<=12){for(let i=0;i<diffDays;i++)dates.push(utcStr(startMs+i*86400000));}
+  else{
+    const selMs=selectedDate?parseUTC(selectedDate):parseUTC(toDateStr(new Date()));
+    const pivMs=selMs-5*86400000;
+    for(let i=0;i<12;i++){const ms=pivMs+i*86400000;if(ms>=startMs&&ms<=endMs)dates.push(utcStr(ms));}
+    if(dates.length<6){dates=[];for(let i=0;i<Math.min(12,diffDays);i++)dates.push(utcStr(startMs+i*86400000));}
+  }
+  const today=toDateStr(new Date());const expDates=new Set(expenses.map(e=>e.date));
+  strip.innerHTML=dates.map(d=>{
+    const ms=parseUTC(d);
+    const wd=new Date(ms).toLocaleDateString('en',{weekday:'short',timeZone:'UTC'});
+    const dd=new Date(ms).toLocaleDateString('en',{day:'numeric',timeZone:'UTC'});
+    const mm=new Date(ms).toLocaleDateString('en',{month:'short',timeZone:'UTC'});
+    const isToday=d===today,isActive=d===selectedDate,hasDot=expDates.has(d);
+    return`<div class="date-card${isActive?' active':''}${isToday?' today-card':''}${hasDot?' has-expenses':''}" onclick="selectStripDate('${d}')">
+      <div class="wd">${wd}</div><div class="dd">${dd}</div><div class="mm">${mm}</div>
+    </div>`;
+  }).join('');
+  // center the active day card INSIDE the strip only — must never scroll the page (strip now lives at the form bottom)
+  setTimeout(()=>{const a=strip.querySelector('.date-card.active');if(!a)return;const wrap=strip.parentElement;try{wrap.scrollLeft=Math.max(0,a.offsetLeft-(wrap.clientWidth-a.offsetWidth)/2);}catch(e){}},50);
+}
+function selectStripDate(d){selectedDate=d;document.getElementById('exp-date').value=d;renderDateStrip();}
+window.selectStripDate=selectStripDate;
+function onManualDateChange(){selectedDate=document.getElementById('exp-date').value;renderDateStrip();}
+window.onManualDateChange=onManualDateChange;
+
+// ── RESET FORM
+function resetNewForm(){
+  editingExpenseId=null;receiptDataURL=null;
+  document.getElementById('editing-badge').classList.add('hidden');
+  document.getElementById('add-expense-btn').textContent='Add Expense';
+  document.getElementById('cancel-edit-btn').classList.add('hidden');
+  document.getElementById('exp-desc').value='';document.getElementById('desc-counter').textContent='0/80';chipDescActive=false;
+  document.getElementById('exp-amount').value='';document.getElementById('hkd-preview').textContent='—';
+  document.getElementById('receipt-file').value='';document.getElementById('receipt-preview').classList.remove('show');
+  document.getElementById('exp-desc').classList.remove('error');document.getElementById('exp-amount').classList.remove('error');
+  const db2=document.getElementById('delete-exp-btn');if(db2)db2.remove();
+  const today=toDateStr(new Date());const trip=currentTrip;let defDate=today;
+  if(trip){const[ty,tm,td]=today.split('-').map(Number);const[sy,sm,sd]=trip.startDate.split('-').map(Number);const[ey,em,ed]=trip.endDate.split('-').map(Number);const tMs=Date.UTC(ty,tm-1,td),sMs=Date.UTC(sy,sm-1,sd),eMs=Date.UTC(ey,em-1,ed);defDate=(tMs>=sMs&&tMs<=eMs)?today:trip.startDate;}
+  selectedDate=defDate;document.getElementById('exp-date').value=defDate;
+  buildQuickChips();buildCategoryChips();selectCategory('Other');
+  buildPaidByDropdown();buildExpCurrencyDropdown();buildSplitGrid();splitAll();renderDateStrip();
+  fabUpdate();focusAmountInput();
+}
+
+// ── RECEIPT
+function handleReceiptUpload(e){
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    const img=new Image();
+    img.onload=()=>{
+      const MAX=800;let w=img.width,h=img.height;
+      if(w>MAX||h>MAX){if(w>h){h=Math.round(h*MAX/w);w=MAX;}else{w=Math.round(w*MAX/h);h=MAX;}}
+      const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      receiptDataURL=canvas.toDataURL('image/jpeg',0.7);
+      document.getElementById('receipt-thumb').src=receiptDataURL;
+      document.getElementById('receipt-preview').classList.add('show');
+      autoPendingIfNeeded();
+    };
+    img.src=ev.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+window.handleReceiptUpload=handleReceiptUpload;
+function autoPendingIfNeeded(){
+  const desc=document.getElementById('exp-desc').value.trim();
+  const amount=parseFloat(document.getElementById('exp-amount').value)||0;
+  if(!desc||amount<=0)selectCategory('Pending Update');
+}
+function viewReceipt(){if(!receiptDataURL)return;document.getElementById('receipt-modal-img').src=receiptDataURL;openModal('receipt-modal');}
+window.viewReceipt=viewReceipt;
+function removeReceipt(){receiptDataURL=null;document.getElementById('receipt-preview').classList.remove('show');document.getElementById('receipt-file').value='';}
+window.removeReceipt=removeReceipt;
+
+// ── SAVE EXPENSE
+async function saveExpense(){
+  if(saveBusy)return;
+  const desc=document.getElementById('exp-desc').value.trim();
+  const amount=parseFloat(document.getElementById('exp-amount').value)||0;
+  const date=document.getElementById('exp-date').value||selectedDate||toDateStr(new Date());
+  const paidBy=document.getElementById('exp-paidby').value;
+  const cur=document.getElementById('exp-currency').value;
+  const split=getSelectedSplit();
+  const hasRec=!!receiptDataURL;
+
+  let effectiveCategory=selectedCategory;
+  // Auto pending if image + missing fields
+  if(hasRec&&(!desc||amount<=0))effectiveCategory='Pending Update';
+  // If editing a pending expense, only upgrade to Other once info is complete
+  if(editingExpenseId&&effectiveCategory==='Pending Update'&&desc&&amount>0)effectiveCategory='Other';
+  const isPend=effectiveCategory==='Pending Update';
+
+  let valid=true;
+  if(!hasRec){
+    if(!desc){document.getElementById('exp-desc').classList.add('error');valid=false;}
+    else document.getElementById('exp-desc').classList.remove('error');
+    if(amount<=0&&!isPend){document.getElementById('exp-amount').classList.add('error');valid=false;}
+    else document.getElementById('exp-amount').classList.remove('error');
+  }else{document.getElementById('exp-desc').classList.remove('error');document.getElementById('exp-amount').classList.remove('error');}
+  if(!paidBy){toast('Select who paid','error');valid=false;}
+  if(split.length<1&&!isPend){toast('Select at least 1 person to split','error');valid=false;}
+  if(!valid)return;
+
+  saveBusy=true;
+  const btn=document.getElementById('add-expense-btn');btn.disabled=true;btn.textContent=editingExpenseId?'Updating…':'Adding…';
+  const rateToHKD=rateForCurrency(cur);
+  // integrity: if editing without changing amount/currency, keep the ORIGINAL HKD value & entry rate
+  // (a description typo-fix must never silently re-rate an old expense at today's rate)
+  const orig=editingExpenseId?expenses.find(e=>e.id===editingExpenseId):null;
+  const unchanged=orig&&orig.currency===cur&&Math.abs((parseFloat(orig.amount)||0)-amount)<0.005;
+  const amountHKD=unchanged&&isFinite(parseFloat(orig.amountHKD))?parseFloat(orig.amountHKD):parseFloat((amount*rateToHKD).toFixed(2));
+  const rateUsedFinal=unchanged&&typeof orig.rateUsed==='number'&&orig.rateUsed>0?orig.rateUsed:rateToHKD;
+  const perPerson=split.length>0?parseFloat((amountHKD/split.length).toFixed(2)):0;
+  const expId=editingExpenseId||(currentCode+'_'+Date.now());
+  const expData={description:desc||(hasRec?'Receipt - pending update':''),amount,currency:cur,amountHKD,rateUsed:rateUsedFinal,date,paidBy,category:effectiveCategory,splitAmong:split,perPerson,hasReceipt:hasRec,updatedAt:new Date().toISOString()};
+  if(!editingExpenseId)expData.createdAt=new Date().toISOString();
+  if(hasRec&&receiptDataURL){await idbSave(expId,receiptDataURL);expData.receiptBase64=(receiptDataURL.length<700000)?receiptDataURL:null;}
+  else{expData.receiptBase64=null;try{await idbDel(expId);}catch(e){}}
+  try{
+    if(firebaseOk&&db){if(editingExpenseId)await updateDoc(doc(db,'trips',currentCode,'expenses',editingExpenseId),expData);else await setDoc(doc(db,'trips',currentCode,'expenses',expId),expData);}
+    else{let exps=getLocalExp(currentCode);if(editingExpenseId){const i=exps.findIndex(e=>e.id===editingExpenseId);if(i>=0)exps[i]={...exps[i],...expData};}else exps.unshift({id:expId,...expData});saveLocalExp(currentCode,exps);loadLocalExp();}
+    toast(editingExpenseId?'Updated ✓':'Added ✓','success');resetNewForm();
+  }catch(e){toast('Save failed: '+e.message,'error');}
+  finally{saveBusy=false;setTimeout(()=>{btn.disabled=false;btn.textContent=editingExpenseId?'Update Expense':'Add Expense';},600);}
+}
+window.saveExpense=saveExpense;
+function cancelEdit(){editingExpenseId=null;resetNewForm();}
+window.cancelEdit=cancelEdit;
+
+// ── EXPENSES PAGE
+function renderExpenses(){
+  const pendingCount=expenses.filter(e=>e.category==='Pending Update').length;
+  const banner=document.getElementById('pending-banner');
+  if(pendingCount>0){banner.classList.remove('hidden');document.getElementById('pending-banner-count').textContent=pendingCount;}
+  else banner.classList.add('hidden');
+
+  const search=document.getElementById('exp-search').value.toLowerCase();
+  const filter=document.getElementById('exp-filter').value;
+  const sortMode=getExpSort();
+  document.getElementById('exp-sort').value=sortMode;
+  const tKey=e=>e.updatedAt||e.createdAt||'';
+  const CMP={
+    // date newest-first, then most recently updated first within a day (deterministic on every backend)
+    newest:(a,b)=>(b.date||'').localeCompare(a.date||'')||tKey(b).localeCompare(tKey(a))||(b.id||'').localeCompare(a.id||''),
+    oldest:(a,b)=>(a.date||'').localeCompare(b.date||'')||tKey(a).localeCompare(tKey(b))||(a.id||'').localeCompare(b.id||''),
+    // amount sorts use the HKD value so mixed currencies compare correctly
+    biggest:(a,b)=>((parseFloat(b.amountHKD)||0)-(parseFloat(a.amountHKD)||0))||(b.date||'').localeCompare(a.date||'')||tKey(b).localeCompare(tKey(a)),
+    smallest:(a,b)=>((parseFloat(a.amountHKD)||0)-(parseFloat(b.amountHKD)||0))||(b.date||'').localeCompare(a.date||'')||tKey(b).localeCompare(tKey(a))
+  };
+  const cmp=CMP[sortMode]||CMP.newest;
+  let filtered=expenses.filter(e=>{
+    if(pendingFilterActive&&e.category!=='Pending Update')return false;
+    if(filter&&e.category!==filter)return false;
+    if(search&&!e.description?.toLowerCase().includes(search)&&!e.paidBy?.toLowerCase().includes(search))return false;
+    return true;
+  }).sort(cmp);
+
+  const total=filtered.length;const pages=Math.ceil(total/EXP_PER_PAGE)||1;
+  if(currentExpPage>pages)currentExpPage=1;
+  const paged=filtered.slice((currentExpPage-1)*EXP_PER_PAGE,currentExpPage*EXP_PER_PAGE);
+  const amountMode=(sortMode==='biggest'||sortMode==='smallest');
+  const groups={};if(!amountMode)paged.forEach(e=>{(groups[e.date||'']=groups[e.date||'']||[]).push(e);});
+
+  const list=document.getElementById('expenses-list');
+  list.classList.toggle('select-mode',selectMode);
+  if(!paged.length){list.innerHTML='<div class="empty-state"><div class="icon">📭</div><p>No expenses found</p></div>';document.getElementById('pagination').innerHTML='';return;}
+
+  if(amountMode){
+    // amount sorts render a flat list; each row carries a date chip for context
+    list.innerHTML=paged.map(e=>buildExpRow(e,true)).join('');
+  }else{
+    const dir=sortMode==='oldest'?1:-1;
+    list.innerHTML=Object.entries(groups).sort(([a],[b])=>dir*a.localeCompare(b)).map(([date,exps])=>{
+      // ✅ FIX: show each currency + HKD total
+      const totalLabel=buildCurrencyLabel(exps,true);
+      return`<div class="date-group">
+        <div class="date-group-header">
+          <div class="date-group-label">${date?formatDateLong(date):'Unknown'}</div>
+          <div class="date-group-total">${totalLabel}</div>
+        </div>
+        ${exps.map(e=>buildExpRow(e)).join('')}
+      </div>`;
+    }).join('');
+  }
+  renderPagination(pages,total);
+}
+
+function buildExpRow(e,showDate=false){
+  const catKey=(e.category||'Other').replace(' ','').toLowerCase();
+  const catClass=catKey==='pendingupdate'?'cat-pending':'cat-'+(catKey||'other');
+  const catColor=CAT_COLORS[e.category]||'#64748b';
+  const friends=currentTrip?.friends||[];
+  const splitLbl=e.splitAmong?.length===friends.length?'All':(e.splitAmong?.join(', ')||'—');
+  const isPending=e.category==='Pending Update';const hasImg=e.hasReceipt;
+  const showCb=selectMode&&hasImg;const isChecked=selectedForBulk.has(e.id);
+  return`<div class="expense-row ${catClass}" data-id="${e.id}" onclick="onExpRowClick(event,'${e.id}')">
+    ${showCb?`<input type="checkbox" class="exp-select-cb" ${isChecked?'checked':''} onclick="event.stopPropagation();toggleBulkSelect('${e.id}',this)">`:selectMode?`<div style="width:18px;flex-shrink:0"></div>`:''}
+    <div class="expense-icon" style="background:${catColor}">${(e.description||'?').charAt(0).toUpperCase()}</div>
+    <div class="expense-info">
+      <div class="expense-title">${esc(e.description||'—')}${hasImg?' 📎':''}</div>
+      <div class="expense-meta">
+        <span class="meta-chip">👤 ${esc(e.paidBy||'?')}</span>
+        ${showDate?`<span class="meta-chip">📅 ${fmtDateShort(e.date)||'—'}</span>`:''}
+        ${isPending?`<span class="meta-chip pending-chip">⏳ Pending</span>`:`<span class="meta-chip">${esc(e.category||'Other')}</span>`}
+        <span class="meta-chip">Split: ${esc(splitLbl)}</span>
+      </div>
+    </div>
+    <div class="expense-right">
+      <div class="expense-amount">${esc(e.currency||'')} ${fmt2(e.amount||0)}</div>
+      <div class="expense-hkd">HKD ${fmt2(e.amountHKD||0)}</div>
+    </div>
+  </div>`;
+}
+
+function onExpRowClick(event,id){
+  if(selectMode){const e=expenses.find(x=>x.id===id);if(e?.hasReceipt){if(selectedForBulk.has(id))selectedForBulk.delete(id);else selectedForBulk.add(id);updateBulkBar();renderExpenses();}}
+  else editExpense(id);
+}
+window.onExpRowClick=onExpRowClick;
+function toggleBulkSelect(id,cb){if(cb.checked)selectedForBulk.add(id);else selectedForBulk.delete(id);updateBulkBar();}
+window.toggleBulkSelect=toggleBulkSelect;
+function updateBulkBar(){const n=selectedForBulk.size;document.getElementById('bulk-bar-label').textContent=n>0?`${n} selected`:'Tap image expenses to select';}
+function enterSelectMode(){selectMode=true;selectedForBulk.clear();document.getElementById('bulk-bar').classList.add('show');document.getElementById('bulk-bar-label').textContent='Tap image expenses to select';document.getElementById('select-images-btn').classList.add('active');renderExpenses();}
+window.enterSelectMode=enterSelectMode;
+function exitSelectMode(){selectMode=false;selectedForBulk.clear();document.getElementById('bulk-bar').classList.remove('show');document.getElementById('select-images-btn').classList.remove('active');renderExpenses();}
+window.exitSelectMode=exitSelectMode;
+async function bulkRemoveImages(){
+  const ids=[...selectedForBulk];if(!ids.length){toast('Select at least one expense','error');return;}
+  if(!confirm(`Remove images from ${ids.length} expense(s)?`))return;
+  showLoading(true,'Removing images…');
+  try{
+    for(const id of ids){
+      await idbDel(id);const update={hasReceipt:false,receiptBase64:null};
+      if(firebaseOk&&db)await updateDoc(doc(db,'trips',currentCode,'expenses',id),update);
+      else{let exps=getLocalExp(currentCode);const i=exps.findIndex(e=>e.id===id);if(i>=0)exps[i]={...exps[i],...update};saveLocalExp(currentCode,exps);}
+    }
+    if(!firebaseOk||!db)loadLocalExp();
+    toast(`Removed images from ${ids.length} expense(s) ✓`,'success');exitSelectMode();
+  }catch(e){toast('Error: '+e.message,'error');}
+  finally{showLoading(false);}
+}
+window.bulkRemoveImages=bulkRemoveImages;
+
+function renderPagination(pages,total){
+  const p=document.getElementById('pagination');if(pages<=1){p.innerHTML='';return;}
+  const start=Math.max(1,currentExpPage-2),end=Math.min(pages,start+4);
+  let html=`<button class="page-btn" onclick="goPage(${currentExpPage-1})" ${currentExpPage<=1?'disabled':''}>‹</button>`;
+  for(let i=start;i<=end;i++)html+=`<button class="page-btn${i===currentExpPage?' active':''}" onclick="goPage(${i})">${i}</button>`;
+  html+=`<button class="page-btn" onclick="goPage(${currentExpPage+1})" ${currentExpPage>=pages?'disabled':''}>›</button>`;
+  html+=`<span class="page-info">${currentExpPage}/${pages} • ${total} items</span>`;
+  p.innerHTML=html;
+}
+function goPage(n){currentExpPage=n;renderExpenses();document.getElementById('app').scrollTo(0,0);}
+window.goPage=goPage;
+function onSearchFilter(){currentExpPage=1;renderExpenses();}
+window.onSearchFilter=onSearchFilter;
+function getExpSort(){try{const v=localStorage.getItem('expSort');return['newest','oldest','biggest','smallest'].includes(v)?v:'newest';}catch(e){return 'newest';}}
+function onSortChange(){try{localStorage.setItem('expSort',document.getElementById('exp-sort').value);}catch(e){}currentExpPage=1;renderExpenses();}
+window.onSortChange=onSortChange;
+function togglePendingFilter(){pendingFilterActive=!pendingFilterActive;document.getElementById('pending-filter-btn').classList.toggle('active',pendingFilterActive);currentExpPage=1;renderExpenses();}
+window.togglePendingFilter=togglePendingFilter;
+
+// ── EDIT/DELETE
+async function editExpense(id){
+  const exp=expenses.find(e=>e.id===id);if(!exp)return;
+  editingExpenseId=id;chipDescActive=false;navigateTo('new');
+  document.getElementById('editing-badge').classList.remove('hidden');
+  document.getElementById('add-expense-btn').textContent='Update Expense';
+  document.getElementById('cancel-edit-btn').classList.remove('hidden');
+  selectedDate=exp.date;document.getElementById('exp-date').value=exp.date||'';
+  document.getElementById('exp-desc').value=exp.description||'';
+  document.getElementById('desc-counter').textContent=(exp.description||'').length+'/80';
+  document.getElementById('exp-amount').value=exp.amount||'';
+  buildExpCurrencyDropdown();document.getElementById('exp-currency').value=exp.currency||currentTrip?.currency;
+  buildPaidByDropdown();document.getElementById('exp-paidby').value=exp.paidBy||'';
+  buildCategoryChips();selectCategory(exp.category||'Other');
+  buildSplitGrid();
+  const ss=new Set(exp.splitAmong||[]);
+  document.querySelectorAll('.split-person').forEach(el=>{const inc=ss.has(el.dataset.name);el.classList.toggle('included',inc);el.querySelector('.split-check').style.opacity=inc?'1':'0';});
+  receiptDataURL=null;
+  if(exp.hasReceipt){const idbData=await idbGet(id);receiptDataURL=idbData||exp.receiptBase64||null;if(receiptDataURL){document.getElementById('receipt-thumb').src=receiptDataURL;document.getElementById('receipt-preview').classList.add('show');}}
+  else document.getElementById('receipt-preview').classList.remove('show');
+  let delBtn=document.getElementById('delete-exp-btn');
+  if(!delBtn){delBtn=document.createElement('button');delBtn.id='delete-exp-btn';delBtn.className='btn btn-danger';delBtn.style.marginTop='8px';document.getElementById('form-action-row').after(delBtn);}
+  delBtn.textContent='Delete Expense';delBtn.onclick=()=>deleteExpense(id);
+  updateHKDPreview();renderDateStrip();buildQuickChips();focusAmountInput();
+}
+window.editExpense=editExpense;
+async function deleteExpense(id){
+  if(!confirm('Delete this expense?'))return;
+  const exp=expenses.find(e=>e.id===id);
+  // capture the receipt BEFORE deleting so Undo can restore the correct image
+  let receiptToRestore=null;
+  try{receiptToRestore=await idbGet(id);}catch(e){}
+  if(!receiptToRestore)receiptToRestore=exp?.receiptBase64||null;
+  try{
+    if(firebaseOk&&db)await deleteDoc(doc(db,'trips',currentCode,'expenses',id));
+    else{let exps=getLocalExp(currentCode).filter(e=>e.id!==id);saveLocalExp(currentCode,exps);loadLocalExp();}
+    await idbDel(id);cancelEdit();navigateTo('expenses');renderExpenses();
+    toast('Expense deleted','warn',async()=>{
+      if(exp){
+        if(firebaseOk&&db){const{id:_,...rest}=exp;await setDoc(doc(db,'trips',currentCode,'expenses',id),rest);}
+        else{let exps=getLocalExp(currentCode);exps.unshift(exp);saveLocalExp(currentCode,exps);loadLocalExp();}
+        if(receiptToRestore)await idbSave(id,receiptToRestore);toast('Restored','success');
+      }
+    },4000);
+  }catch(e){toast('Delete failed: '+e.message,'error');}
+}
+window.deleteExpense=deleteExpense;
+
+// ── BALANCES
+function computeBalances(){
+  const friends=currentTrip?.friends||[];
+  const paid={},share={},paidOrig={},shareOrig={},paidByCur={},shareByCur={};
+  friends.forEach(f=>{paid[f]=0;share[f]=0;paidOrig[f]=0;shareOrig[f]=0;paidByCur[f]={};shareByCur[f]={};});
+  expenses.forEach(e=>{
+    const hkd=parseFloat(e.amountHKD)||0,orig=parseFloat(e.amount)||0,cur=e.currency||'HKD';
+    const split=(e.splitAmong||[]).filter(f=>friends.includes(f));
+    if(e.paidBy&&friends.includes(e.paidBy)){
+      paid[e.paidBy]+=hkd;paidOrig[e.paidBy]+=orig;
+      paidByCur[e.paidBy][cur]=(paidByCur[e.paidBy][cur]||0)+orig;
+    }
+    if(split.length){
+      const ph=hkd/split.length,po=orig/split.length;
+      split.forEach(f=>{
+        if(friends.includes(f)){
+          share[f]+=ph;shareOrig[f]+=po;
+          shareByCur[f][cur]=(shareByCur[f][cur]||0)+po;
+        }
+      });
+    }
+  });
+  return friends.map((f,i)=>({name:f,idx:i,paid:paid[f],share:share[f],paidOrig:paidOrig[f],shareOrig:shareOrig[f],paidByCur:paidByCur[f],shareByCur:shareByCur[f],balance:parseFloat((paid[f]-share[f]).toFixed(2))}));
+}
+
+function renderBalances(){
+  if(!currentTrip)return;
+  const balances=computeBalances();
+  const trip=currentTrip;
+  document.getElementById('balance-grid').innerHTML=balances.map((b,i)=>{
+    const cls=BC_CLASSES[i%BC_CLASSES.length],color=AVATAR_COLORS[b.idx%AVATAR_COLORS.length];
+    const sign=b.balance>0?'+':'';
+    const status=Math.abs(b.balance)<0.01?'Settled':b.balance>0?'Gets back':'Owes';
+    const sc=b.balance>0.01?'#16a34a':b.balance<-0.01?'#dc2626':'#64748b';
+
+    // ✅ FIX: build per-currency paid/share detail
+    const paidCurs=sortCurKeys(Object.keys(b.paidByCur));
+    const shareCurs=sortCurKeys(Object.keys(b.shareByCur));
+    const paidDetail=paidCurs.length===0?`${trip.currency} 0`:paidCurs.map(c=>`${c} ${fmt2(b.paidByCur[c])}`).join(' + ');
+    const shareDetail=shareCurs.length===0?`${trip.currency} 0`:shareCurs.map(c=>`${c} ${fmt2(b.shareByCur[c])}`).join(' + ');
+
+    return`<div class="balance-card ${cls}" onclick="openPersonSheet(${i})">
+      <div class="bc-avatar" style="background:${color}">${b.name.charAt(0).toUpperCase()}</div>
+      <div class="bc-name">${esc(b.name)}</div>
+      <div class="bc-balance" style="color:${sc}">${sign}HKD ${fmt2(Math.abs(b.balance))}</div>
+      <div class="bc-status" style="color:${sc}">${status}</div>
+      <div class="bc-detail">Paid: ${paidDetail}<br>Share: ${shareDetail}</div>
+    </div>`;
+  }).join('');
+
+  const catTotals={};
+  expenses.forEach(e=>{catTotals[e.category]=(catTotals[e.category]||0)+(parseFloat(e.amountHKD)||0);});
+  const totalHKD=Object.values(catTotals).reduce((a,b)=>a+b,0)||1;
+  document.getElementById('cat-breakdown').innerHTML=Object.entries(catTotals).sort(([,a],[,b])=>b-a)
+    .map(([cat,total])=>`<div class="cat-row">
+      <div class="cat-dot" style="background:${CAT_COLORS[cat]||'#64748b'}"></div>
+      <div class="cat-name">${esc(cat)}</div>
+      <div class="cat-pct">${Math.round(total/totalHKD*100)}%</div>
+      <div class="cat-total">HKD ${fmt2(total)}</div>
+    </div>`).join('');
+  document.getElementById('bal-currency').value=currentTrip.currency||'KRW';
+  document.getElementById('bal-rate').value=currentTrip.exchangeRate||0.0057;
+}
+
+function onBalCurrencyChange(){document.getElementById('bal-rate').value=DEFAULT_RATES[document.getElementById('bal-currency').value]||1;}
+window.onBalCurrencyChange=onBalCurrencyChange;
+async function fetchRateForBalances(){await fetchRate(document.getElementById('bal-currency').value,'bal-rate','bal-fetch-btn');}
+window.fetchRateForBalances=fetchRateForBalances;
+async function saveBalanceSettings(){
+  const cur=document.getElementById('bal-currency').value;const rate=parseFloat(document.getElementById('bal-rate').value)||1;
+  const oldCur=currentTrip.currency,oldRate=parseFloat(currentTrip.exchangeRate)||1;
+  currentTrip.currency=cur;currentTrip.exchangeRate=rate;
+  // Re-rate: expenses in the NEW trip currency use the new rate; all others keep the rate they were entered with
+  const rateFor=e=>{
+    if(e.currency===cur)return rate;
+    if(typeof e.rateUsed==='number'&&e.rateUsed>0)return e.rateUsed;
+    if(e.currency===oldCur)return oldRate;
+    return DEFAULT_RATES[e.currency]||1;
+  };
+  showLoading(true,'Recalculating…');
+  try{
+    if(firebaseOk&&db){
+      await updateDoc(doc(db,'trips',currentCode),{currency:cur,exchangeRate:rate});
+      const batch=writeBatch(db);
+      expenses.forEach(e=>{const r=rateFor(e);const nH=parseFloat(((parseFloat(e.amount)||0)*r).toFixed(2));const nP=(e.splitAmong?.length||0)>0?parseFloat((nH/e.splitAmong.length).toFixed(2)):0;batch.update(doc(db,'trips',currentCode,'expenses',e.id),{amountHKD:nH,perPerson:nP,rateUsed:r});});
+      await batch.commit();
+    }else{
+      const lt=getLocalTrips();if(lt[currentCode]){lt[currentCode].currency=cur;lt[currentCode].exchangeRate=rate;}localStorage.setItem('localTrips',JSON.stringify(lt));
+      let exps=getLocalExp(currentCode).map(e=>{const r=rateFor(e);const nH=parseFloat(((parseFloat(e.amount)||0)*r).toFixed(2));const nP=(e.splitAmong?.length||0)>0?parseFloat((nH/e.splitAmong.length).toFixed(2)):0;return{...e,amountHKD:nH,perPerson:nP,rateUsed:r};});
+      saveLocalExp(currentCode,exps);loadLocalExp();
+    }
+    toast('Saved & recalculated ✓','success');renderHeroBlocks();renderBalances();renderSettlement();
+  }catch(e){currentTrip.currency=oldCur;currentTrip.exchangeRate=oldRate;toast('Save failed: '+e.message,'error');}
+  finally{showLoading(false);}
+}
+window.saveBalanceSettings=saveBalanceSettings;
+
+// ── PERSON SHEET
+function openPersonSheet(idx){
+  const friends=currentTrip?.friends||[];
+  const name=typeof idx==='number'?friends[idx]:idx;
+  if(!name||!friends.includes(name))return;
+  personSheetName=name;
+  const hasNonHKD=expenses.some(e=>(e.currency||'HKD')!=='HKD');
+  const toggle=document.getElementById('ps-currency-toggle');
+  toggle.innerHTML=`<option value="HKD">HKD</option><option value="ORIG">As entered</option>`;
+  toggle.value='HKD';
+  toggle.style.display=hasNonHKD?'':'none';
+  document.querySelectorAll('.tab-btn-inner').forEach((b,i)=>b.classList.toggle('active',i===0));
+  document.querySelectorAll('.tab-panel').forEach((p,i)=>p.classList.toggle('active',i===0));
+  renderPersonSheet();openSheet('person-sheet');
+}
+window.openPersonSheet=openPersonSheet;
+function switchPersonTab(idx,btn){document.querySelectorAll('.tab-btn-inner').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.tab-panel')[idx].classList.add('active');}
+window.switchPersonTab=switchPersonTab;
+function renderPersonSheet(){
+  const name=personSheetName;if(!name||!currentTrip)return;
+  const friends=currentTrip.friends||[];const idx=friends.indexOf(name);
+  const color=AVATAR_COLORS[idx<0?0:idx%AVATAR_COLORS.length];
+  const isHKD=document.getElementById('ps-currency-toggle').value!=='ORIG';
+  // per-currency totals (never sum different currencies together)
+  const me=(computeBalances().find(b=>b.name===name)||{paid:0,share:0,paidByCur:{},shareByCur:{}});
+  const paid=me.paid,share=me.share;
+  const paidExps=[],owesExps=[];
+  expenses.forEach(e=>{
+    const hkd=parseFloat(e.amountHKD)||0,orig=parseFloat(e.amount)||0;
+    const split=(e.splitAmong||[]).filter(f=>friends.includes(f));
+    if(e.paidBy===name)paidExps.push(e);
+    if(split.includes(name)){const ph=split.length?hkd/split.length:0,po=split.length?orig/split.length:0;owesExps.push({...e,perHKD:ph,perOrig:po});}
+  });
+  const balance=parseFloat((paid-share).toFixed(2));const sign=balance>0?'+':'';const sc=balance>0.01?'#16a34a':balance<-0.01?'#dc2626':'#64748b';
+  const av=document.getElementById('ps-avatar');av.style.background=color;av.textContent=name.charAt(0).toUpperCase();
+  document.getElementById('ps-name').textContent=name;
+  document.getElementById('ps-balance-big').textContent=`${sign}HKD ${fmt2(Math.abs(balance))}`;
+  document.getElementById('ps-balance-big').style.color=sc;
+  // build per-currency labels e.g. "KRW 50,000 + JPY 1,000"
+  const curList=byCur=>{const ks=sortCurKeys(Object.keys(byCur));return ks.length?ks.map(c=>`${c} ${fmt2(byCur[c])}`).join(' + '):null;};
+  const paidOrigLbl=curList(me.paidByCur),shareOrigLbl=curList(me.shareByCur);
+  const bigStyle=lbl=>lbl&&lbl.length>14?'font-size:14px;line-height:1.4;word-break:break-word;':'font-size:20px;';
+  const card=(title,bg,labColor,valColor,hkdVal,origLbl)=>`
+    <div style="background:${bg};border-radius:12px;padding:14px;text-align:center;overflow:hidden">
+      <div style="font-size:11px;font-weight:700;color:${labColor};margin-bottom:6px">${title}</div>
+      ${isHKD
+        ?`<div style="font-size:20px;font-weight:800;color:${valColor}">HKD ${fmt2(hkdVal)}</div>
+          <div style="font-size:11px;color:#64748b;margin-top:4px">${origLbl||'—'}</div>`
+        :`<div style="font-weight:800;color:${valColor};${bigStyle(origLbl)}">${origLbl||'—'}</div>
+          <div style="font-size:11px;color:#64748b;margin-top:4px">HKD ${fmt2(hkdVal)}</div>`}
+    </div>`;
+  document.getElementById('ps-tab-overview').innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+      ${card('PAID','#dbeafe','#1d4ed8','#1e40af',paid,paidOrigLbl)}
+      ${card('SHARE','#fef9c3','#a16207','#92400e',share,shareOrigLbl)}
+    </div>
+    <div style="text-align:center;padding:16px;background:${balance>0.01?'#dcfce7':balance<-0.01?'#fee2e2':'#f1f5f9'};border-radius:12px">
+      <div style="font-size:12px;font-weight:700;color:var(--gray);margin-bottom:4px">NET BALANCE</div>
+      <div style="font-size:28px;font-weight:800;color:${sc}">${sign}HKD ${fmt2(Math.abs(balance))}</div>
+      <div style="font-size:13px;font-weight:600;color:${sc};margin-top:4px">${Math.abs(balance)<0.01?'Settled':balance>0?'Gets back':'Owes'}</div>
+      <div style="font-size:11px;color:var(--gray);margin-top:6px">Settlements are calculated in HKD</div>
+    </div>`;
+  // rows always show the expense's REAL currency + HKD equivalent (never relabel a foreign amount)
+  const eRow=(e,main,sub,x='')=>`
+    <div style="padding:10px 0;border-bottom:1px solid var(--gray-mid);display:flex;justify-content:space-between;align-items:center">
+      <div><div style="font-size:13px;font-weight:700">${esc(e.description||'—')}${e.hasReceipt?' 📎':''}</div>
+        <div style="font-size:11px;color:var(--gray);margin-top:2px">${fmtDateShort(e.date)}${x}</div></div>
+      <div style="text-align:right;flex-shrink:0"><div style="font-size:14px;font-weight:800">${main}</div><div style="font-size:10px;color:var(--gray)">${sub}</div></div>
+    </div>`;
+  document.getElementById('ps-tab-paid').innerHTML=paidExps.length?paidExps.map(e=>{
+    const m=isHKD?`HKD ${fmt2(e.amountHKD)}`:`${e.currency||'HKD'} ${fmt2(e.amount)}`;
+    const s=isHKD?`${e.currency||'HKD'} ${fmt2(e.amount)}`:`HKD ${fmt2(e.amountHKD)}`;
+    return eRow(e,m,s,` • Split ${e.splitAmong?.length||0}`);
+  }).join(''):'<div style="text-align:center;padding:20px;color:var(--gray)">No expenses paid</div>';
+  document.getElementById('ps-tab-owes').innerHTML=owesExps.length?owesExps.map(e=>{
+    const m=isHKD?`HKD ${fmt2(e.perHKD)}`:`${e.currency||'HKD'} ${fmt2(e.perOrig)}`;
+    const s=isHKD?`${e.currency||'HKD'} ${fmt2(e.perOrig)}`:`HKD ${fmt2(e.perHKD)}`;
+    return eRow(e,m,s,` • Paid by ${esc(e.paidBy)}`);
+  }).join(''):'<div style="text-align:center;padding:20px;color:var(--gray)">No shared expenses</div>';
+  const settlements=computeSettlements();const relevant=settlements.filter(s=>s.from===name||s.to===name);
+  document.getElementById('ps-tab-settle').innerHTML=(relevant.length?relevant.map(s=>{const iF=s.from===name;return`<div style="padding:12px;background:${iF?'#fee2e2':'#dcfce7'};border-radius:10px;margin-bottom:8px"><div style="font-size:13px;font-weight:700;color:${iF?'#dc2626':'#16a34a'}">${iF?esc(name)+' pays '+esc(s.to):esc(s.from)+' pays '+esc(name)}</div><div style="font-size:18px;font-weight:800;margin-top:4px">HKD ${fmt2(s.amount)}</div></div>`;}).join(''):'<div style="text-align:center;padding:20px;color:var(--gray)">No settlements needed ✅</div>')+(relevant.length?`<div style="font-size:11px;color:var(--gray);text-align:center;margin-top:4px">All transfers settle in HKD</div>`:'');
+}
+window.renderPersonSheet=renderPersonSheet;
+
+// ── SETTLEMENT
+function computeSettlements(){
+  const bal=computeBalances();
+  const deb=bal.filter(b=>b.balance<-0.01).sort((a,b)=>a.balance-b.balance).map(b=>({name:b.name,amount:-b.balance}));
+  const cred=bal.filter(b=>b.balance>0.01).sort((a,b)=>b.balance-a.balance).map(b=>({name:b.name,amount:b.balance}));
+  const trans=[];let di=0,ci=0;
+  while(di<deb.length&&ci<cred.length){const pay=Math.min(deb[di].amount,cred[ci].amount);if(pay>0.01)trans.push({from:deb[di].name,to:cred[ci].name,amount:parseFloat(pay.toFixed(2))});deb[di].amount-=pay;cred[ci].amount-=pay;if(deb[di].amount<0.01)di++;if(cred[ci].amount<0.01)ci++;}
+  return trans;
+}
+function renderSettlement(){
+  if(!currentTrip)return;
+  const trans=computeSettlements();const friends=currentTrip.friends||[];const totalHKD=trans.reduce((s,t)=>s+t.amount,0);
+  document.getElementById('settlement-summary').innerHTML=`
+    <div class="settle-stat"><div class="settle-stat-val">${trans.length}</div><div class="settle-stat-lbl">Transfers</div></div>
+    <div class="settle-stat"><div class="settle-stat-val">HKD ${fmt2(totalHKD)}</div><div class="settle-stat-lbl">Total</div></div>
+    <div class="settle-stat"><div class="settle-stat-val">HKD</div><div class="settle-stat-lbl">Currency</div></div>`;
+  if(!trans.length){document.getElementById('settlement-list').innerHTML='<div class="empty-state"><div class="icon">✅</div><p>All settled!</p></div>';return;}
+  document.getElementById('settlement-list').innerHTML=trans.map(t=>{
+    const fi=friends.indexOf(t.from),ti=friends.indexOf(t.to);
+    const fc=AVATAR_COLORS[fi<0?0:fi%AVATAR_COLORS.length],tc2=AVATAR_COLORS[ti<0?0:ti%AVATAR_COLORS.length];
+    return`<div class="transfer-row">
+      <div class="transfer-avatar" style="background:${fc}">${t.from.charAt(0).toUpperCase()}</div>
+      <div class="transfer-arrow">→</div>
+      <div class="transfer-avatar" style="background:${tc2}">${t.to.charAt(0).toUpperCase()}</div>
+      <div class="transfer-info"><div class="transfer-names">${esc(t.from)} → ${esc(t.to)}</div><div class="transfer-sub">${esc(t.from)} pays ${esc(t.to)}</div></div>
+      <div class="transfer-amount">HKD ${fmt2(t.amount)}</div>
+    </div>`;
+  }).join('');
+}
+function copySettlement(){
+  const trans=computeSettlements();if(!trans.length){toast('All settled — nothing to copy');return;}
+  navigator.clipboard?.writeText(trans.map(t=>`${t.from} pays ${t.to}: HKD ${fmt2(t.amount)}`).join('\n')).then(()=>toast('Copied ✓','success')).catch(()=>toast('Copy failed','error'));
+}
+window.copySettlement=copySettlement;
+
+// ── EXCEL
+function xlSafe(v){const s=String(v==null?'':v);return /^[=+\-@\t\r]/.test(s)?"'"+s:s;}
+function exportExcel(){
+  if(!window.XLSX){toast('Excel library not loaded','warn');return;}
+  const trip=currentTrip,bal=computeBalances(),trans=computeSettlements();
+  const curList=byCur=>{const ks=sortCurKeys(Object.keys(byCur));return ks.length?ks.map(c=>`${c} ${fmt2(byCur[c])}`).join(' + '):'';};
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['Date','Description','Category','Paid By','Currency','Amount (as entered)','Amount (HKD)','Rate to HKD','Shared With','Receipt'],...expenses.map(e=>[xlSafe(e.date||''),xlSafe(e.description||''),xlSafe(e.category||''),xlSafe(e.paidBy||''),xlSafe(e.currency||'HKD'),e.amount||0,e.amountHKD||0,e.rateUsed||'',xlSafe((e.splitAmong||[]).join(', ')),e.hasReceipt?'Yes':'No'])]),'Expenses');
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['Name','Paid (as entered)','Paid (HKD)','Share (as entered)','Share (HKD)','Balance (HKD)','Status'],...bal.map(b=>[xlSafe(b.name),xlSafe(curList(b.paidByCur)),fmt2(b.paid),xlSafe(curList(b.shareByCur)),fmt2(b.share),fmt2(b.balance),Math.abs(b.balance)<0.01?'Settled':b.balance>0?'Gets back':'Owes'])]),'Balances');
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['From','To','Amount (HKD)'],...trans.map(t=>[xlSafe(t.from),xlSafe(t.to),fmt2(t.amount)])]),'Settlement');
+  XLSX.writeFile(wb,(trip.name||'TripSplit')+'_export.xlsx');toast('Exported ✓','success');
+}
+window.exportExcel=exportExcel;
+
+// ── SETTINGS
+function openSettings(){if(currentTrip)navigateTo('settings');}
+window.openSettings=openSettings;
+function _openSettingsForm(){
+  if(!currentTrip)return;
+  document.getElementById('s-name').value=currentTrip.name||'';
+  document.getElementById('s-start').value=currentTrip.startDate||'';
+  document.getElementById('s-end').value=currentTrip.endDate||'';
+  document.getElementById('s-members').value=(currentTrip.friends||[]).join(', ');
+  document.getElementById('s-identity-display').textContent=myIdentity||'Not set';
+  document.getElementById('s-invite-link').textContent=location.origin+location.pathname+'?join='+currentCode;
+  document.getElementById('s-trip-name-display').textContent=currentTrip.name||'';
+  document.getElementById('s-confirm-delete').value='';
+}
+async function saveTripSettings(){
+  const name=document.getElementById('s-name').value.trim();const start=document.getElementById('s-start').value;const end=document.getElementById('s-end').value;
+  let members=document.getElementById('s-members').value.split(',').map(s=>s.trim()).filter(Boolean);
+  const seen=new Set();members=members.filter(m=>{const k=m.toLowerCase();if(seen.has(k))return false;seen.add(k);return true;});
+  if(!name){toast('Name required','error');return;}if(start>end){toast('Start ≤ end','error');return;}if(!members.length||members.length>8){toast('1–8 members','error');return;}
+  // warn before silently redistributing a removed member's shares
+  const removed=(currentTrip.friends||[]).filter(f=>!members.includes(f));
+  const activeRemoved=removed.filter(f=>expenses.some(e=>e.paidBy===f||(e.splitAmong||[]).includes(f)));
+  if(activeRemoved.length&&!confirm(`${activeRemoved.join(', ')} ${activeRemoved.length>1?'have':'has'} paid or shared expenses. Removing ${activeRemoved.length>1?'them':'them'} will re-split those expenses among the remaining members. Continue?`))return;
+  showLoading(true,'Saving…');
+  try{
+    const u={name,startDate:start,endDate:end,friends:members};
+    if(firebaseOk&&db)await updateDoc(doc(db,'trips',currentCode),u);
+    else{const lt=getLocalTrips();if(lt[currentCode])Object.assign(lt[currentCode],u);localStorage.setItem('localTrips',JSON.stringify(lt));}
+    Object.assign(currentTrip,u);saveMyTrip(currentCode,name,localStorage.getItem('trip_'+currentCode+'_pw')||'');
+    renderTripHeaders();renderDateStrip();
+    if(!currentTrip.friends?.includes(myIdentity))myIdentity=null;
+    toast('Saved ✓','success');
+  }catch(e){toast('Save failed: '+e.message,'error');}finally{showLoading(false);}
+}
+window.saveTripSettings=saveTripSettings;
+async function updateTripPassword(){
+  const pw=document.getElementById('s-newpw').value;if(pw.length<3){toast('Min 3 chars','error');return;}
+  showLoading(true,'Updating…');
+  try{
+    const salt=await makeSalt();const hash=await hashPassword(pw,salt);
+    if(firebaseOk&&db)await updateDoc(doc(db,'trips',currentCode),{passwordHash:hash,passwordSalt:salt,kdf:'PBKDF2-SHA256-60000'});
+    else{const lt=getLocalTrips();if(lt[currentCode]){lt[currentCode].passwordHash=hash;lt[currentCode].passwordSalt=salt;}localStorage.setItem('localTrips',JSON.stringify(lt));}
+    currentTrip.passwordHash=hash;currentTrip.passwordSalt=salt;document.getElementById('s-newpw').value='';
+    // keep the remembered password in sync so quick-join still works
+    const storedPw=localStorage.getItem('trip_'+currentCode+'_pw');
+    if(storedPw!==null)localStorage.setItem('trip_'+currentCode+'_pw',pw);
+    saveMyTrip(currentCode,currentTrip.name||'',storedPw!==null?pw:'');
+    toast('Password updated ✓','success');
+  }catch(e){toast('Failed: '+e.message,'error');}finally{showLoading(false);}
+}
+window.updateTripPassword=updateTripPassword;
+function copyInviteLink(){
+  const link=document.getElementById('s-invite-link').textContent||'';
+  if(!link||link==='—')return;
+  navigator.clipboard?.writeText(link).then(()=>toast('Invite link copied ✓','success')).catch(()=>toast('Copy failed — long-press the link to copy','error'));
+}
+window.copyInviteLink=copyInviteLink;
+function copyTripNameForDelete(){const name=currentTrip?.name||'';navigator.clipboard?.writeText(name).then(()=>toast('Copied','success'));document.getElementById('s-confirm-delete').value=name;}
+window.copyTripNameForDelete=copyTripNameForDelete;
+async function deleteTripSettings(){
+  const typed=document.getElementById('s-confirm-delete').value;
+  if(typed!==currentTrip?.name){toast('Name does not match','error');return;}if(!confirm(`Permanently delete "${currentTrip.name}"?`))return;
+  showLoading(true,'Deleting…');
+  try{
+    if(firebaseOk&&db){const snap=await getDocs(collection(db,'trips',currentCode,'expenses'));const batch=writeBatch(db);snap.docs.forEach(d=>batch.delete(d.ref));batch.delete(doc(db,'trips',currentCode));await batch.commit();}
+    else{const lt=getLocalTrips();delete lt[currentCode];localStorage.setItem('localTrips',JSON.stringify(lt));localStorage.removeItem('localExp_'+currentCode);}
+    await idbDelTrip(currentCode);removeMyTrip(currentCode);
+    localStorage.removeItem('trip_'+currentCode+'_who');localStorage.removeItem('trip_'+currentCode+'_pw');
+    currentTrip=null;currentCode=null;myIdentity=null;expenses=[];
+    if(expensesUnsub){expensesUnsub();expensesUnsub=null;}
+    renderLobby();navigateTo('lobby');toast('Trip deleted','warn');
+  }catch(e){toast('Delete failed: '+e.message,'error');}finally{showLoading(false);}
+}
+window.deleteTripSettings=deleteTripSettings;
+async function confirmDeleteAll(){
+  if(document.getElementById('delete-all-input').value!=='DELETE ALL'){toast('Type DELETE ALL exactly','error');return;}
+  closeModal('delete-all-modal');showLoading(true,'Deleting…');
+  try{
+    // SAFETY: only trips saved on THIS device are deleted — never the whole collection
+    const mine=getMyTrips().map(t=>t.code);
+    if(firebaseOk&&db){
+      for(const c of mine){
+        const es=await getDocs(collection(db,'trips',c,'expenses'));
+        const batch=writeBatch(db);es.docs.forEach(dd=>batch.delete(dd.ref));batch.delete(doc(db,'trips',c));await batch.commit();
+      }
+    }
+    const lt=getLocalTrips();mine.forEach(c=>{delete lt[c];localStorage.removeItem('localExp_'+c);});
+    localStorage.setItem('localTrips',JSON.stringify(lt));
+    await idbClearAll();
+    mine.forEach(c=>{removeMyTrip(c);localStorage.removeItem('trip_'+c+'_who');localStorage.removeItem('trip_'+c+'_pw');});
+    if(expensesUnsub){expensesUnsub();expensesUnsub=null;}
+    currentTrip=null;currentCode=null;myIdentity=null;expenses=[];
+    navigateTo('lobby');renderLobby();toast('All my trips deleted','warn');
+  }catch(e){toast('Error: '+e.message,'error');}finally{showLoading(false);}
+}
+window.confirmDeleteAll=confirmDeleteAll;
+
+// ── UTILS
+function esc(s){const d=document.createElement('div');d.textContent=s||'';return d.innerHTML;}
+function escAttr(s){return esc(s).replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+function fmt2(n){return(Math.round((parseFloat(n)||0)*100)/100).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});}
+function toDateStr(d){return d.toISOString().split('T')[0];}
+function fmtDateShort(s){if(!s)return'';const[y,m,d]=s.split('-').map(Number);return new Date(Date.UTC(y,m-1,d)).toLocaleDateString('en',{day:'numeric',month:'short',timeZone:'UTC'});}
+function formatDateLong(s){if(!s)return'';const[y,m,d]=s.split('-').map(Number);return new Date(Date.UTC(y,m-1,d)).toLocaleDateString('en',{weekday:'short',day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}).replace(',',' •');}
+
+// ── INIT
+(async function init(){
+  showLoading(true,'Loading TripSplit…');
+  await openIDB();await initFirebase();renderLobby();showLoading(false);
+})();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a317e5f24db0e2fe',t:'MTc4NzgwMDM4NA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
