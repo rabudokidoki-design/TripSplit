@@ -26,7 +26,8 @@
   --cat-activity:#10b981;--cat-other:#64748b;--cat-pending:#ec4899;
 }
 html,body{height:100%;overflow:hidden}
-body{font-family:var(--font);background:#f0f4ff;color:var(--dark);display:flex;flex-direction:column;padding-bottom:100px;-webkit-font-smoothing:antialiased}
+body{font-family:var(--font);background:#f0f4ff;color:var(--dark);display:flex;flex-direction:column;-webkit-font-smoothing:antialiased}
+body.has-tabs{padding-bottom:88px}
 input,select,textarea,button{font-family:var(--font);outline:none}
 button{cursor:pointer;border:none;background:none}
 #app{flex:1;overflow-y:auto;overflow-x:hidden;scroll-behavior:smooth;-webkit-overflow-scrolling:touch}
@@ -941,6 +942,7 @@ function navigateTo(page){
   const tripPages=['new','expenses','balances','settlement'];
   if(tripPages.includes(page)){tabs.style.display='flex';document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===page));}
   else tabs.style.display='none';
+  document.body.classList.toggle('has-tabs',tripPages.includes(page));
   document.getElementById('app').scrollTo(0,0);
   fabUpdate();
   if(page==='create')initCreatePage();
@@ -1695,7 +1697,15 @@ function computeBalances(){
       });
     }
   });
-  return friends.map((f,i)=>({name:f,idx:i,paid:paid[f],share:share[f],paidOrig:paidOrig[f],shareOrig:shareOrig[f],paidByCur:paidByCur[f],shareByCur:shareByCur[f],balance:parseFloat((paid[f]-share[f]).toFixed(2))}));
+  const out=friends.map((f,i)=>({name:f,idx:i,paid:paid[f],share:share[f],paidOrig:paidOrig[f],shareOrig:shareOrig[f],paidByCur:paidByCur[f],shareByCur:shareByCur[f],balance:parseFloat((paid[f]-share[f]).toFixed(2))}));
+  // rounding residual: individually-rounded balances don't always sum to 0 (e.g. 3-way split of 100).
+  // absorb the ±1-2¢ into the largest balance so cards, person sheets and settlements always agree EXACTLY.
+  const residual=Math.round(-out.reduce((s,b)=>s+Math.round(b.balance*100),0));
+  if(residual!==0&&out.length){
+    let big=out[0];out.forEach(b=>{if(Math.abs(b.balance)>Math.abs(big.balance))big=b;});
+    if(big)big.balance=parseFloat(((Math.round(big.balance*100)+residual)/100).toFixed(2));
+  }
+  return out;
 }
 
 function renderBalances(){
@@ -1704,7 +1714,7 @@ function renderBalances(){
   const trip=currentTrip;
   document.getElementById('balance-grid').innerHTML=balances.map((b,i)=>{
     const cls=BC_CLASSES[i%BC_CLASSES.length],color=AVATAR_COLORS[b.idx%AVATAR_COLORS.length];
-    const sign=b.balance>0?'+':'';
+    const sign=b.balance>0.005?'+':b.balance<-0.005?'-':'';
     const status=Math.abs(b.balance)<0.01?'Settled':b.balance>0?'Gets back':'Owes';
     const sc=b.balance>0.01?'#16a34a':b.balance<-0.01?'#dc2626':'#64748b';
 
@@ -1794,7 +1804,7 @@ function renderPersonSheet(){
   const color=AVATAR_COLORS[idx<0?0:idx%AVATAR_COLORS.length];
   const isHKD=document.getElementById('ps-currency-toggle').value!=='ORIG';
   // per-currency totals (never sum different currencies together)
-  const me=(computeBalances().find(b=>b.name===name)||{paid:0,share:0,paidByCur:{},shareByCur:{}});
+  const me=(computeBalances().find(b=>b.name===name)||{paid:0,share:0,balance:0,paidByCur:{},shareByCur:{}});
   const paid=me.paid,share=me.share;
   const paidExps=[],owesExps=[];
   expenses.forEach(e=>{
@@ -1803,7 +1813,7 @@ function renderPersonSheet(){
     if(e.paidBy===name)paidExps.push(e);
     if(split.includes(name)){const ph=split.length?hkd/split.length:0,po=split.length?orig/split.length:0;owesExps.push({...e,perHKD:ph,perOrig:po});}
   });
-  const balance=parseFloat((paid-share).toFixed(2));const sign=balance>0?'+':'';const sc=balance>0.01?'#16a34a':balance<-0.01?'#dc2626':'#64748b';
+  const balance=me.balance;const sign=balance>0.005?'+':balance<-0.005?'-':'';const sc=balance>0.005?'#16a34a':balance<-0.005?'#dc2626':'#64748b';
   const av=document.getElementById('ps-avatar');av.style.background=color;av.textContent=name.charAt(0).toUpperCase();
   document.getElementById('ps-name').textContent=name;
   document.getElementById('ps-balance-big').textContent=`${sign}HKD ${fmt2(Math.abs(balance))}`;
@@ -1857,10 +1867,18 @@ window.renderPersonSheet=renderPersonSheet;
 // ── SETTLEMENT
 function computeSettlements(){
   const bal=computeBalances();
-  const deb=bal.filter(b=>b.balance<-0.01).sort((a,b)=>a.balance-b.balance).map(b=>({name:b.name,amount:-b.balance}));
-  const cred=bal.filter(b=>b.balance>0.01).sort((a,b)=>b.balance-a.balance).map(b=>({name:b.name,amount:b.balance}));
+  // integer-cents engine: debits and credits sum to exactly the same amount,
+  // so every transfer list settles the group to the penny — no dropped cents
+  const deb=bal.filter(b=>b.balance<-0.005).sort((a,b)=>a.balance-b.balance).map(b=>({name:b.name,cents:Math.round(-b.balance*100)}));
+  const cred=bal.filter(b=>b.balance>0.005).sort((a,b)=>b.balance-a.balance).map(b=>({name:b.name,cents:Math.round(b.balance*100)}));
   const trans=[];let di=0,ci=0;
-  while(di<deb.length&&ci<cred.length){const pay=Math.min(deb[di].amount,cred[ci].amount);if(pay>0.01)trans.push({from:deb[di].name,to:cred[ci].name,amount:parseFloat(pay.toFixed(2))});deb[di].amount-=pay;cred[ci].amount-=pay;if(deb[di].amount<0.01)di++;if(cred[ci].amount<0.01)ci++;}
+  while(di<deb.length&&ci<cred.length){
+    const pay=Math.min(deb[di].cents,cred[ci].cents);
+    if(pay>0)trans.push({from:deb[di].name,to:cred[ci].name,amount:parseFloat((pay/100).toFixed(2))});
+    deb[di].cents-=pay;cred[ci].cents-=pay;
+    if(deb[di].cents<=0)di++;
+    if(cred[ci].cents<=0)ci++;
+  }
   return trans;
 }
 function renderSettlement(){
@@ -2014,6 +2032,5 @@ function formatDateLong(s){if(!s)return'';const[y,m,d]=s.split('-').map(Number);
   await openIDB();await initFirebase();renderLobby();showLoading(false);
 })();
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a317e5f24db0e2fe',t:'MTc4NzgwMDM4NA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a31808b2198b094e',t:'MTc4NzgwMTgwNw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
