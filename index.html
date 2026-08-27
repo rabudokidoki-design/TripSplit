@@ -560,6 +560,14 @@ button{cursor:pointer;border:none;background:none}
     <div class="form-label">Date</div>
     <div class="date-strip-wrap mt-8"><div class="date-strip" id="date-strip"></div></div>
     <input type="date" id="exp-date" class="form-input" style="margin-bottom:14px" onchange="onManualDateChange()">
+    <div class="form-group">
+      <label class="form-label">Amount *</label>
+      <div class="amount-row">
+        <input type="number" id="exp-amount" class="form-input amount-input" placeholder="0.00" step="0.01" min="0" oninput="updateHKDPreview()">
+        <select class="currency-select" id="exp-currency" onchange="updateHKDPreview()" style="padding:12px 30px 12px 12px"></select>
+      </div>
+      <div class="hkd-preview" id="hkd-preview">—</div>
+    </div>
     <div class="form-label">Quick Fill</div>
     <div class="chips-row mt-8" id="quick-chips"></div>
     <div class="form-group">
@@ -569,14 +577,6 @@ button{cursor:pointer;border:none;background:none}
       </div>
       <input type="text" id="exp-desc" class="form-input" placeholder="What was this expense? (optional if photo)" maxlength="80"
         oninput="onDescInput(this)">
-    </div>
-    <div class="form-group">
-      <label class="form-label">Amount</label>
-      <div class="amount-row">
-        <input type="number" id="exp-amount" class="form-input amount-input" placeholder="0.00" step="0.01" min="0" oninput="updateHKDPreview()">
-        <select class="currency-select" id="exp-currency" onchange="updateHKDPreview()" style="padding:12px 30px 12px 12px"></select>
-      </div>
-      <div class="hkd-preview" id="hkd-preview">—</div>
     </div>
     <div class="form-group">
       <label class="form-label">Paid By *</label>
@@ -659,6 +659,12 @@ button{cursor:pointer;border:none;background:none}
       <option value="Activity">Activity</option>
       <option value="Other">Other</option>
       <option value="Pending Update">Pending</option>
+    </select>
+    <select class="filter-select" id="exp-sort" onchange="onSortChange()" style="min-width:118px">
+      <option value="newest">⬇ Newest</option>
+      <option value="oldest">⬆ Oldest</option>
+      <option value="biggest">💰 Largest</option>
+      <option value="smallest">🪙 Smallest</option>
     </select>
     <button class="pending-btn" id="pending-filter-btn" onclick="togglePendingFilter()">⏳</button>
     <button class="select-img-btn" id="select-images-btn" onclick="enterSelectMode()">🖼 Select</button>
@@ -1418,37 +1424,56 @@ function renderExpenses(){
 
   const search=document.getElementById('exp-search').value.toLowerCase();
   const filter=document.getElementById('exp-filter').value;
+  const sortMode=getExpSort();
+  document.getElementById('exp-sort').value=sortMode;
+  const tKey=e=>e.updatedAt||e.createdAt||'';
+  const CMP={
+    // date newest-first, then most recently updated first within a day (deterministic on every backend)
+    newest:(a,b)=>(b.date||'').localeCompare(a.date||'')||tKey(b).localeCompare(tKey(a))||(b.id||'').localeCompare(a.id||''),
+    oldest:(a,b)=>(a.date||'').localeCompare(b.date||'')||tKey(a).localeCompare(tKey(b))||(a.id||'').localeCompare(b.id||''),
+    // amount sorts use the HKD value so mixed currencies compare correctly
+    biggest:(a,b)=>((parseFloat(b.amountHKD)||0)-(parseFloat(a.amountHKD)||0))||(b.date||'').localeCompare(a.date||'')||tKey(b).localeCompare(tKey(a)),
+    smallest:(a,b)=>((parseFloat(a.amountHKD)||0)-(parseFloat(b.amountHKD)||0))||(b.date||'').localeCompare(a.date||'')||tKey(b).localeCompare(tKey(a))
+  };
+  const cmp=CMP[sortMode]||CMP.newest;
   let filtered=expenses.filter(e=>{
     if(pendingFilterActive&&e.category!=='Pending Update')return false;
     if(filter&&e.category!==filter)return false;
     if(search&&!e.description?.toLowerCase().includes(search)&&!e.paidBy?.toLowerCase().includes(search))return false;
     return true;
-  }).sort((a,b)=>(b.date||'').localeCompare(a.date||'')||0);
+  }).sort(cmp);
 
   const total=filtered.length;const pages=Math.ceil(total/EXP_PER_PAGE)||1;
   if(currentExpPage>pages)currentExpPage=1;
   const paged=filtered.slice((currentExpPage-1)*EXP_PER_PAGE,currentExpPage*EXP_PER_PAGE);
-  const groups={};paged.forEach(e=>{(groups[e.date||'']=groups[e.date||'']||[]).push(e);});
+  const amountMode=(sortMode==='biggest'||sortMode==='smallest');
+  const groups={};if(!amountMode)paged.forEach(e=>{(groups[e.date||'']=groups[e.date||'']||[]).push(e);});
 
   const list=document.getElementById('expenses-list');
   list.classList.toggle('select-mode',selectMode);
   if(!paged.length){list.innerHTML='<div class="empty-state"><div class="icon">📭</div><p>No expenses found</p></div>';document.getElementById('pagination').innerHTML='';return;}
 
-  list.innerHTML=Object.entries(groups).sort(([a],[b])=>b.localeCompare(a)).map(([date,exps])=>{
-    // ✅ FIX: show each currency + HKD total
-    const totalLabel=buildCurrencyLabel(exps,true);
-    return`<div class="date-group">
-      <div class="date-group-header">
-        <div class="date-group-label">${date?formatDateLong(date):'Unknown'}</div>
-        <div class="date-group-total">${totalLabel}</div>
-      </div>
-      ${exps.map(e=>buildExpRow(e)).join('')}
-    </div>`;
-  }).join('');
+  if(amountMode){
+    // amount sorts render a flat list; each row carries a date chip for context
+    list.innerHTML=paged.map(e=>buildExpRow(e,true)).join('');
+  }else{
+    const dir=sortMode==='oldest'?1:-1;
+    list.innerHTML=Object.entries(groups).sort(([a],[b])=>dir*a.localeCompare(b)).map(([date,exps])=>{
+      // ✅ FIX: show each currency + HKD total
+      const totalLabel=buildCurrencyLabel(exps,true);
+      return`<div class="date-group">
+        <div class="date-group-header">
+          <div class="date-group-label">${date?formatDateLong(date):'Unknown'}</div>
+          <div class="date-group-total">${totalLabel}</div>
+        </div>
+        ${exps.map(e=>buildExpRow(e)).join('')}
+      </div>`;
+    }).join('');
+  }
   renderPagination(pages,total);
 }
 
-function buildExpRow(e){
+function buildExpRow(e,showDate=false){
   const catKey=(e.category||'Other').replace(' ','').toLowerCase();
   const catClass=catKey==='pendingupdate'?'cat-pending':'cat-'+(catKey||'other');
   const catColor=CAT_COLORS[e.category]||'#64748b';
@@ -1463,6 +1488,7 @@ function buildExpRow(e){
       <div class="expense-title">${esc(e.description||'—')}${hasImg?' 📎':''}</div>
       <div class="expense-meta">
         <span class="meta-chip">👤 ${esc(e.paidBy||'?')}</span>
+        ${showDate?`<span class="meta-chip">📅 ${fmtDateShort(e.date)||'—'}</span>`:''}
         ${isPending?`<span class="meta-chip pending-chip">⏳ Pending</span>`:`<span class="meta-chip">${esc(e.category||'Other')}</span>`}
         <span class="meta-chip">Split: ${esc(splitLbl)}</span>
       </div>
@@ -1516,6 +1542,9 @@ function goPage(n){currentExpPage=n;renderExpenses();document.getElementById('ap
 window.goPage=goPage;
 function onSearchFilter(){currentExpPage=1;renderExpenses();}
 window.onSearchFilter=onSearchFilter;
+function getExpSort(){try{return localStorage.getItem('expSort')||'newest';}catch(e){return 'newest';}}
+function onSortChange(){try{localStorage.setItem('expSort',document.getElementById('exp-sort').value);}catch(e){}currentExpPage=1;renderExpenses();}
+window.onSortChange=onSortChange;
 function togglePendingFilter(){pendingFilterActive=!pendingFilterActive;document.getElementById('pending-filter-btn').classList.toggle('active',pendingFilterActive);currentExpPage=1;renderExpenses();}
 window.togglePendingFilter=togglePendingFilter;
 
@@ -1892,5 +1921,5 @@ function formatDateLong(s){if(!s)return'';const[y,m,d]=s.split('-').map(Number);
 })();
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3173f970e3ddd4d',t:'MTc4Nzc5MzU3MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a317533f2989dd4d',t:'MTc4Nzc5NDM3NQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
