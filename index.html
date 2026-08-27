@@ -47,13 +47,42 @@ html[data-theme=dark] .date-group-header{background:#0b1220}
 html[data-theme=dark] .chip,html[data-theme=dark] .search-box,html[data-theme=dark] .filter-select,html[data-theme=dark] .currency-select,html[data-theme=dark] .form-input,html[data-theme=dark] .seg-btn,html[data-theme=dark] .share-step,html[data-theme=dark] .exact-input{background:#1e293b;color:#e2e8f0;border-color:#334155}
 html[data-theme=dark] .trip-card,html[data-theme=dark] .section-card,html[data-theme=dark] .settings-block{background:#16213a;border-color:#334155}
 html[data-theme=dark] .invite-preview{background:#1c2a4d;color:#bcd0f5}
-html[data-theme=dark] .hero-block{background:#16213a}
+html[data-theme=dark] .hero-block{background:rgba(15,26,51,.55);border-color:rgba(148,163,184,.25)}
 html[data-theme=dark] .end-date-display{background:#1e293b;color:#e2e8f0}
 html[data-theme=dark] .receipt-area{background:#1c2a4d;border-color:#334155}
 html[data-theme=dark] .modal-box,html[data-theme=dark] .sheet-box{background:#16213a;color:#e2e8f0}
 html[data-theme=dark] .bc-white{background:#1e293b;border-color:#334155}
 html[data-theme=dark] .toast{background:#1e293b;color:#e2e8f0}
 html[data-theme=dark] .who-btn{background:#1e293b;border-color:#334155;color:#e2e8f0}
+html[data-theme=dark] .date-card{background:#1e293b;border-color:#334155;color:#e2e8f0}
+html[data-theme=dark] .date-card.today-card{border-color:var(--accent)}
+html[data-theme=dark] .page-btn{background:#1e293b;border-color:#334155;color:#e2e8f0}
+html[data-theme=dark] .page-btn.active{background:var(--accent);border-color:var(--accent)}
+html[data-theme=dark] .expense-row{background:#16213a;border-color:#334155}
+html[data-theme=dark] .expense-amount{color:#f1f5f9}
+html[data-theme=dark] .hkd-preview{background:#1c2a4d;color:#bcd0f5}
+html[data-theme=dark] .mini-toggle{background:#1e293b}
+html[data-theme=dark] .seg-btn{background:#1e293b;color:#94a3b8}
+html[data-theme=dark] .seg-btn.active{background:var(--accent);color:#fff}
+html[data-theme=dark] .loading-overlay{background:rgba(11,18,32,.92)}
+html[data-theme=dark] .lobby-hero{background:linear-gradient(160deg,#0d1b3e,#243870)}
+html[data-theme=dark] .bc-yellow{background:#3a3312}html[data-theme=dark] .bc-green{background:#123524}
+html[data-theme=dark] .bc-blue{background:#122a4d}html[data-theme=dark] .bc-pink{background:#3d1a2e}
+html[data-theme=dark] .bc-orange{background:#3d2a12}html[data-theme=dark] .bc-violet{background:#2a1a3d}
+html[data-theme=dark] .bc-white{background:#1e293b;border-color:#334155}
+html[data-theme=dark] .bc-dark{background:#0f1a33}
+html[data-theme=dark] .bc-dark .bc-name,html[data-theme=dark] .bc-dark .bc-balance,html[data-theme=dark] .bc-dark .bc-status,html[data-theme=dark] .bc-dark .bc-detail{color:#e2e8f0}
+html[data-theme=dark] .settle-stat{background:#16213a}
+html[data-theme=dark] .transfer-row{background:#16213a;border-color:#334155}
+html[data-theme=dark] .split-person{background:#16213a;border-color:#334155}
+html[data-theme=dark] .split-person.included{background:#1c2a4d;border-color:var(--accent)}
+html[data-theme=dark] .conv-btn{background:#1e293b}
+html[data-theme=dark] .rate-row .form-input{background:#1e293b}
+html[data-theme=dark] .bulk-bar{background:#0f1a33}
+html[data-theme=dark] .empty-state{color:#94a3b8}
+html[data-theme=dark] .invite-preview{background:#1c2a4d}
+html[data-theme=dark] .admin-link{color:#94a3b8}
+html[data-theme=dark] .toast-undo{color:#93c5fd}
 
 /* FAB: draggable circular add-expense button */
 #fab-add{position:fixed;width:58px;height:58px;border-radius:50%;display:none;align-items:center;justify-content:center;z-index:50;border:none;padding:0;background:linear-gradient(135deg,var(--blue-mid),var(--blue));color:#fff;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;outline:none;box-shadow:0 10px 26px rgba(37,99,235,.45),0 3px 8px rgba(10,22,40,.25);transition:transform .16s ease,box-shadow .16s ease}
@@ -503,10 +532,16 @@ html[data-theme=dark] .who-btn{background:#1e293b;border-color:#334155;color:#e2
       <div class="section-title">Admin Actions</div>
       <button class="btn btn-primary" onclick="navigateTo('create')">+ Create New Trip</button>
       <button class="btn btn-danger mt-8" onclick="openModal('delete-all-modal');document.getElementById('delete-all-input').value=''">⚠️ Delete All My Trips</button>
+      <div style="margin-top:14px;border-top:1.5px solid var(--gray-mid);padding-top:12px">
+        <div class="section-title" style="margin-bottom:8px">📦 Device Storage</div>
+        <div id="storage-info" style="font-size:12px;color:var(--gray);line-height:1.7">Calculating…</div>
+        <p style="font-size:10px;color:var(--gray);margin-top:6px">Measures this device only (offline data, receipts, price photos). Cloud (Firebase) usage is not included — that lives on Google's servers.</p>
+      </div>
     </div>
   </div>
-  <div class="admin-footer">
+  <div class="admin-footer" style="display:flex;justify-content:center;gap:18px;flex-wrap:wrap">
     <button class="admin-link" onclick="promptAdmin()">Admin: Create trip</button>
+    <button class="admin-link" id="lobby-theme-btn" onclick="cycleTheme()">🌙 Theme: Auto</button>
   </div>
 </div>
 
@@ -681,7 +716,6 @@ html[data-theme=dark] .who-btn{background:#1e293b;border-color:#334155;color:#e2
     </div>
     <div style="display:flex;gap:10px;margin-top:16px" id="form-action-row">
       <button class="btn btn-outline hidden" id="cancel-edit-btn" onclick="cancelEdit()">Cancel</button>
-      <button class="btn btn-outline" style="padding:12px 16px" onclick="openConverter()" title="Currency converter" aria-label="Currency converter">💱</button>
       <button class="btn btn-primary" id="add-expense-btn" onclick="saveExpense()" style="flex:1">Add Expense</button>
     </div>
   </div>
@@ -858,15 +892,24 @@ html[data-theme=dark] .who-btn{background:#1e293b;border-color:#334155;color:#e2
         <button type="button" class="btn btn-outline btn-sm" onclick="document.getElementById('conv-photo-file').click()">📷 Photo</button>
         <img id="conv-photo-thumb" src="" alt="photo" style="width:40px;height:40px;object-fit:cover;border-radius:8px;border:1.5px solid var(--gray-mid);display:none" onclick="viewConvPhotoPreview()">
         <button type="button" id="conv-photo-remove" class="share-step" style="display:none" onclick="removeConvPhoto()" title="Remove photo">✕</button>
+        <button type="button" class="mini-toggle" id="cv-shared-toggle" onclick="toggleNewQuoteShared()" title="New quotes: shared with trip members or private to this device">👁 Public</button>
         <button class="btn btn-outline btn-sm" style="margin-left:auto" onclick="saveConvEntry()">💾 Save to compare</button>
       </div>
     </div>
     <div class="section-card" style="margin-top:14px">
-      <div style="display:flex;justify-content:space-between;align-items:center">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
         <div class="section-title" style="margin-bottom:0">🛍 Price Comparison</div>
-        <button class="btn btn-outline btn-sm" id="conv-clear-btn" onclick="clearConvHistory()" style="display:none;padding:5px 10px;font-size:12px">🗑 Clear</button>
+        <div class="seg-ctrl" id="conv-filter-ctrl">
+          <button type="button" class="seg-btn active" data-cf="all" onclick="setConvFilter('all')">All</button>
+          <button type="button" class="seg-btn" data-cf="public" onclick="setConvFilter('public')">👁 Public</button>
+          <button type="button" class="seg-btn" data-cf="private" onclick="setConvFilter('private')">🔒 Private</button>
+        </div>
       </div>
-      <p style="font-size:11px;color:var(--gray);margin:6px 0 4px">Convert a price at each shop, save it, and compare — cheapest is flagged 🥇</p>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <input type="text" id="conv-search" class="form-input" style="flex:1;padding:9px 12px;font-size:13px" placeholder="🔍 Search product or shop…" oninput="renderConvHistory()">
+        <button class="btn btn-outline btn-sm" id="conv-clear-btn" onclick="clearConvHistory()" style="display:none;padding:5px 10px;font-size:12px;white-space:nowrap">🗑 Clear</button>
+      </div>
+      <p style="font-size:11px;color:var(--gray);margin:8px 0 4px">Public comparisons are shared with all trip members · tap a product name to collapse</p>
       <div id="conv-history"></div>
     </div>
   </div>
@@ -881,6 +924,7 @@ html[data-theme=dark] .who-btn{background:#1e293b;border-color:#334155;color:#e2
     <h1>Trip Settings</h1><p>Manage your trip details</p>
   </div>
   <div class="settings-content">
+<div style="font-size:11px;font-weight:800;letter-spacing:1.2px;color:var(--gray);margin:18px 0 8px;text-transform:uppercase">Trip</div>
     <div class="settings-block">
       <h3>📋 Trip Details</h3>
       <div class="form-group">
@@ -917,35 +961,6 @@ html[data-theme=dark] .who-btn{background:#1e293b;border-color:#334155;color:#e2
       <button class="btn btn-outline btn-sm" style="margin-top:10px;padding:8px 14px" onclick="copyInviteLink()">📋 Copy Invite Link</button>
     </div>
     <div class="settings-block">
-      <h3>🕐 Recent Activity</h3>
-      <button class="btn btn-outline btn-sm" style="width:100%" id="s-activity-toggle" onclick="toggleActivityBox()">Show activity</button>
-      <div id="s-activity-box" class="hidden" style="margin-top:10px">
-        <div id="activity-feed"></div>
-      </div>
-    </div>
-    <div class="settings-block">
-      <h3>🎨 Appearance</h3>
-      <div class="form-group" style="margin-bottom:0">
-        <label class="form-label">Theme</label>
-        <select class="currency-select" id="s-theme" onchange="setTheme(this.value)">
-          <option value="auto">Auto (system)</option>
-          <option value="light">Light</option>
-          <option value="dark">Dark</option>
-        </select>
-      </div>
-    </div>
-    <div class="settings-block">
-      <h3>📦 Storage</h3>
-      <div id="storage-info" style="font-size:12px;color:var(--gray);line-height:1.7">Calculating…</div>
-    </div>
-    <div class="settings-block">
-      <h3>💾 Backup &amp; Restore</h3>
-      <p style="font-size:13px;color:var(--gray);margin-bottom:12px">Export this trip (expenses, payments, settings) as a JSON file, or restore from a backup file.</p>
-      <button class="btn btn-outline" style="width:100%" onclick="exportBackup()">⬇️ Export Backup</button>
-      <input type="file" id="restore-file" accept="application/json,.json" style="display:none" onchange="handleRestoreFile(event)">
-      <button class="btn btn-outline mt-8" style="width:100%" onclick="document.getElementById('restore-file').click()">⬆️ Restore Backup</button>
-    </div>
-    <div class="settings-block">
       <h3>🔑 Change Password</h3>
       <div class="form-group" style="margin-bottom:12px">
         <label class="form-label">New Password</label>
@@ -958,6 +973,22 @@ html[data-theme=dark] .who-btn{background:#1e293b;border-color:#334155;color:#e2
       </div>
       <button class="btn btn-primary" onclick="updateTripPassword()">Update Password</button>
     </div>
+<div style="font-size:11px;font-weight:800;letter-spacing:1.2px;color:var(--gray);margin:18px 0 8px;text-transform:uppercase">Data</div>
+    <div class="settings-block">
+      <h3>💾 Backup &amp; Restore</h3>
+      <p style="font-size:13px;color:var(--gray);margin-bottom:12px">Export this trip (expenses, payments, settings) as a JSON file, or restore from a backup file.</p>
+      <button class="btn btn-outline" style="width:100%" onclick="exportBackup()">⬇️ Export Backup</button>
+      <input type="file" id="restore-file" accept="application/json,.json" style="display:none" onchange="handleRestoreFile(event)">
+      <button class="btn btn-outline mt-8" style="width:100%" onclick="document.getElementById('restore-file').click()">⬆️ Restore Backup</button>
+    </div>
+    <div class="settings-block">
+      <h3>🕐 Recent Activity</h3>
+      <button class="btn btn-outline btn-sm" style="width:100%" id="s-activity-toggle" onclick="toggleActivityBox()">Show activity</button>
+      <div id="s-activity-box" class="hidden" style="margin-top:10px">
+        <div id="activity-feed"></div>
+      </div>
+    </div>
+<div style="font-size:11px;font-weight:800;letter-spacing:1.2px;color:var(--gray);margin:18px 0 8px;text-transform:uppercase">Danger Zone</div>
     <div class="settings-block danger-zone">
       <h3>⚠️ Delete Trip</h3>
       <p style="font-size:13px;color:var(--gray);margin-bottom:12px">Permanently deletes all expenses for this trip.</p>
@@ -1017,6 +1048,7 @@ let chipDescActive=false;
 let payments=[],paymentsUnsub=null;
 let splitMode='equal',shareVals={},exactVals={},multiPayer=false,payerVals={};
 let liveRates={},lastSettlements=[],lastPayments=[],galleryItems=[];
+let comparisons=[],convUnsub=null,convFilter='all',collapsedProducts=new Set(),newQuoteShared=true;
 let currentExpPage=1,saveBusy=false,personSheetName=null,isAdminMode=false;
 const EXP_PER_PAGE=10;
 
@@ -1223,6 +1255,7 @@ function renderLobby(){
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="16" height="16" stroke-width="2.5" style="color:var(--gray);flex-shrink:0"><polyline points="9 18 15 12 9 6"/></svg>
     </div>`).join('');}
   document.getElementById('create-section').classList.toggle('hidden',!isAdminMode);
+  if(isAdminMode)computeStorageInfo();
 }
 async function quickJoin(code){
   const saved=getMyTrips().find(t=>t.code===code);
@@ -1334,6 +1367,7 @@ function enterTrip(){setupExpensesListener();renderTripHeaders();navigateTo('new
 function setupExpensesListener(){
   if(expensesUnsub){expensesUnsub();expensesUnsub=null;}
   if(paymentsUnsub){paymentsUnsub();paymentsUnsub=null;}
+  if(convUnsub){convUnsub();convUnsub=null;}
   if(firebaseOk&&db){
     expensesUnsub=onSnapshot(query(collection(db,'trips',currentCode,'expenses'),orderBy('date','desc')),
       snap=>{expenses=snap.docs.map(d=>({id:d.id,...d.data()}));onExpensesUpdated();},
@@ -1341,9 +1375,12 @@ function setupExpensesListener(){
     paymentsUnsub=onSnapshot(collection(db,'trips',currentCode,'payments'),
       snap=>{payments=snap.docs.map(d=>({id:d.id,...d.data()}));onExpensesUpdated();},
       err=>{payments=getLocalPay(currentCode);});
+    convUnsub=onSnapshot(collection(db,'trips',currentCode,'comparisons'),
+      snap=>{comparisons=snap.docs.map(d=>({id:d.id,...d.data()}));if(document.getElementById('page-convert')?.classList.contains('active'))renderConvHistory();},
+      err=>{});
   }else loadLocalExp();
 }
-function loadLocalExp(){expenses=getLocalExp(currentCode);payments=getLocalPay(currentCode);onExpensesUpdated();}
+function loadLocalExp(){expenses=getLocalExp(currentCode);payments=getLocalPay(currentCode);comparisons=[];onExpensesUpdated();}
 function onExpensesUpdated(){
   renderHeroBlocks();renderDateStrip();renderActivity();
   if(document.getElementById('page-expenses').classList.contains('active'))renderExpenses();
@@ -1806,6 +1843,7 @@ async function saveExpense(){
       }else await setDoc(doc(db,'trips',currentCode,'expenses',expId),payload);
     }
     else{let exps=getLocalExp(currentCode);if(editingExpenseId){const i=exps.findIndex(e=>e.id===editingExpenseId);if(i>=0){exps[i]={...exps[i],...expData};if(!splitPack)delete exps[i].splitShares;if(!exactPack)delete exps[i].splitAmounts;if(!payersPack)delete exps[i].payers;}}else exps.unshift({id:expId,...expData});saveLocalExp(currentCode,exps);loadLocalExp();}
+    logActivity(editingExpenseId?'edit':'add',`${editingExpenseId?'edited':'added'} “${(desc||'Receipt').slice(0,24)}” ${cur} ${fmt2(amount)}`);
     toast(editingExpenseId?'Updated ✓':'Added ✓','success');resetNewForm(true);
   }catch(e){toast('Save failed: '+e.message,'error');}
   finally{saveBusy=false;setTimeout(()=>{btn.disabled=false;btn.textContent=editingExpenseId?'Update Expense':'Add Expense';},600);}
@@ -1943,6 +1981,7 @@ This cannot be undone.`))return;
     }
     if(!firebaseOk||!db){saveLocalExp(currentCode,getLocalExp(currentCode).filter(e=>!ids.includes(e.id)));loadLocalExp();}
     else if(editingExpenseId&&ids.includes(editingExpenseId))cancelEdit();
+    logActivity('bulkDelete',`deleted ${ids.length} expense(s)${withImg?` (incl. ${withImg} image${withImg>1?'s':''})`:''}`);
     toast(`Deleted ${ids.length} expense(s)`,'warn');
     exitSelectMode();
   }catch(e){toast('Error: '+e.message,'error');}
@@ -2011,11 +2050,12 @@ async function deleteExpense(id){
     if(firebaseOk&&db)await deleteDoc(doc(db,'trips',currentCode,'expenses',id));
     else{let exps=getLocalExp(currentCode).filter(e=>e.id!==id);saveLocalExp(currentCode,exps);loadLocalExp();}
     await idbDel(id);cancelEdit();navigateTo('expenses');renderExpenses();
+    logActivity('delete',`deleted “${(exp?.description||'Receipt').slice(0,24)}”${exp?' '+(exp.currency||'')+' '+fmt2(exp.amount||0):''}`);
     toast('Expense deleted','warn',async()=>{
       if(exp){
         if(firebaseOk&&db){const{id:_,...rest}=exp;await setDoc(doc(db,'trips',currentCode,'expenses',id),rest);}
         else{let exps=getLocalExp(currentCode);exps.unshift(exp);saveLocalExp(currentCode,exps);loadLocalExp();}
-        if(receiptToRestore)await idbSave(id,receiptToRestore);toast('Restored','success');
+        if(receiptToRestore)await idbSave(id,receiptToRestore);toast('Restored','success');logActivity('restore',`restored “${(exp?.description||'Receipt').slice(0,24)}”`);
       }
     },4000);
   }catch(e){toast('Delete failed: '+e.message,'error');}
@@ -2332,6 +2372,7 @@ async function savePayment(from,to,amount){
     if(firebaseOk&&db)await setDoc(doc(db,'trips',currentCode,'payments',id),rec);
     else{let ps=getLocalPay(currentCode);ps.unshift({id,...rec});saveLocalPay(currentCode,ps);}
     if(!firebaseOk||!db)loadLocalExp();
+    logActivity('payment',`recorded: ${from} paid ${to} HKD ${fmt2(rec.amountHKD)}`);
     toast('Payment recorded ✓','success',async()=>{await removePayment(id);});
     renderSettlement();
   }catch(e){toast('Error: '+e.message,'error');}
@@ -2339,8 +2380,10 @@ async function savePayment(from,to,amount){
 }
 async function removePayment(id){
   try{
+    const p=payments.find(x=>x.id===id);
     if(firebaseOk&&db)await deleteDoc(doc(db,'trips',currentCode,'payments',id));
-    else{saveLocalPay(currentCode,getLocalPay(currentCode).filter(p=>p.id!==id));loadLocalExp();}
+    else{saveLocalPay(currentCode,getLocalPay(currentCode).filter(x=>x.id!==id));loadLocalExp();}
+    if(p)logActivity('paymentRemove',`removed payment record ${p.from}→${p.to} HKD ${fmt2(p.amountHKD)}`);
     renderSettlement();
   }catch(e){toast('Error: '+e.message,'error');}
 }
@@ -2390,7 +2433,6 @@ function _openSettingsForm(){
   document.getElementById('s-end').value=currentTrip.endDate||'';
   document.getElementById('s-members').value=(currentTrip.friends||[]).join(', ');
   document.getElementById('s-identity-display').textContent=myIdentity||'Not set';
-  const st=document.getElementById('s-theme');if(st){try{st.value=localStorage.getItem('theme')||'auto';}catch(e){st.value='auto';}}
   computeStorageInfo();
   const abox=document.getElementById('s-activity-box');if(abox)abox.classList.add('hidden');
   const abtn=document.getElementById('s-activity-toggle');if(abtn)abtn.textContent='Show activity';
@@ -2469,15 +2511,33 @@ function renderConverter(){
   renderConvHistory();
 }
 window.renderConverter=renderConverter;
-// ── PRICE COMPARISON — same product, different shops (stored per trip)
+// ── PRICE COMPARISON — products quoted at different shops; Public (shared) or Private (this device)
 let convPhotoDataURL=null;
-function getConvHistory(){
-  try{
-    const raw=JSON.parse(localStorage.getItem('localConv_'+currentCode)||'[]');
-    return raw.map(e=>({id:e.id||('cv_'+Date.now().toString(36)+Math.random().toString(36).slice(2,7)),product:e.product||e.label||'Untitled',shop:e.shop||'',amount:e.amount,from:e.from,to:e.to,result:e.result,ts:e.ts,hasPhoto:!!e.hasPhoto}));
-  }catch(e){return[];}
+function migrateConvEntry(e){
+  return{id:e.id||('cv_'+Date.now().toString(36)+Math.random().toString(36).slice(2,7)),product:e.product||e.label||'Untitled',shop:e.shop||'',amount:e.amount,from:e.from,to:e.to,result:e.result,ts:e.ts,hasPhoto:!!e.hasPhoto,photo:e.photo||null,shared:!!e.shared};
 }
+function getStoredConv(){let raw=[];try{raw=JSON.parse(localStorage.getItem('localConv_'+currentCode)||'[]');}catch(e){}return raw.map(migrateConvEntry);}
 function saveConvHistoryList(l){try{localStorage.setItem('localConv_'+currentCode,JSON.stringify(l));}catch(e){}}
+function getConvHistory(){
+  const stored=getStoredConv();
+  let pub,priv;
+  if(firebaseOk&&db){
+    pub=comparisons.map(e=>({...migrateConvEntry(e),shared:true}));
+    priv=stored.filter(e=>!e.shared);
+  }else{
+    pub=stored.filter(e=>e.shared);
+    priv=stored.filter(e=>!e.shared);
+  }
+  return[...pub,...priv].sort((a,b)=>(b.ts||'').localeCompare(a.ts||''));
+}
+function removeFromLocalConv(id){saveConvHistoryList(getStoredConv().filter(e=>e.id!==id));}
+function setLocalConvShared(id,shared){saveConvHistoryList(getStoredConv().map(e=>e.id===id?{...e,shared}:e));}
+function updateSharedToggleLabel(){
+  const b=document.getElementById('cv-shared-toggle');
+  if(b){b.textContent=newQuoteShared?'👁 Public':'🔒 Private';b.style.color=newQuoteShared?'var(--green)':'var(--gray)';}
+}
+function toggleNewQuoteShared(){newQuoteShared=!newQuoteShared;updateSharedToggleLabel();}
+window.toggleNewQuoteShared=toggleNewQuoteShared;
 function resetConvPhotoUI(){
   convPhotoDataURL=null;
   const th=document.getElementById('conv-photo-thumb'),rm=document.getElementById('conv-photo-remove');
@@ -2513,7 +2573,9 @@ function viewConvPhotoPreview(){
 }
 window.viewConvPhotoPreview=viewConvPhotoPreview;
 async function viewConvPhoto(id){
-  let img=null;try{img=await idbGet('conv_'+id);}catch(e){}
+  const entry=getConvHistory().find(x=>x.id===id);
+  let img=entry&&entry.photo||null;
+  if(!img){try{img=await idbGet('conv_'+id);}catch(e){}}
   if(!img)return;
   document.getElementById('receipt-modal-img').src=img;openModal('receipt-modal');
 }
@@ -2525,32 +2587,80 @@ function saveConvEntry(){
   const br=bestRate(from),bt=bestRate(to);
   const product=document.getElementById('cv-product').value.trim()||'Untitled product';
   const shop=document.getElementById('cv-shop').value.trim()||'';
-  const entry={id:'cv_'+Date.now().toString(36)+Math.random().toString(36).slice(2,7),product,shop,amount:amt,from,to,result:parseFloat((amt*br.rate/bt.rate).toFixed(2)),ts:new Date().toISOString(),hasPhoto:false};
-  const list=getConvHistory();
-  if(!shop)entry.shop='Quote '+(list.filter(x=>x.product===product).length+1);
-  if(convPhotoDataURL){entry.hasPhoto=true;idbSave('conv_'+entry.id,convPhotoDataURL).catch(()=>{});}
-  list.unshift(entry);saveConvHistoryList(list.slice(0,80));
+  const existing=getConvHistory().find(e=>e.product===product);
+  const shared=existing?!!existing.shared:newQuoteShared; // follow the product's visibility; default Public
+  const entry={id:'cv_'+Date.now().toString(36)+Math.random().toString(36).slice(2,7),product,shop,amount:amt,from,to,result:parseFloat((amt*br.rate/bt.rate).toFixed(2)),ts:new Date().toISOString(),hasPhoto:false,photo:null,shared};
+  if(!shop)entry.shop='Quote '+(getConvHistory().filter(x=>x.product===product).length+1);
+  if(convPhotoDataURL){entry.hasPhoto=true;if(convPhotoDataURL.length<400000)entry.photo=convPhotoDataURL;}
+  if(shared&&firebaseOk&&db){
+    const{id:_,shared:sh,...docData}=entry;
+    setDoc(doc(db,'trips',currentCode,'comparisons',entry.id),cleanForStore(docData)).catch(err=>toast('Save failed: '+err.message,'error'));
+  }else{
+    if(convPhotoDataURL)idbSave('conv_'+entry.id,convPhotoDataURL).catch(()=>{});
+    const localEntry={...entry,photo:undefined};
+    saveConvHistoryList([localEntry,...getStoredConv()].slice(0,200));
+  }
   document.getElementById('cv-product').value='';document.getElementById('cv-shop').value='';
-  resetConvPhotoUI();
-  renderConvHistory();toast('Saved to comparison ✓','success');
+  resetConvPhotoUI();newQuoteShared=true;updateSharedToggleLabel();
+  renderConvHistory();toast(`Saved to comparison (${shared?'Public · shared with members':'Private · this device'}) ✓`,'success');
 }
 window.saveConvEntry=saveConvEntry;
 function deleteConvEntryById(id){
-  const list=getConvHistory();const entry=list.find(x=>x.id===id);
-  saveConvHistoryList(list.filter(x=>x.id!==id));renderConvHistory();
-  if(entry&&entry.hasPhoto)idbDel('conv_'+id).catch(()=>{});
+  const entry=getConvHistory().find(x=>x.id===id);if(!entry)return;
+  if(entry.shared&&firebaseOk&&db)deleteDoc(doc(db,'trips',currentCode,'comparisons',id)).catch(()=>{});
+  removeFromLocalConv(id);
+  if(entry.hasPhoto)idbDel('conv_'+id).catch(()=>{});
+  renderConvHistory();
 }
 window.deleteConvEntryById=deleteConvEntryById;
 function deleteProductGroup(product){
-  const list=getConvHistory();
-  const gone=list.filter(x=>x.product===product);
+  const gone=getConvHistory().filter(x=>x.product===product);
   if(!gone.length)return;
   if(!confirm(`Remove “${product}” and its ${gone.length} quote(s)?`))return;
-  saveConvHistoryList(list.filter(x=>x.product!==product));
-  gone.forEach(g=>{if(g.hasPhoto)idbDel('conv_'+g.id).catch(()=>{});});
+  gone.forEach(g=>{
+    if(g.shared&&firebaseOk&&db)deleteDoc(doc(db,'trips',currentCode,'comparisons',g.id)).catch(()=>{});
+    removeFromLocalConv(g.id);
+    if(g.hasPhoto)idbDel('conv_'+g.id).catch(()=>{});
+  });
   renderConvHistory();toast('Removed from comparison','warn');
 }
 window.deleteProductGroup=deleteProductGroup;
+async function toggleProductShared(product){
+  const entries=getConvHistory().filter(e=>e.product===product);
+  if(!entries.length)return;
+  const makePublic=!entries[0].shared;
+  if(!confirm(makePublic?`Share “${product}” with all trip members?`:`Make “${product}” private (only this device)?`))return;
+  showLoading(true,'Updating…');
+  try{
+    for(const e of entries){
+      if(makePublic){
+        if(e.shared)continue;
+        if(firebaseOk&&db){
+          removeFromLocalConv(e.id);
+          let photo=e.photo||null;
+          if(!photo){try{const img=await idbGet('conv_'+e.id);if(img&&img.length<400000)photo=img;}catch(err){}}
+          const{id:_,shared:sh,...docData}={...e,photo};
+          await setDoc(doc(db,'trips',currentCode,'comparisons',e.id),cleanForStore(docData));
+        }else{
+          setLocalConvShared(e.id,true);
+        }
+      }else{
+        if(!e.shared)continue;
+        if(firebaseOk&&db){
+          await deleteDoc(doc(db,'trips',currentCode,'comparisons',e.id));
+          saveConvHistoryList([{...e,shared:false,photo:undefined},...getStoredConv()]);
+          if(e.photo){try{await idbSave('conv_'+e.id,e.photo);}catch(err){}}
+        }else{
+          setLocalConvShared(e.id,false); // already on device — just flip the flag
+        }
+      }
+    }
+    renderConvHistory();
+    toast(makePublic?'Shared with all members ✓':'Now private (this device only)','success');
+  }catch(e){toast('Error: '+e.message,'error');}
+  finally{showLoading(false);}
+}
+window.toggleProductShared=toggleProductShared;
 function useQuote(id){
   const entry=getConvHistory().find(x=>x.id===id);if(!entry)return;
   document.getElementById('exp-amount').value=String(entry.amount);
@@ -2562,49 +2672,95 @@ window.useQuote=useQuote;
 function clearConvHistory(){
   const list=getConvHistory();
   if(!list.length)return;
-  if(!confirm('Clear all saved comparisons?'))return;
-  list.forEach(g=>{if(g.hasPhoto)idbDel('conv_'+g.id).catch(()=>{});});
-  saveConvHistoryList([]);renderConvHistory();toast('Comparison cleared','warn');
+  if(!confirm('Clear ALL saved comparisons (public and private)?'))return;
+  list.forEach(g=>{
+    if(g.shared&&firebaseOk&&db)deleteDoc(doc(db,'trips',currentCode,'comparisons',g.id)).catch(()=>{});
+    removeFromLocalConv(g.id);
+    if(g.hasPhoto)idbDel('conv_'+g.id).catch(()=>{});
+  });
+  renderConvHistory();toast('Comparison cleared','warn');
 }
 window.clearConvHistory=clearConvHistory;
+function setConvFilter(f){
+  convFilter=f;
+  document.querySelectorAll('#conv-filter-ctrl .seg-btn').forEach(b=>b.classList.toggle('active',b.dataset.cf===f));
+  renderConvHistory();
+}
+window.setConvFilter=setConvFilter;
+function toggleConvCollapse(p){
+  if(collapsedProducts.has(p))collapsedProducts.delete(p);else collapsedProducts.add(p);
+  renderConvHistory();
+}
+window.toggleConvCollapse=toggleConvCollapse;
+function addQuoteToProduct(p){
+  const g=getConvHistory().find(e=>e.product===p);
+  newQuoteShared=g?!!g.shared:true;
+  updateSharedToggleLabel();
+  document.getElementById('cv-product').value=p;
+  document.getElementById('cv-shop').value='';
+  document.getElementById('cv-amount').value='';
+  document.getElementById('cv-result').innerHTML='<div style="color:var(--gray);font-size:13px">Enter the new price…</div>';
+  document.getElementById('cv-rate').textContent='';
+  try{document.getElementById('cv-amount').focus({preventScroll:true});document.getElementById('app').scrollTo(0,0);}catch(e){}
+  toast(`Adding quotes to “${p}” — ${newQuoteShared?'Public':'Private'}`,'success');
+}
+window.addQuoteToProduct=addQuoteToProduct;
 function renderConvHistory(){
   const wrap=document.getElementById('conv-history');if(!wrap)return;
   const list=getConvHistory();
   const clr=document.getElementById('conv-clear-btn');if(clr)clr.style.display=list.length?'':'none';
   if(!list.length){wrap.innerHTML='<div style="font-size:12px;color:var(--gray);text-align:center;padding:14px">No saved quotes yet — convert a price, name the product &amp; shop, then “Save to compare”</div>';return;}
-  // group quotes by product (groups ordered by their newest quote)
+  const q=(document.getElementById('conv-search')?.value||'').toLowerCase();
+  // group by product, groups ordered by newest quote
   const groups=[],gidx={};
   list.forEach(h=>{
-    const key=h.product;
-    if(gidx[key]==null){gidx[key]=groups.length;groups.push({product:key,quotes:[]});}
-    groups[gidx[key]].quotes.push(h);
+    const k=h.product;
+    if(gidx[k]==null){gidx[k]=groups.length;groups.push({product:k,shared:!!h.shared,quotes:[]});}
+    groups[gidx[k]].quotes.push(h);
   });
-  wrap.innerHTML=groups.map(g=>{
+  let shown=groups;
+  if(convFilter==='public')shown=shown.filter(g=>g.shared);
+  else if(convFilter==='private')shown=shown.filter(g=>!g.shared);
+  if(q)shown=shown.filter(g=>g.product.toLowerCase().includes(q)||g.quotes.some(x=>(x.shop||'').toLowerCase().includes(q)));
+  if(!shown.length){wrap.innerHTML=`<div style="font-size:12px;color:var(--gray);text-align:center;padding:14px">No comparisons ${q?'match your search':(convFilter==='public'?'are public':'are private')}</div>`;return;}
+  wrap.innerHTML=shown.map(g=>{
+    const collapsed=collapsedProducts.has(g.product);
     const to=g.quotes[0].to;
-    const cheapest=Math.min(...g.quotes.filter(q=>q.to===to).map(q=>q.result));
+    const cheapest=Math.min(...g.quotes.filter(x=>x.to===to).map(x=>x.result));
+    const bestShop=(g.quotes.find(x=>x.to===to&&x.result===cheapest)||{}).shop||'';
     return`
     <div style="border:1.5px solid var(--gray-mid);border-radius:12px;padding:10px 12px;margin-bottom:10px;background:var(--white)">
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
-        <div style="font-size:13px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(g.product)}</div>
+      <div style="display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none" onclick="toggleConvCollapse('${escAttr(g.product)}')">
+        <span style="font-size:11px;color:var(--gray);display:inline-block;transition:transform .15s;transform:rotate(${collapsed?-90:0}deg)">▾</span>
+        <div style="flex:1;min-width:0;font-size:13px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(g.product)} <span style="font-weight:600;color:var(--gray);font-size:11px">(${g.quotes.length})</span></div>
+        <span style="font-size:9px;font-weight:800;border-radius:8px;padding:1px 6px;flex-shrink:0;${g.shared?'color:#1d4ed8;background:#dbeafe':'color:var(--gray);background:var(--gray-light)'}">${g.shared?'👁 PUBLIC':'🔒 PRIVATE'}</span>
+        ${collapsed?`<span style="font-size:11px;color:var(--gray);flex-shrink:0">best: ${esc(to)} ${fmt2(cheapest)} · ${esc(bestShop)}</span>`:''}
+      </div>
+      ${collapsed?'':`
+      <div style="display:flex;justify-content:flex-end;gap:6px;margin-top:6px">
+        <button class="mini-toggle" onclick="toggleProductShared('${escAttr(g.product)}')" title="Toggle sharing with members">${g.shared?'👁 Shared':'🔒 Make public'}</button>
         <button class="settle-paid-btn" style="border-color:var(--danger);color:var(--danger)" onclick="deleteProductGroup('${escAttr(g.product)}')" title="Remove product">🗑</button>
       </div>
-      ${g.quotes.map(q=>{
-        let tt='';try{tt=new Date(q.ts).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}catch(e){}
-        const best=q.to===to&&q.result===cheapest;
+      ${g.quotes.map(qq=>{
+        let tt='';try{tt=new Date(qq.ts).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}catch(e){}
+        const best=qq.to===to&&qq.result===cheapest;
         return`
         <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-top:1px solid var(--gray-mid)">
-          <img data-photoid="${q.id}" src="" alt="" ${q.hasPhoto?'':'style="display:none"'} style="width:44px;height:44px;object-fit:cover;border-radius:8px;border:1.5px solid var(--gray-mid);cursor:pointer" onclick="viewConvPhoto('${q.id}')">
+          <img data-photoid="${qq.id}" src="" alt="" ${qq.hasPhoto?'':'style="display:none"'} style="width:44px;height:44px;object-fit:cover;border-radius:8px;border:1.5px solid var(--gray-mid);cursor:pointer" onclick="viewConvPhoto('${qq.id}')">
           <div style="flex:1;min-width:0">
-            <div style="font-size:12px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(q.shop)}${best?' <span style="font-size:9px;font-weight:800;color:#15803d;background:#dcfce7;border-radius:8px;padding:1px 6px">🥇 CHEAPEST</span>':''}</div>
-            <div style="font-size:11px;color:var(--gray);margin-top:2px">${esc(q.from)} ${fmt2(q.amount)} → <b style="color:var(--dark)">${esc(q.to)} ${fmt2(q.result)}</b> · ${tt}</div>
+            <div style="font-size:12px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(qq.shop)}${best?' <span style="font-size:9px;font-weight:800;color:#15803d;background:#dcfce7;border-radius:8px;padding:1px 6px">🥇 CHEAPEST</span>':''}</div>
+            <div style="font-size:11px;color:var(--gray);margin-top:2px">${esc(qq.from)} ${fmt2(qq.amount)} → <b style="color:var(--dark)">${esc(qq.to)} ${fmt2(qq.result)}</b> · ${tt}</div>
           </div>
-          <button class="settle-paid-btn" onclick="useQuote('${q.id}')" title="Use this price in Add Expense">➕</button>
-          <button class="settle-paid-btn" style="border-color:var(--danger);color:var(--danger)" onclick="deleteConvEntryById('${q.id}')" title="Remove quote">✕</button>
+          <button class="settle-paid-btn" onclick="useQuote('${qq.id}')" title="Use this price in Add Expense">➕</button>
+          <button class="settle-paid-btn" style="border-color:var(--danger);color:var(--danger)" onclick="deleteConvEntryById('${qq.id}')" title="Remove quote">✕</button>
         </div>`;}).join('')}
+      <button class="btn btn-outline btn-sm" style="width:100%;margin-top:8px;padding:6px;font-size:12px" onclick="addQuoteToProduct('${escAttr(g.product)}')">➕ Add quote for this product</button>
+      `}
     </div>`;}).join('');
-  // load photo thumbnails asynchronously from IndexedDB
-  list.filter(q=>q.hasPhoto).forEach(q=>{
-    idbGet('conv_'+q.id).then(data=>{const im=wrap.querySelector(`[data-photoid="${q.id}"]`);if(im&&data)im.src=data;}).catch(()=>{});
+  // thumbnails: embedded (public) or from IndexedDB (private)
+  list.filter(x=>x.hasPhoto).forEach(x=>{
+    if(x.photo){const im=wrap.querySelector(`[data-photoid="${x.id}"]`);if(im)im.src=x.photo;return;}
+    idbGet('conv_'+x.id).then(data=>{const im=wrap.querySelector(`[data-photoid="${x.id}"]`);if(im&&data)im.src=data;}).catch(()=>{});
   });
 }
 function swapConverter(){const f=document.getElementById('cv-from'),t=document.getElementById('cv-to');const a=f.value;f.value=t.value;t.value=a;renderConverter();}
@@ -2645,21 +2801,46 @@ function viewGalleryReceipt(i){
 }
 window.viewGalleryReceipt=viewGalleryReceipt;
 
-// ── ACTIVITY FEED (derived: additions, edits, payments)
-function renderActivity(){
+// ── ACTIVITY LOG (persisted — survives deletion, serves as an audit trail)
+const ACT_ICON={add:'➕',edit:'✏️',delete:'🗑️',restore:'♻️',payment:'🤝',paymentRemove:'↩️',bulkDelete:'🗑️',backup:'💾',restoreBackup:'📥'};
+function getLocalAct(){try{return JSON.parse(localStorage.getItem('localAct_'+currentCode)||'[]');}catch(e){return[];}}
+async function logActivity(action,text){
+  if(!currentCode)return;
+  const rec={who:myIdentity||'Someone',action,text,ts:new Date().toISOString()};
+  try{
+    if(firebaseOk&&db)await setDoc(doc(db,'trips',currentCode,'activity',currentCode+'_act_'+Date.now().toString(36)+Math.random().toString(36).slice(2,5)),rec);
+    else{const l=getLocalAct();l.unshift(rec);try{localStorage.setItem('localAct_'+currentCode,JSON.stringify(l.slice(0,200)));}catch(e){}}
+  }catch(e){}
+}
+window.logActivity=logActivity;
+async function readActivityLog(){
+  if(firebaseOk&&db){
+    try{
+      const snap=await getDocs(query(collection(db,'trips',currentCode,'activity'),orderBy('ts','desc')));
+      return snap.docs.map(dd=>({id:dd.id,...dd.data()})).slice(0,60);
+    }catch(e){return[];}
+  }
+  return getLocalAct().slice(0,60);
+}
+async function renderActivity(){
   const el=document.getElementById('activity-feed');if(!el)return;
-  const acts=[];
-  expenses.forEach(e=>{
-    const created=e.createdAt||'',updated=e.updatedAt||'';
-    const edited=updated&&created&&(new Date(updated)-new Date(created))>2000;
-    acts.push({ts:updated||created,who:e.paidBy||'?',kind:edited?'✏️':'➕',txt:`${edited?'edited':'added'} “${String(e.description||'Receipt').slice(0,24)}” ${esc((e.currency||'')+(' '+fmt2(e.amount||0)))}`});
-  });
-  payments.forEach(p=>acts.push({ts:p.createdAt||'',who:p.from,kind:'🤝',txt:`paid ${p.to} HKD ${fmt2(p.amountHKD||0)}`}));
-  acts.sort((a,b)=>(b.ts||'').localeCompare(a.ts||''));
-  el.innerHTML=acts.slice(0,6).map(a=>`
+  const box=document.getElementById('s-activity-box');
+  if(box&&box.classList.contains('hidden'))return; // only read the log when the panel is open
+  let acts=await readActivityLog();
+  // fallback for trips created before the log existed: derive from current data
+  if(!acts.length){
+    expenses.forEach(e=>{
+      const created=e.createdAt||'',updated=e.updatedAt||'';
+      const edited=updated&&created&&(new Date(updated)-new Date(created))>2000;
+      acts.push({ts:updated||created,who:e.paidBy||'?',action:edited?'edit':'add',text:`“${String(e.description||'Receipt').slice(0,24)}” ${(e.currency||'')+' '+fmt2(e.amount||0)}`});
+    });
+    payments.forEach(p=>acts.push({ts:p.createdAt||'',who:p.from,action:'payment',text:`paid ${p.to} HKD ${fmt2(p.amountHKD||0)}`}));
+    acts.sort((a,b)=>(b.ts||'').localeCompare(a.ts||''));
+  }
+  el.innerHTML=acts.slice(0,12).map(a=>`
     <div style="display:flex;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--gray-mid);font-size:12px">
-      <span>${a.kind}</span>
-      <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><b>${esc(a.who)}</b> ${a.txt}</span>
+      <span>${ACT_ICON[a.action]||'•'}</span>
+      <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><b>${esc(a.who||'?')}</b> ${esc(a.text||'')}</span>
       <span style="color:var(--gray);font-size:10px;flex-shrink:0">${a.ts?fmtDateShort(String(a.ts).slice(0,10)):''}</span>
     </div>`).join('')||'<div style="font-size:12px;color:var(--gray);padding:6px 0">No activity yet</div>';
 }
@@ -2670,9 +2851,17 @@ function applyTheme(){
   const dark=pref==='dark'||(pref==='auto'&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);
   document.documentElement.dataset.theme=dark?'dark':'light';
   const mt=document.querySelector('meta[name=theme-color]');if(mt)mt.setAttribute('content',dark?'#0b1220':'#f0f4ff');
+  const lb=document.getElementById('lobby-theme-btn');
+  if(lb){const ico=dark?'🌙':'☀️';lb.textContent=`${ico} Theme: ${pref[0].toUpperCase()+pref.slice(1)}`;}
 }
 function setTheme(v){try{localStorage.setItem('theme',v);}catch(e){}applyTheme();}
 window.setTheme=setTheme;
+function cycleTheme(){
+  const order=['auto','light','dark'];
+  let pref='auto';try{pref=localStorage.getItem('theme')||'auto';}catch(e){}
+  setTheme(order[(order.indexOf(pref)+1)%order.length]);
+}
+window.cycleTheme=cycleTheme;
 function toggleActivityBox(){
   const box=document.getElementById('s-activity-box');
   const btn=document.getElementById('s-activity-toggle');
@@ -2712,6 +2901,7 @@ async function restoreBackupData(data){
       localStorage.setItem('localPay_'+currentCode,JSON.stringify(data.payments||[]));
       loadLocalExp();
     }
+    logActivity('restoreBackup',`restored a backup (${data.expenses.length} expense(s))`);
     toast('Backup restored ✓','success');renderTripHeaders();renderDateStrip();
   }finally{showLoading(false);}
 }
@@ -2776,13 +2966,14 @@ async function deleteTripSettings(){
   if(typed!==currentTrip?.name){toast('Name does not match','error');return;}if(!confirm(`Permanently delete "${currentTrip.name}"?`))return;
   showLoading(true,'Deleting…');
   try{
-    if(firebaseOk&&db){const snap=await getDocs(collection(db,'trips',currentCode,'expenses'));const batch=writeBatch(db);snap.docs.forEach(d=>batch.delete(d.ref));const psnap=await getDocs(collection(db,'trips',currentCode,'payments'));psnap.docs.forEach(d=>batch.delete(d.ref));batch.delete(doc(db,'trips',currentCode));await batch.commit();}
-    else{const lt=getLocalTrips();delete lt[currentCode];localStorage.setItem('localTrips',JSON.stringify(lt));localStorage.removeItem('localExp_'+currentCode);localStorage.removeItem('localPay_'+currentCode);localStorage.removeItem('localConv_'+currentCode);}
+    if(firebaseOk&&db){const snap=await getDocs(collection(db,'trips',currentCode,'expenses'));const batch=writeBatch(db);snap.docs.forEach(d=>batch.delete(d.ref));const psnap=await getDocs(collection(db,'trips',currentCode,'payments'));psnap.docs.forEach(d=>batch.delete(d.ref));const csnap=await getDocs(collection(db,'trips',currentCode,'comparisons'));csnap.docs.forEach(d=>batch.delete(d.ref));const asnap=await getDocs(collection(db,'trips',currentCode,'activity'));asnap.docs.forEach(d=>batch.delete(d.ref));batch.delete(doc(db,'trips',currentCode));await batch.commit();}
+    else{const lt=getLocalTrips();delete lt[currentCode];localStorage.setItem('localTrips',JSON.stringify(lt));localStorage.removeItem('localExp_'+currentCode);localStorage.removeItem('localPay_'+currentCode);localStorage.removeItem('localConv_'+currentCode);localStorage.removeItem('localAct_'+currentCode);}
     await idbDelTrip(currentCode);removeMyTrip(currentCode);
     localStorage.removeItem('trip_'+currentCode+'_who');localStorage.removeItem('trip_'+currentCode+'_pw');
     currentTrip=null;currentCode=null;myIdentity=null;expenses=[];
     if(expensesUnsub){expensesUnsub();expensesUnsub=null;}
     if(paymentsUnsub){paymentsUnsub();paymentsUnsub=null;}
+    if(convUnsub){convUnsub();convUnsub=null;}
     renderLobby();navigateTo('lobby');toast('Trip deleted','warn');
   }catch(e){toast('Delete failed: '+e.message,'error');}finally{showLoading(false);}
 }
@@ -2797,15 +2988,18 @@ async function confirmDeleteAll(){
       for(const c of mine){
         const es=await getDocs(collection(db,'trips',c,'expenses'));
         const ps=await getDocs(collection(db,'trips',c,'payments'));
-        const batch=writeBatch(db);es.docs.forEach(dd=>batch.delete(dd.ref));ps.docs.forEach(dd=>batch.delete(dd.ref));batch.delete(doc(db,'trips',c));await batch.commit();
+        const cs=await getDocs(collection(db,'trips',c,'comparisons'));
+        const as=await getDocs(collection(db,'trips',c,'activity'));
+        const batch=writeBatch(db);es.docs.forEach(dd=>batch.delete(dd.ref));ps.docs.forEach(dd=>batch.delete(dd.ref));cs.docs.forEach(dd=>batch.delete(dd.ref));as.docs.forEach(dd=>batch.delete(dd.ref));batch.delete(doc(db,'trips',c));await batch.commit();
       }
     }
-    const lt=getLocalTrips();mine.forEach(c=>{delete lt[c];localStorage.removeItem('localExp_'+c);localStorage.removeItem('localPay_'+c);localStorage.removeItem('localConv_'+c);});
+    const lt=getLocalTrips();mine.forEach(c=>{delete lt[c];localStorage.removeItem('localExp_'+c);localStorage.removeItem('localPay_'+c);localStorage.removeItem('localConv_'+c);localStorage.removeItem('localAct_'+c);});
     localStorage.setItem('localTrips',JSON.stringify(lt));
     await idbClearAll();
     mine.forEach(c=>{removeMyTrip(c);localStorage.removeItem('trip_'+c+'_who');localStorage.removeItem('trip_'+c+'_pw');});
     if(expensesUnsub){expensesUnsub();expensesUnsub=null;}
     if(paymentsUnsub){paymentsUnsub();paymentsUnsub=null;}
+    if(convUnsub){convUnsub();convUnsub=null;}
     currentTrip=null;currentCode=null;myIdentity=null;expenses=[];
     navigateTo('lobby');renderLobby();toast('All my trips deleted','warn');
   }catch(e){toast('Error: '+e.message,'error');}finally{showLoading(false);}
@@ -2830,5 +3024,5 @@ function formatDateLong(s){if(!s)return'';const[y,m,d]=s.split('-').map(Number);
   }
 })();
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3199c7eac7f0705',t:'MTc4NzgxODM0Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a319db8cbea208bc',t:'MTc4NzgyMDkzMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
