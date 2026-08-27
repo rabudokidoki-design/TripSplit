@@ -183,6 +183,9 @@ button{cursor:pointer;border:none;background:none}
 .split-person-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--white);flex-shrink:0}
 .split-person-name{font-size:12px;font-weight:600;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .split-check{color:var(--accent);flex-shrink:0;transition:opacity .15s}
+.paid-tag{display:none;font-size:9px;font-weight:800;letter-spacing:.4px;color:#92400e;background:#fef3c7;border:1.5px solid #fcd34d;border-radius:8px;padding:1px 7px;width:max-content;margin-top:2px}
+.split-person.is-payer .paid-tag{display:inline-block}
+.split-person.is-payer .split-person-avatar{box-shadow:0 0 0 2.5px #f59e0b}
 .split-check svg{width:14px;height:14px;stroke-width:2.5}
 
 /* EXPENSES */
@@ -616,7 +619,7 @@ button{cursor:pointer;border:none;background:none}
       <div class="rate-row">
         <div style="min-width:0">
           <label class="form-label">Paid By *</label>
-          <select class="currency-select" id="exp-paidby" style="width:100%;padding:12px 36px 12px 14px"></select>
+          <select class="currency-select" id="exp-paidby" style="width:100%;padding:12px 36px 12px 14px" onchange="updatePaidByBadge()"></select>
         </div>
         <div style="min-width:0">
           <label class="form-label">Date</label>
@@ -1010,7 +1013,8 @@ document.querySelectorAll('.modal-overlay,.sheet-overlay').forEach(el=>{el.addEv
 // ── TOAST
 function toast(msg,type='',undoFn=null,duration=3500){
   const c=document.getElementById('toast-container');const t=document.createElement('div');
-  t.className='toast'+(type?' '+type:'');t.innerHTML=`<span>${msg}</span>`;
+  t.className='toast'+(type?' '+type:'');
+  const ts=document.createElement('span');ts.textContent=msg;t.appendChild(ts);
   if(undoFn){const u=document.createElement('button');u.className='toast-undo';u.textContent='Undo';u.onclick=()=>{undoFn();t.remove();};t.appendChild(u);}
   c.appendChild(t);setTimeout(()=>t.remove(),duration);
 }
@@ -1061,7 +1065,7 @@ window.quickJoin=quickJoin;
   const p=new URLSearchParams(location.search);
   const jc=p.get('join');
   if(jc){
-    const code=jc.toUpperCase();
+    const code=jc.toUpperCase().replace(/[^A-Z0-9]/g,'');
     document.getElementById('join-code').value=code;
     const saved=getMyTrips().find(t=>t.code===code);
     if(saved?.pw){document.getElementById('join-pw').value=saved.pw;setTimeout(()=>joinTrip(true),800);}
@@ -1183,14 +1187,17 @@ function renderHeroBlocks(){
     <div class="hero-block">
       <div class="hero-block-label">Members</div>
       <div class="hero-block-value">${(trip.friends||[]).length}</div>
-      <div class="hero-block-sub">${(trip.friends||[]).join(', ')}</div>
+      <div class="hero-block-sub">${(trip.friends||[]).map(f=>esc(f)).join(', ')}</div>
     </div>`;
   ['exp-hero-blocks','bal-hero-blocks'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=html;});
 }
 
 // ── CREATE TRIP
 function generateCode(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';return Array.from({length:6},()=>c[Math.floor(Math.random()*c.length)]).join('');}
-async function getUniqueCode(){let code=generateCode();if(firebaseOk&&db){for(let i=0;i<5;i++){if(!(await getDoc(doc(db,'trips',code))).exists())return code;code=generateCode();}}return code;}
+async function getUniqueCode(){let code=generateCode();
+  if(firebaseOk&&db){for(let i=0;i<5;i++){if(!(await getDoc(doc(db,'trips',code))).exists())return code;code=generateCode();}}
+  else{const local=getLocalTrips();for(let i=0;i<5;i++){if(!local[code])return code;code=generateCode();}}
+  return code;}
 async function initCreatePage(){
   const sel=document.getElementById('c-numdays');
   if(!sel.options.length){for(let i=1;i<=30;i++){const o=document.createElement('option');o.value=i;o.textContent=i+' day'+(i>1?'s':'');sel.appendChild(o);}sel.value=5;}
@@ -1270,11 +1277,20 @@ window.selectCategory=selectCategory;
 function buildSplitGrid(){
   document.getElementById('split-grid').innerHTML=(currentTrip?.friends||[]).map((name,i)=>`
     <div class="split-person included" data-name="${escAttr(name)}" onclick="toggleSplit(this)">
-      <div class="split-person-avatar" style="background:${AVATAR_COLORS[i%AVATAR_COLORS.length]}">${name.charAt(0).toUpperCase()}</div>
-      <div class="split-person-name">${esc(name)}</div>
+      <div class="split-person-avatar" style="background:${AVATAR_COLORS[i%AVATAR_COLORS.length]}">${esc(name.charAt(0).toUpperCase())}</div>
+      <div style="flex:1;min-width:0">
+        <div class="split-person-name">${esc(name)}</div>
+        <span class="paid-tag">💰 PAID</span>
+      </div>
       <div class="split-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
     </div>`).join('');
+  updatePaidByBadge();
 }
+function updatePaidByBadge(){
+  const payer=document.getElementById('exp-paidby')?.value||'';
+  document.querySelectorAll('#split-grid .split-person').forEach(el=>el.classList.toggle('is-payer',el.dataset.name===payer));
+}
+window.updatePaidByBadge=updatePaidByBadge;
 function toggleSplit(el){el.classList.toggle('included');el.querySelector('.split-check').style.opacity=el.classList.contains('included')?'1':'0';}
 window.toggleSplit=toggleSplit;
 function splitAll(){document.querySelectorAll('.split-person').forEach(el=>{el.classList.add('included');el.querySelector('.split-check').style.opacity='1';});}
@@ -1422,10 +1438,15 @@ async function saveExpense(){
   saveBusy=true;
   const btn=document.getElementById('add-expense-btn');btn.disabled=true;btn.textContent=editingExpenseId?'Updating…':'Adding…';
   const rateToHKD=rateForCurrency(cur);
-  const amountHKD=parseFloat((amount*rateToHKD).toFixed(2));
+  // integrity: if editing without changing amount/currency, keep the ORIGINAL HKD value & entry rate
+  // (a description typo-fix must never silently re-rate an old expense at today's rate)
+  const orig=editingExpenseId?expenses.find(e=>e.id===editingExpenseId):null;
+  const unchanged=orig&&orig.currency===cur&&Math.abs((parseFloat(orig.amount)||0)-amount)<0.005;
+  const amountHKD=unchanged&&isFinite(parseFloat(orig.amountHKD))?parseFloat(orig.amountHKD):parseFloat((amount*rateToHKD).toFixed(2));
+  const rateUsedFinal=unchanged&&typeof orig.rateUsed==='number'&&orig.rateUsed>0?orig.rateUsed:rateToHKD;
   const perPerson=split.length>0?parseFloat((amountHKD/split.length).toFixed(2)):0;
   const expId=editingExpenseId||(currentCode+'_'+Date.now());
-  const expData={description:desc||(hasRec?'Receipt - pending update':''),amount,currency:cur,amountHKD,rateUsed:rateToHKD,date,paidBy,category:effectiveCategory,splitAmong:split,perPerson,hasReceipt:hasRec,updatedAt:new Date().toISOString()};
+  const expData={description:desc||(hasRec?'Receipt - pending update':''),amount,currency:cur,amountHKD,rateUsed:rateUsedFinal,date,paidBy,category:effectiveCategory,splitAmong:split,perPerson,hasReceipt:hasRec,updatedAt:new Date().toISOString()};
   if(!editingExpenseId)expData.createdAt=new Date().toISOString();
   if(hasRec&&receiptDataURL){await idbSave(expId,receiptDataURL);expData.receiptBase64=(receiptDataURL.length<700000)?receiptDataURL:null;}
   else{expData.receiptBase64=null;try{await idbDel(expId);}catch(e){}}
@@ -1567,7 +1588,7 @@ function goPage(n){currentExpPage=n;renderExpenses();document.getElementById('ap
 window.goPage=goPage;
 function onSearchFilter(){currentExpPage=1;renderExpenses();}
 window.onSearchFilter=onSearchFilter;
-function getExpSort(){try{return localStorage.getItem('expSort')||'newest';}catch(e){return 'newest';}}
+function getExpSort(){try{const v=localStorage.getItem('expSort');return['newest','oldest','biggest','smallest'].includes(v)?v:'newest';}catch(e){return 'newest';}}
 function onSortChange(){try{localStorage.setItem('expSort',document.getElementById('exp-sort').value);}catch(e){}currentExpPage=1;renderExpenses();}
 window.onSortChange=onSortChange;
 function togglePendingFilter(){pendingFilterActive=!pendingFilterActive;document.getElementById('pending-filter-btn').classList.toggle('active',pendingFilterActive);currentExpPage=1;renderExpenses();}
@@ -1838,14 +1859,15 @@ function copySettlement(){
 window.copySettlement=copySettlement;
 
 // ── EXCEL
+function xlSafe(v){const s=String(v==null?'':v);return /^[=+\-@\t\r]/.test(s)?"'"+s:s;}
 function exportExcel(){
   if(!window.XLSX){toast('Excel library not loaded','warn');return;}
   const trip=currentTrip,bal=computeBalances(),trans=computeSettlements();
   const curList=byCur=>{const ks=sortCurKeys(Object.keys(byCur));return ks.length?ks.map(c=>`${c} ${fmt2(byCur[c])}`).join(' + '):'';};
   const wb=XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['Date','Description','Category','Paid By','Currency','Amount (as entered)','Amount (HKD)','Rate to HKD','Shared With','Receipt'],...expenses.map(e=>[e.date||'',e.description||'',e.category||'',e.paidBy||'',e.currency||'HKD',e.amount||0,e.amountHKD||0,e.rateUsed||'',(e.splitAmong||[]).join(', '),e.hasReceipt?'Yes':'No'])]),'Expenses');
-  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['Name','Paid (as entered)','Paid (HKD)','Share (as entered)','Share (HKD)','Balance (HKD)','Status'],...bal.map(b=>[b.name,curList(b.paidByCur),fmt2(b.paid),curList(b.shareByCur),fmt2(b.share),fmt2(b.balance),Math.abs(b.balance)<0.01?'Settled':b.balance>0?'Gets back':'Owes'])]),'Balances');
-  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['From','To','Amount (HKD)'],...trans.map(t=>[t.from,t.to,fmt2(t.amount)])]),'Settlement');
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['Date','Description','Category','Paid By','Currency','Amount (as entered)','Amount (HKD)','Rate to HKD','Shared With','Receipt'],...expenses.map(e=>[xlSafe(e.date||''),xlSafe(e.description||''),xlSafe(e.category||''),xlSafe(e.paidBy||''),xlSafe(e.currency||'HKD'),e.amount||0,e.amountHKD||0,e.rateUsed||'',xlSafe((e.splitAmong||[]).join(', ')),e.hasReceipt?'Yes':'No'])]),'Expenses');
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['Name','Paid (as entered)','Paid (HKD)','Share (as entered)','Share (HKD)','Balance (HKD)','Status'],...bal.map(b=>[xlSafe(b.name),xlSafe(curList(b.paidByCur)),fmt2(b.paid),xlSafe(curList(b.shareByCur)),fmt2(b.share),fmt2(b.balance),Math.abs(b.balance)<0.01?'Settled':b.balance>0?'Gets back':'Owes'])]),'Balances');
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['From','To','Amount (HKD)'],...trans.map(t=>[xlSafe(t.from),xlSafe(t.to),fmt2(t.amount)])]),'Settlement');
   XLSX.writeFile(wb,(trip.name||'TripSplit')+'_export.xlsx');toast('Exported ✓','success');
 }
 window.exportExcel=exportExcel;
