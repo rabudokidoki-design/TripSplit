@@ -557,9 +557,6 @@ button{cursor:pointer;border:none;background:none}
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="14" height="14" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
       EDITING EXPENSE
     </div>
-    <div class="form-label">Date</div>
-    <div class="date-strip-wrap mt-8"><div class="date-strip" id="date-strip"></div></div>
-    <input type="date" id="exp-date" class="form-input" style="margin-bottom:14px" onchange="onManualDateChange()">
     <div class="form-group">
       <label class="form-label">Amount *</label>
       <div class="amount-row">
@@ -577,10 +574,6 @@ button{cursor:pointer;border:none;background:none}
       </div>
       <input type="text" id="exp-desc" class="form-input" placeholder="What was this expense? (optional if photo)" maxlength="80"
         oninput="onDescInput(this)">
-    </div>
-    <div class="form-group">
-      <label class="form-label">Paid By *</label>
-      <select class="currency-select" id="exp-paidby" style="width:100%;padding:12px 36px 12px 14px"></select>
     </div>
     <div class="form-group">
       <label class="form-label">Category</label>
@@ -616,6 +609,19 @@ button{cursor:pointer;border:none;background:none}
         </div>
       </div>
       <div class="split-grid" id="split-grid"></div>
+    </div>
+    <div class="form-group" style="margin-bottom:0">
+      <div class="rate-row">
+        <div style="min-width:0">
+          <label class="form-label">Paid By *</label>
+          <select class="currency-select" id="exp-paidby" style="width:100%;padding:12px 36px 12px 14px"></select>
+        </div>
+        <div style="min-width:0">
+          <label class="form-label">Date</label>
+          <input type="date" id="exp-date" class="form-input" style="width:100%" onchange="onManualDateChange()">
+        </div>
+      </div>
+      <div class="date-strip-wrap" style="margin-top:10px"><div class="date-strip" id="date-strip"></div></div>
     </div>
     <div style="display:flex;gap:10px;margin-top:16px" id="form-action-row">
       <button class="btn btn-outline hidden" id="cancel-edit-btn" onclick="cancelEdit()">Cancel</button>
@@ -781,6 +787,12 @@ button{cursor:pointer;border:none;background:none}
       <button class="btn btn-primary mt-8" onclick="saveTripSettings()">Save Changes</button>
     </div>
     <div class="settings-block">
+      <h3>🔗 Invite Members</h3>
+      <p style="font-size:13px;color:var(--gray);margin-bottom:12px">Share this link — friends enter the trip password to join.</p>
+      <div class="invite-preview" id="s-invite-link">—</div>
+      <button class="btn btn-outline btn-sm" style="margin-top:10px;padding:8px 14px" onclick="copyInviteLink()">📋 Copy Invite Link</button>
+    </div>
+    <div class="settings-block">
       <h3>🔑 Change Password</h3>
       <div class="form-group" style="margin-bottom:12px">
         <label class="form-label">New Password</label>
@@ -904,6 +916,7 @@ async function sha256(str){const buf=await crypto.subtle.digest('SHA-256',new Te
 
 // ── NAVIGATION
 function navigateTo(page){
+  cleanUrlParams();
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page-'+page).classList.add('active');
   const tabs=document.getElementById('bottom-tabs');
@@ -916,6 +929,7 @@ function navigateTo(page){
   if(page==='settings')_openSettingsForm();
 }
 window.navigateTo=navigateTo;
+function cleanUrlParams(){try{if(location.search)history.replaceState(null,'',location.pathname);}catch(e){}}
 function switchTab(tab){
   navigateTo(tab);
   if(tab==='expenses')renderExpenses();
@@ -1071,6 +1085,7 @@ async function joinTrip(auto=false){
     else{const local=getLocalTrips();if(!local[code])throw new Error('Trip not found');trip=local[code];}
     if(await sha256(pw)!==trip.passwordHash)throw new Error('Wrong password');
     currentTrip=trip;currentCode=code;
+    cleanUrlParams(); // invite link consumed — don't keep ?join=CODE in the address bar
     if(rem){saveMyTrip(code,trip.name,pw);localStorage.setItem('trip_'+code+'_pw',pw);}
     else saveMyTrip(code,trip.name,'');
     const who=localStorage.getItem('trip_'+code+'_who');
@@ -1835,6 +1850,7 @@ function _openSettingsForm(){
   document.getElementById('s-end').value=currentTrip.endDate||'';
   document.getElementById('s-members').value=(currentTrip.friends||[]).join(', ');
   document.getElementById('s-identity-display').textContent=myIdentity||'Not set';
+  document.getElementById('s-invite-link').textContent=location.origin+location.pathname+'?join='+currentCode;
   document.getElementById('s-trip-name-display').textContent=currentTrip.name||'';
   document.getElementById('s-confirm-delete').value='';
 }
@@ -1875,6 +1891,12 @@ async function updateTripPassword(){
   }catch(e){toast('Failed: '+e.message,'error');}finally{showLoading(false);}
 }
 window.updateTripPassword=updateTripPassword;
+function copyInviteLink(){
+  const link=document.getElementById('s-invite-link').textContent||'';
+  if(!link||link==='—')return;
+  navigator.clipboard?.writeText(link).then(()=>toast('Invite link copied ✓','success')).catch(()=>toast('Copy failed — long-press the link to copy','error'));
+}
+window.copyInviteLink=copyInviteLink;
 function copyTripNameForDelete(){const name=currentTrip?.name||'';navigator.clipboard?.writeText(name).then(()=>toast('Copied','success'));document.getElementById('s-confirm-delete').value=name;}
 window.copyTripNameForDelete=copyTripNameForDelete;
 async function deleteTripSettings(){
@@ -1921,5 +1943,5 @@ function formatDateLong(s){if(!s)return'';const[y,m,d]=s.split('-').map(Number);
 })();
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a317533f2989dd4d',t:'MTc4Nzc5NDM3NQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a31762b169efdd4d',t:'MTc4Nzc5NTAwOA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
