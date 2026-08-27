@@ -98,6 +98,8 @@ button{cursor:pointer;border:none;background:none}
 .badge{background:var(--navy-mid);color:var(--white);border-radius:10px;padding:2px 8px;font-size:11px;font-weight:700}
 .trip-card{display:flex;align-items:center;padding:12px 14px;border-radius:var(--radius-sm);border:2px solid var(--gray-mid);margin-bottom:8px;cursor:pointer;transition:all .2s;gap:12px}
 .trip-card:hover{border-color:var(--accent);background:var(--accent-light)}
+.trip-card-remove{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--gray-mid);background:var(--white);color:var(--gray);font-size:13px;font-weight:700;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;padding:0}
+.trip-card-remove:hover{border-color:var(--danger);color:var(--danger);background:#fef2f2}
 .trip-card-icon{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--navy),var(--navy-mid));display:flex;align-items:center;justify-content:center;color:var(--white);font-weight:800;font-size:15px;flex-shrink:0}
 .trip-card-info{flex:1;min-width:0}
 .trip-card-name{font-size:14px;font-weight:700;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -177,7 +179,6 @@ button{cursor:pointer;border:none;background:none}
 .receipt-thumb{width:48px;height:48px;object-fit:cover;border-radius:6px;cursor:pointer}
 .receipt-actions{display:flex;gap:8px}
 .receipt-btn{padding:5px 10px;border-radius:6px;font-size:12px;font-weight:600;background:var(--white);border:1.5px solid var(--gray-mid);color:var(--dark);cursor:pointer}
-.storage-badge{display:inline-flex;align-items:center;gap:5px;background:#f0fdf4;border:1.5px solid #86efac;border-radius:8px;padding:4px 10px;font-size:11px;font-weight:600;color:#16a34a;margin-top:6px}
 .split-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
 .split-person{display:flex;align-items:center;gap:8px;padding:10px;border-radius:var(--radius-sm);border:2px solid var(--gray-mid);cursor:pointer;transition:all .15s}
 .split-person.included{border-color:var(--accent);background:var(--accent-light)}
@@ -578,10 +579,6 @@ button{cursor:pointer;border:none;background:none}
       <div class="receipt-area" onclick="document.getElementById('receipt-file').click()">
         📎 Upload receipt / Take photo
       </div>
-      <div class="storage-badge">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="12" height="12" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        Stored locally on device · Free · Works offline
-      </div>
       <div class="receipt-preview" id="receipt-preview">
         <img class="receipt-thumb" id="receipt-thumb" src="" alt="Receipt" onclick="viewReceipt()">
         <div style="flex:1;min-width:0">
@@ -640,7 +637,7 @@ button{cursor:pointer;border:none;background:none}
 <div class="page" id="page-expenses">
   <div class="trip-header">
     <div class="trip-header-top">
-      <div class="trip-header-back" onclick="navigateTo('lobby')">
+      <div class="trip-header-back" onclick="navigateTo('new')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>Trips
       </div>
       <div class="trip-header-title" id="exp-trip-title">Expenses</div>
@@ -689,7 +686,7 @@ button{cursor:pointer;border:none;background:none}
 <div class="page" id="page-balances">
   <div class="trip-header">
     <div class="trip-header-top">
-      <div class="trip-header-back" onclick="navigateTo('lobby')">
+      <div class="trip-header-back" onclick="navigateTo('new')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>Trips
       </div>
       <div class="trip-header-title" id="bal-trip-title">Balances</div>
@@ -731,7 +728,7 @@ button{cursor:pointer;border:none;background:none}
 <div class="page" id="page-settlement">
   <div class="trip-header">
     <div class="trip-header-top">
-      <div class="trip-header-back" onclick="navigateTo('lobby')">
+      <div class="trip-header-back" onclick="navigateTo('new')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>Trips
       </div>
       <div class="trip-header-title" id="set-trip-title">Settlement</div>
@@ -1063,6 +1060,7 @@ function renderLobby(){
         <div class="trip-card-name">${esc(t.name||t.code)}</div>
         <div class="trip-card-code">${esc(t.code)}</div>
       </div>
+      <button class="trip-card-remove" onclick="event.stopPropagation();removeTripFromList('${esc(t.code)}')" title="Remove from My Trips" aria-label="Remove from My Trips">✕</button>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="16" height="16" stroke-width="2.5" style="color:var(--gray);flex-shrink:0"><polyline points="9 18 15 12 9 6"/></svg>
     </div>`).join('');}
   document.getElementById('create-section').classList.toggle('hidden',!isAdminMode);
@@ -1074,6 +1072,13 @@ async function quickJoin(code){
   else{document.getElementById('join-pw').value='';document.getElementById('join-pw').focus();}
 }
 window.quickJoin=quickJoin;
+function removeTripFromList(code){
+  const t=getMyTrips().find(x=>x.code===code);if(!t)return;
+  if(!confirm(`Remove "${t.name||t.code}" from My Trips?\n(The trip itself is not deleted for other members.)`))return;
+  removeMyTrip(code);renderLobby();toast('Removed from My Trips','warn');
+}
+window.removeTripFromList=removeTripFromList;
+window.renderLobby=renderLobby;
 
 // ── ?join ?admin
 (function(){
@@ -1137,7 +1142,14 @@ async function joinTrip(auto=false){
     const who=localStorage.getItem('trip_'+code+'_who');
     if(who&&trip.friends?.includes(who)){myIdentity=who;showLoading(false);toast(`Welcome back ${who} 👋`,'success');enterTrip();}
     else{showLoading(false);showWhoModal();}
-  }catch(e){showLoading(false);toast(e.message==='Trip not found'?'Trip not found — check code':'Wrong password ❌','error');}
+  }catch(e){
+    showLoading(false);
+    if(e.message==='Trip not found'){
+      const known=getMyTrips().some(t=>t.code===code);
+      if(known&&confirm(`Trip ${code} no longer exists (it may have been deleted by an admin).\nRemove it from My Trips?`)){removeMyTrip(code);renderLobby();toast('Removed from My Trips','warn');return;}
+      toast('Trip not found — check code','error');
+    }else toast('Wrong password ❌','error');
+  }
 }
 window.joinTrip=joinTrip;
 
@@ -1390,7 +1402,7 @@ function onManualDateChange(){selectedDate=document.getElementById('exp-date').v
 window.onManualDateChange=onManualDateChange;
 
 // ── RESET FORM
-function resetNewForm(){
+function resetNewForm(skipFocus=false){
   editingExpenseId=null;receiptDataURL=null;
   document.getElementById('editing-badge').classList.add('hidden');
   document.getElementById('add-expense-btn').textContent='Add Expense';
@@ -1405,7 +1417,9 @@ function resetNewForm(){
   selectedDate=defDate;document.getElementById('exp-date').value=defDate;
   buildQuickChips();buildCategoryChips();selectCategory('Other');
   buildPaidByDropdown();buildExpCurrencyDropdown();buildSplitGrid();splitAll();renderDateStrip();
-  fabUpdate();focusAmountInput();
+  fabUpdate();
+  if(!skipFocus)focusAmountInput();
+  else{try{const ae=document.activeElement;if(ae&&ae.blur)ae.blur();}catch(e){}} // drop the keyboard so the success toast is visible
 }
 
 // ── RECEIPT
@@ -1486,7 +1500,7 @@ async function saveExpense(){
   try{
     if(firebaseOk&&db){if(editingExpenseId)await updateDoc(doc(db,'trips',currentCode,'expenses',editingExpenseId),expData);else await setDoc(doc(db,'trips',currentCode,'expenses',expId),expData);}
     else{let exps=getLocalExp(currentCode);if(editingExpenseId){const i=exps.findIndex(e=>e.id===editingExpenseId);if(i>=0)exps[i]={...exps[i],...expData};}else exps.unshift({id:expId,...expData});saveLocalExp(currentCode,exps);loadLocalExp();}
-    toast(editingExpenseId?'Updated ✓':'Added ✓','success');resetNewForm();
+    toast(editingExpenseId?'Updated ✓':'Added ✓','success');resetNewForm(true);
   }catch(e){toast('Save failed: '+e.message,'error');}
   finally{saveBusy=false;setTimeout(()=>{btn.disabled=false;btn.textContent=editingExpenseId?'Update Expense':'Add Expense';},600);}
 }
@@ -2032,5 +2046,5 @@ function formatDateLong(s){if(!s)return'';const[y,m,d]=s.split('-').map(Number);
   await openIDB();await initFirebase();renderLobby();showLoading(false);
 })();
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a31808b2198b094e',t:'MTc4NzgwMTgwNw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3182a7c89af094e',t:'MTc4NzgwMzE5MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
