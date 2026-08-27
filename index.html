@@ -154,6 +154,9 @@ button{cursor:pointer;border:none;background:none}
 .date-card .mm{font-size:9px;font-weight:600;opacity:.7;margin-top:2px}
 .date-card.active .wd,.date-card.active .mm{opacity:.65}
 .chips-row{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+.chips-scroll{display:flex;gap:7px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:2px 0 4px}
+.chips-scroll::-webkit-scrollbar{display:none}
+.chips-scroll .chip{flex:0 0 auto}
 .chip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;border:2px solid var(--gray-mid);color:var(--gray);background:var(--white);cursor:pointer;transition:all .15s}
 .chip:hover{border-color:var(--accent);color:var(--accent)}
 .chip.active{border-color:var(--accent);background:var(--accent);color:var(--white)}
@@ -163,7 +166,7 @@ button{cursor:pointer;border:none;background:none}
 .chip.cat-activity.active{background:var(--cat-activity);border-color:var(--cat-activity);color:#fff}
 .chip.cat-other.active{background:var(--cat-other);border-color:var(--cat-other);color:#fff}
 .chip.cat-pending.active{background:var(--cat-pending);border-color:var(--cat-pending);color:#fff}
-.amount-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start}
+.amount-row{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:stretch}
 .amount-input{font-size:26px;font-weight:800;letter-spacing:-.5px}
 .hkd-preview{background:var(--accent-light);border-radius:var(--radius-sm);padding:10px 12px;font-size:12px;color:var(--navy-mid);font-weight:600;margin-top:8px}
 .receipt-area{border:2px dashed var(--gray-mid);border-radius:var(--radius-sm);padding:20px;text-align:center;cursor:pointer;transition:border-color .2s;color:var(--gray);font-size:14px;font-weight:600}
@@ -560,24 +563,10 @@ button{cursor:pointer;border:none;background:none}
     <div class="form-group">
       <label class="form-label">Amount *</label>
       <div class="amount-row">
+        <select class="currency-select" id="exp-currency" onchange="updateHKDPreview()" style="width:96px;padding:12px 12px"></select>
         <input type="number" id="exp-amount" class="form-input amount-input" placeholder="0.00" step="0.01" min="0" oninput="updateHKDPreview()">
-        <select class="currency-select" id="exp-currency" onchange="updateHKDPreview()" style="padding:12px 30px 12px 12px"></select>
       </div>
       <div class="hkd-preview" id="hkd-preview">—</div>
-    </div>
-    <div class="form-label">Quick Fill</div>
-    <div class="chips-row mt-8" id="quick-chips"></div>
-    <div class="form-group">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-        <label class="form-label" style="margin-bottom:0">Description</label>
-        <span id="desc-counter" style="font-size:11px;color:var(--gray)">0/80</span>
-      </div>
-      <input type="text" id="exp-desc" class="form-input" placeholder="What was this expense? (optional if photo)" maxlength="80"
-        oninput="onDescInput(this)">
-    </div>
-    <div class="form-group">
-      <label class="form-label">Category</label>
-      <div class="chips-row mt-8" id="cat-chips"></div>
     </div>
     <div class="form-group">
       <label class="form-label">Receipt / Photo</label>
@@ -601,6 +590,15 @@ button{cursor:pointer;border:none;background:none}
       </div>
     </div>
     <div class="form-group">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <label class="form-label" style="margin-bottom:0">Description</label>
+        <span id="desc-counter" style="font-size:11px;color:var(--gray)">0/80</span>
+      </div>
+      <input type="text" id="exp-desc" class="form-input" placeholder="What was this expense? (optional if photo)" maxlength="80"
+        oninput="onDescInput(this)">
+      <div class="chips-scroll mt-8" id="quick-chips"></div>
+    </div>
+    <div class="form-group">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
         <label class="form-label" style="margin-bottom:0">Split Among</label>
         <div style="display:flex;gap:8px">
@@ -609,6 +607,10 @@ button{cursor:pointer;border:none;background:none}
         </div>
       </div>
       <div class="split-grid" id="split-grid"></div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Category</label>
+      <div class="chips-row mt-8" id="cat-chips"></div>
     </div>
     <div class="form-group" style="margin-bottom:0">
       <div class="rate-row">
@@ -1943,5 +1945,5 @@ function formatDateLong(s){if(!s)return'';const[y,m,d]=s.split('-').map(Number);
 })();
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a31762b169efdd4d',t:'MTc4Nzc5NTAwOA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
