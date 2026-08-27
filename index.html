@@ -33,6 +33,20 @@ button{cursor:pointer;border:none;background:none}
 
 /* TABS */
 #bottom-tabs{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:480px;background:var(--navy);border-radius:20px;display:none;align-items:center;justify-content:space-around;padding:10px 8px;z-index:40;box-shadow:0 8px 32px rgba(13,27,62,.4)}
+
+/* FAB: draggable circular add-expense button */
+#fab-add{position:fixed;width:58px;height:58px;border-radius:50%;display:none;align-items:center;justify-content:center;z-index:50;border:none;padding:0;background:linear-gradient(135deg,var(--blue-mid),var(--blue));color:#fff;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;outline:none;box-shadow:0 10px 26px rgba(37,99,235,.45),0 3px 8px rgba(10,22,40,.25);transition:transform .16s ease,box-shadow .16s ease}
+#fab-add.show{display:flex;animation:fabPop .22s ease}
+#fab-add:active{transform:scale(.92)}
+#fab-add.dragging{cursor:grabbing;transform:scale(1.1);transition:none;box-shadow:0 16px 34px rgba(37,99,235,.55),0 5px 12px rgba(10,22,40,.3)}
+#fab-add:focus-visible{box-shadow:0 0 0 3px #fff,0 10px 26px rgba(37,99,235,.45)}
+#fab-add svg{pointer-events:none;display:block}
+#fab-add .fab-ring{position:absolute;inset:-5px;border-radius:50%;border:2px dashed rgba(79,142,247,.45);animation:fabFlow 2.8s linear infinite;pointer-events:none}
+#fab-add .fab-ico-edit{display:none}
+#fab-add.editing .fab-ico-add{display:none}
+#fab-add.editing .fab-ico-edit{display:block}
+@keyframes fabPop{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes fabFlow{from{transform:rotate(0)}to{transform:rotate(360deg)}}
 .tab-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 4px;border-radius:12px;transition:all .2s;color:rgba(255,255,255,.4)}
 .tab-btn.active{color:var(--white);background:rgba(255,255,255,.15)}
 .tab-btn svg{width:20px;height:20px;stroke-width:2}
@@ -791,6 +805,13 @@ button{cursor:pointer;border:none;background:none}
 
 </div><!-- /app -->
 
+<!-- DRAGGABLE ADD-EXPENSE FAB -->
+<button id="fab-add" aria-label="Add expense">
+  <span class="fab-ring"></span>
+  <svg class="fab-ico-add" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" width="26" height="26"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+  <svg class="fab-ico-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><polyline points="20 6 9 17 4 12"/></svg>
+</button>
+
 <nav id="bottom-tabs">
   <button class="tab-btn active" onclick="switchTab('new')" data-tab="new">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg><span>New</span>
@@ -884,6 +905,7 @@ function navigateTo(page){
   if(tripPages.includes(page)){tabs.style.display='flex';document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===page));}
   else tabs.style.display='none';
   document.getElementById('app').scrollTo(0,0);
+  fabUpdate();
   if(page==='create')initCreatePage();
   if(page==='settings')_openSettingsForm();
 }
@@ -896,6 +918,57 @@ function switchTab(tab){
   if(tab==='new'&&!editingExpenseId)resetNewForm();
 }
 window.switchTab=switchTab;
+
+// ── DRAGGABLE ADD-EXPENSE FAB
+const FAB=document.getElementById('fab-add');
+let fabDrag=null,fabSuppressClick=false;
+function fabClamp(x,y){
+  const w=window.innerWidth||360,h=window.innerHeight||640,s=FAB.offsetWidth||58;
+  return{x:Math.min(Math.max(0,x),Math.max(0,w-s)),y:Math.min(Math.max(0,y),Math.max(0,h-s))};
+}
+function fabSetPos(x,y,save){
+  const p=fabClamp(x,y);
+  FAB.style.left=p.x+'px';FAB.style.top=p.y+'px';
+  if(save){try{localStorage.setItem('fabAddPos',JSON.stringify(p));}catch(e){}}
+}
+function fabDefault(){const w=window.innerWidth||360,h=window.innerHeight||640;fabSetPos(w-78,h-150,false);}
+function fabUpdate(){
+  const show=!!currentTrip&&document.getElementById('page-new').classList.contains('active');
+  if(show&&!FAB.style.left)fabDefault();
+  FAB.classList.toggle('show',show);
+  FAB.classList.toggle('editing',!!editingExpenseId);
+  FAB.setAttribute('aria-label',editingExpenseId?'Update expense':'Add expense');
+}
+(function(){try{const p=JSON.parse(localStorage.getItem('fabAddPos')||'null');if(p&&typeof p.x==='number'&&typeof p.y==='number')fabSetPos(p.x,p.y,false);else fabDefault();}catch(e){fabDefault();}})();
+FAB.addEventListener('pointerdown',e=>{
+  if(!FAB.classList.contains('show'))return;
+  e.preventDefault();
+  try{FAB.setPointerCapture(e.pointerId);}catch(err){}
+  const r=FAB.getBoundingClientRect();
+  fabDrag={dx:e.clientX-r.left,dy:e.clientY-r.top,sx:e.clientX,sy:e.clientY,lx:null,ly:null,moved:false};
+  FAB.classList.add('dragging');
+});
+FAB.addEventListener('pointermove',e=>{
+  if(!fabDrag)return;
+  if(Math.hypot(e.clientX-fabDrag.sx,e.clientY-fabDrag.sy)>6)fabDrag.moved=true;
+  if(fabDrag.moved){fabDrag.lx=e.clientX-fabDrag.dx;fabDrag.ly=e.clientY-fabDrag.dy;fabSetPos(fabDrag.lx,fabDrag.ly,false);}
+});
+function fabPointerEnd(){
+  if(!fabDrag)return;
+  const d=fabDrag;fabDrag=null;
+  FAB.classList.remove('dragging');
+  if(d.moved){
+    if(typeof d.lx==='number')fabSetPos(d.lx,d.ly,true);
+    fabSuppressClick=true;
+  }
+}
+FAB.addEventListener('pointerup',fabPointerEnd);
+FAB.addEventListener('pointercancel',fabPointerEnd);
+FAB.addEventListener('click',()=>{
+  if(fabSuppressClick){fabSuppressClick=false;return;}
+  saveExpense();
+});
+window.addEventListener('resize',()=>{if(FAB.classList.contains('show')&&FAB.style.left){const p=fabClamp(parseFloat(FAB.style.left)||0,parseFloat(FAB.style.top)||0);FAB.style.left=p.x+'px';FAB.style.top=p.y+'px';}});
 
 // ── MODALS
 function openModal(id){document.getElementById(id).classList.add('show');}
@@ -1252,6 +1325,7 @@ function resetNewForm(){
   selectedDate=defDate;document.getElementById('exp-date').value=defDate;
   buildQuickChips();buildCategoryChips();selectCategory('Other');
   buildPaidByDropdown();buildExpCurrencyDropdown();buildSplitGrid();splitAll();renderDateStrip();
+  fabUpdate();
 }
 
 // ── RECEIPT
@@ -1818,5 +1892,5 @@ function formatDateLong(s){if(!s)return'';const[y,m,d]=s.split('-').map(Number);
 })();
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3140abb8fb0fbc9',t:'MTc4Nzc1OTk0OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3173f970e3ddd4d',t:'MTc4Nzc5MzU3MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
