@@ -709,6 +709,7 @@ html[data-theme=dark] .who-btn{background:#1e293b;border-color:#334155;color:#e2
     <div class="bulk-bar-left" id="bulk-bar-label">Tap image expenses to select</div>
     <div class="bulk-bar-actions">
       <button class="bulk-btn bulk-btn-danger" onclick="bulkRemoveImages()">🗑 Remove Images</button>
+      <button class="bulk-btn bulk-btn-danger" onclick="bulkDeleteExpenses()">❌ Delete Expenses</button>
       <button class="bulk-btn bulk-btn-cancel" onclick="exitSelectMode()">Cancel</button>
     </div>
   </div>
@@ -844,10 +845,20 @@ html[data-theme=dark] .who-btn{background:#1e293b;border-color:#334155;color:#e2
       <button class="btn btn-primary" style="width:100%;margin-top:14px" onclick="useConverterInForm()">➕ Fill into Add Expense</button>
       <div class="rate-row" style="margin-top:14px;align-items:flex-end">
         <div class="form-group" style="margin-bottom:0;min-width:0">
-          <label class="form-label">Label (optional)</label>
-          <input type="text" id="cv-note" class="form-input" placeholder="e.g. Shop A / Myeongdong stall" maxlength="40">
+          <label class="form-label">Product *</label>
+          <input type="text" id="cv-product" class="form-input" placeholder="e.g. Ginseng pack" maxlength="40">
         </div>
-        <button class="btn btn-outline" style="margin-bottom:2px;white-space:nowrap" onclick="saveConvEntry()">💾 Save to compare</button>
+        <div class="form-group" style="margin-bottom:0;min-width:0">
+          <label class="form-label">Shop / place</label>
+          <input type="text" id="cv-shop" class="form-input" placeholder="e.g. Shop A" maxlength="40">
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:wrap">
+        <input type="file" id="conv-photo-file" accept="image/*" capture="environment" style="display:none" onchange="handleConvPhoto(event)">
+        <button type="button" class="btn btn-outline btn-sm" onclick="document.getElementById('conv-photo-file').click()">📷 Photo</button>
+        <img id="conv-photo-thumb" src="" alt="photo" style="width:40px;height:40px;object-fit:cover;border-radius:8px;border:1.5px solid var(--gray-mid);display:none" onclick="viewConvPhotoPreview()">
+        <button type="button" id="conv-photo-remove" class="share-step" style="display:none" onclick="removeConvPhoto()" title="Remove photo">✕</button>
+        <button class="btn btn-outline btn-sm" style="margin-left:auto" onclick="saveConvEntry()">💾 Save to compare</button>
       </div>
     </div>
     <div class="section-card" style="margin-top:14px">
@@ -922,6 +933,10 @@ html[data-theme=dark] .who-btn{background:#1e293b;border-color:#334155;color:#e2
           <option value="dark">Dark</option>
         </select>
       </div>
+    </div>
+    <div class="settings-block">
+      <h3>📦 Storage</h3>
+      <div id="storage-info" style="font-size:12px;color:var(--gray);line-height:1.7">Calculating…</div>
     </div>
     <div class="settings-block">
       <h3>💾 Backup &amp; Restore</h3>
@@ -1865,7 +1880,7 @@ function buildExpRow(e,showDate=false){
   const splitModeLbl=e.splitMode==='shares'?' · shares':e.splitMode==='exact'?' · exact':'';
   const splitLbl=(e.splitAmong?.length===friends.length?'All':(e.splitAmong?.join(', ')||'—'))+splitModeLbl;
   const isPending=e.category==='Pending Update';const hasImg=e.hasReceipt;
-  const showCb=selectMode&&hasImg;const isChecked=selectedForBulk.has(e.id);
+  const showCb=selectMode;const isChecked=selectedForBulk.has(e.id);
   return`<div class="expense-row ${catClass}" data-id="${e.id}" onclick="onExpRowClick(event,'${e.id}')">
     ${showCb?`<input type="checkbox" class="exp-select-cb" ${isChecked?'checked':''} onclick="event.stopPropagation();toggleBulkSelect('${e.id}',this)">`:selectMode?`<div style="width:18px;flex-shrink:0"></div>`:''}
     <div class="expense-icon" style="background:${catColor}">${(e.description||'?').charAt(0).toUpperCase()}</div>
@@ -1886,33 +1901,54 @@ function buildExpRow(e,showDate=false){
 }
 
 function onExpRowClick(event,id){
-  if(selectMode){const e=expenses.find(x=>x.id===id);if(e?.hasReceipt){if(selectedForBulk.has(id))selectedForBulk.delete(id);else selectedForBulk.add(id);updateBulkBar();renderExpenses();}}
+  if(selectMode){if(selectedForBulk.has(id))selectedForBulk.delete(id);else selectedForBulk.add(id);updateBulkBar();renderExpenses();}
   else editExpense(id);
 }
 window.onExpRowClick=onExpRowClick;
 function toggleBulkSelect(id,cb){if(cb.checked)selectedForBulk.add(id);else selectedForBulk.delete(id);updateBulkBar();}
 window.toggleBulkSelect=toggleBulkSelect;
-function updateBulkBar(){const n=selectedForBulk.size;document.getElementById('bulk-bar-label').textContent=n>0?`${n} selected`:'Tap image expenses to select';}
-function enterSelectMode(){selectMode=true;selectedForBulk.clear();document.getElementById('bulk-bar').classList.add('show');document.getElementById('bulk-bar-label').textContent='Tap image expenses to select';document.getElementById('select-images-btn').classList.add('active');renderExpenses();}
+function updateBulkBar(){const n=selectedForBulk.size;document.getElementById('bulk-bar-label').textContent=n>0?`${n} selected`:'Tap expenses to select';}
+function enterSelectMode(){selectMode=true;selectedForBulk.clear();document.getElementById('bulk-bar').classList.add('show');document.getElementById('bulk-bar-label').textContent='Tap expenses to select';document.getElementById('select-images-btn').classList.add('active');renderExpenses();}
 window.enterSelectMode=enterSelectMode;
 function exitSelectMode(){selectMode=false;selectedForBulk.clear();document.getElementById('bulk-bar').classList.remove('show');document.getElementById('select-images-btn').classList.remove('active');renderExpenses();}
 window.exitSelectMode=exitSelectMode;
 async function bulkRemoveImages(){
   const ids=[...selectedForBulk];if(!ids.length){toast('Select at least one expense','error');return;}
-  if(!confirm(`Remove images from ${ids.length} expense(s)?`))return;
+  const withImg=expenses.filter(e=>ids.includes(e.id)&&e.hasReceipt).map(e=>e.id);
+  if(!withImg.length){toast('No images among the selected expenses','warn');return;}
+  if(!confirm(`Remove images from ${withImg.length} expense(s)?`))return;
   showLoading(true,'Removing images…');
   try{
-    for(const id of ids){
+    for(const id of withImg){
       await idbDel(id);const update={hasReceipt:false,receiptBase64:null};
       if(firebaseOk&&db)await updateDoc(doc(db,'trips',currentCode,'expenses',id),update);
       else{let exps=getLocalExp(currentCode);const i=exps.findIndex(e=>e.id===id);if(i>=0)exps[i]={...exps[i],...update};saveLocalExp(currentCode,exps);}
     }
     if(!firebaseOk||!db)loadLocalExp();
-    toast(`Removed images from ${ids.length} expense(s) ✓`,'success');exitSelectMode();
+    toast(`Removed images from ${withImg.length} expense(s) ✓`,'success');exitSelectMode();
   }catch(e){toast('Error: '+e.message,'error');}
   finally{showLoading(false);}
 }
 window.bulkRemoveImages=bulkRemoveImages;
+async function bulkDeleteExpenses(){
+  const ids=[...selectedForBulk];if(!ids.length){toast('Select at least one expense','error');return;}
+  const withImg=expenses.filter(e=>ids.includes(e.id)&&e.hasReceipt).length;
+  if(!confirm(`Delete ${ids.length} expense(s)${withImg?` (including ${withImg} image${withImg>1?'s':''})`:''}?
+This cannot be undone.`))return;
+  showLoading(true,'Deleting…');
+  try{
+    for(const id of ids){
+      try{await idbDel(id);}catch(e){}
+      if(firebaseOk&&db)await deleteDoc(doc(db,'trips',currentCode,'expenses',id));
+    }
+    if(!firebaseOk||!db){saveLocalExp(currentCode,getLocalExp(currentCode).filter(e=>!ids.includes(e.id)));loadLocalExp();}
+    else if(editingExpenseId&&ids.includes(editingExpenseId))cancelEdit();
+    toast(`Deleted ${ids.length} expense(s)`,'warn');
+    exitSelectMode();
+  }catch(e){toast('Error: '+e.message,'error');}
+  finally{showLoading(false);}
+}
+window.bulkDeleteExpenses=bulkDeleteExpenses;
 
 function renderPagination(pages,total){
   const p=document.getElementById('pagination');if(pages<=1){p.innerHTML='';return;}
@@ -2355,6 +2391,7 @@ function _openSettingsForm(){
   document.getElementById('s-members').value=(currentTrip.friends||[]).join(', ');
   document.getElementById('s-identity-display').textContent=myIdentity||'Not set';
   const st=document.getElementById('s-theme');if(st){try{st.value=localStorage.getItem('theme')||'auto';}catch(e){st.value='auto';}}
+  computeStorageInfo();
   const abox=document.getElementById('s-activity-box');if(abox)abox.classList.add('hidden');
   const abtn=document.getElementById('s-activity-toggle');if(abtn)abtn.textContent='Show activity';
   document.getElementById('s-invite-link').textContent=location.origin+location.pathname+'?join='+currentCode;
@@ -2432,25 +2469,101 @@ function renderConverter(){
   renderConvHistory();
 }
 window.renderConverter=renderConverter;
-// ── PRICE COMPARISON HISTORY (shopping scratchpad, stored per trip)
-function getConvHistory(){try{return JSON.parse(localStorage.getItem('localConv_'+currentCode)||'[]');}catch(e){return[];}}
+// ── PRICE COMPARISON — same product, different shops (stored per trip)
+let convPhotoDataURL=null;
+function getConvHistory(){
+  try{
+    const raw=JSON.parse(localStorage.getItem('localConv_'+currentCode)||'[]');
+    return raw.map(e=>({id:e.id||('cv_'+Date.now().toString(36)+Math.random().toString(36).slice(2,7)),product:e.product||e.label||'Untitled',shop:e.shop||'',amount:e.amount,from:e.from,to:e.to,result:e.result,ts:e.ts,hasPhoto:!!e.hasPhoto}));
+  }catch(e){return[];}
+}
 function saveConvHistoryList(l){try{localStorage.setItem('localConv_'+currentCode,JSON.stringify(l));}catch(e){}}
+function resetConvPhotoUI(){
+  convPhotoDataURL=null;
+  const th=document.getElementById('conv-photo-thumb'),rm=document.getElementById('conv-photo-remove');
+  if(th){th.src='';th.style.display='none';}
+  if(rm)rm.style.display='none';
+  const f=document.getElementById('conv-photo-file');if(f)f.value='';
+}
+function handleConvPhoto(e){
+  const file=e.target.files&&e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    const img=new Image();
+    img.onload=()=>{
+      const MAX=600;let w=img.width,h=img.height;
+      if(w>MAX||h>MAX){if(w>h){h=Math.round(h*MAX/w);w=MAX;}else{w=Math.round(w*MAX/h);h=MAX;}}
+      const cv=document.createElement('canvas');cv.width=w;cv.height=h;
+      cv.getContext('2d').drawImage(img,0,0,w,h);
+      convPhotoDataURL=cv.toDataURL('image/jpeg',0.7);
+      const th=document.getElementById('conv-photo-thumb');
+      if(th){th.src=convPhotoDataURL;th.style.display='';}
+      const rm=document.getElementById('conv-photo-remove');if(rm)rm.style.display='';
+    };
+    img.src=ev.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+window.handleConvPhoto=handleConvPhoto;
+function removeConvPhoto(){resetConvPhotoUI();}
+window.removeConvPhoto=removeConvPhoto;
+function viewConvPhotoPreview(){
+  if(!convPhotoDataURL)return;
+  document.getElementById('receipt-modal-img').src=convPhotoDataURL;openModal('receipt-modal');
+}
+window.viewConvPhotoPreview=viewConvPhotoPreview;
+async function viewConvPhoto(id){
+  let img=null;try{img=await idbGet('conv_'+id);}catch(e){}
+  if(!img)return;
+  document.getElementById('receipt-modal-img').src=img;openModal('receipt-modal');
+}
+window.viewConvPhoto=viewConvPhoto;
 function saveConvEntry(){
   const amt=parseFloat(document.getElementById('cv-amount').value)||0;
   if(amt<=0){toast('Enter an amount first','error');return;}
   const from=document.getElementById('cv-from').value,to=document.getElementById('cv-to').value;
   const br=bestRate(from),bt=bestRate(to);
-  const entry={label:document.getElementById('cv-note').value.trim(),amount:amt,from,to,result:parseFloat((amt*br.rate/bt.rate).toFixed(2)),ts:new Date().toISOString()};
-  const list=getConvHistory();list.unshift(entry);saveConvHistoryList(list.slice(0,50));
-  document.getElementById('cv-note').value='';
+  const product=document.getElementById('cv-product').value.trim()||'Untitled product';
+  const shop=document.getElementById('cv-shop').value.trim()||'';
+  const entry={id:'cv_'+Date.now().toString(36)+Math.random().toString(36).slice(2,7),product,shop,amount:amt,from,to,result:parseFloat((amt*br.rate/bt.rate).toFixed(2)),ts:new Date().toISOString(),hasPhoto:false};
+  const list=getConvHistory();
+  if(!shop)entry.shop='Quote '+(list.filter(x=>x.product===product).length+1);
+  if(convPhotoDataURL){entry.hasPhoto=true;idbSave('conv_'+entry.id,convPhotoDataURL).catch(()=>{});}
+  list.unshift(entry);saveConvHistoryList(list.slice(0,80));
+  document.getElementById('cv-product').value='';document.getElementById('cv-shop').value='';
+  resetConvPhotoUI();
   renderConvHistory();toast('Saved to comparison ✓','success');
 }
 window.saveConvEntry=saveConvEntry;
-function deleteConvEntry(i){const l=getConvHistory();l.splice(i,1);saveConvHistoryList(l);renderConvHistory();}
-window.deleteConvEntry=deleteConvEntry;
+function deleteConvEntryById(id){
+  const list=getConvHistory();const entry=list.find(x=>x.id===id);
+  saveConvHistoryList(list.filter(x=>x.id!==id));renderConvHistory();
+  if(entry&&entry.hasPhoto)idbDel('conv_'+id).catch(()=>{});
+}
+window.deleteConvEntryById=deleteConvEntryById;
+function deleteProductGroup(product){
+  const list=getConvHistory();
+  const gone=list.filter(x=>x.product===product);
+  if(!gone.length)return;
+  if(!confirm(`Remove “${product}” and its ${gone.length} quote(s)?`))return;
+  saveConvHistoryList(list.filter(x=>x.product!==product));
+  gone.forEach(g=>{if(g.hasPhoto)idbDel('conv_'+g.id).catch(()=>{});});
+  renderConvHistory();toast('Removed from comparison','warn');
+}
+window.deleteProductGroup=deleteProductGroup;
+function useQuote(id){
+  const entry=getConvHistory().find(x=>x.id===id);if(!entry)return;
+  document.getElementById('exp-amount').value=String(entry.amount);
+  document.getElementById('exp-currency').value=entry.from;
+  updateHKDPreview();navigateTo('new');
+  toast(`Price added to the expense form (${entry.from} ${fmt2(entry.amount)}) ✓`,'success');
+}
+window.useQuote=useQuote;
 function clearConvHistory(){
-  if(!getConvHistory().length)return;
-  if(!confirm('Clear all saved conversions?'))return;
+  const list=getConvHistory();
+  if(!list.length)return;
+  if(!confirm('Clear all saved comparisons?'))return;
+  list.forEach(g=>{if(g.hasPhoto)idbDel('conv_'+g.id).catch(()=>{});});
   saveConvHistoryList([]);renderConvHistory();toast('Comparison cleared','warn');
 }
 window.clearConvHistory=clearConvHistory;
@@ -2458,21 +2571,41 @@ function renderConvHistory(){
   const wrap=document.getElementById('conv-history');if(!wrap)return;
   const list=getConvHistory();
   const clr=document.getElementById('conv-clear-btn');if(clr)clr.style.display=list.length?'':'none';
-  if(!list.length){wrap.innerHTML='<div style="font-size:12px;color:var(--gray);text-align:center;padding:14px">No saved conversions yet — convert a price and tap “Save to compare”</div>';return;}
-  const to=list[0].to; // compare within the newest entry's target currency
-  const cheapest=Math.min(...list.filter(x=>x.to===to).map(x=>x.result));
-  let timeStr='';try{timeStr=new Date(list[0].ts).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}catch(e){}
-  wrap.innerHTML=list.map((h,i)=>{
-    let tt='';try{tt=new Date(h.ts).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}catch(e){}
-    const best=h.to===to&&h.result===cheapest;
+  if(!list.length){wrap.innerHTML='<div style="font-size:12px;color:var(--gray);text-align:center;padding:14px">No saved quotes yet — convert a price, name the product &amp; shop, then “Save to compare”</div>';return;}
+  // group quotes by product (groups ordered by their newest quote)
+  const groups=[],gidx={};
+  list.forEach(h=>{
+    const key=h.product;
+    if(gidx[key]==null){gidx[key]=groups.length;groups.push({product:key,quotes:[]});}
+    groups[gidx[key]].quotes.push(h);
+  });
+  wrap.innerHTML=groups.map(g=>{
+    const to=g.quotes[0].to;
+    const cheapest=Math.min(...g.quotes.filter(q=>q.to===to).map(q=>q.result));
     return`
-    <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--gray-mid)">
-      <div style="flex:1;min-width:0">
-        <div style="font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(h.label||('Item '+(i+1)))}${best?' <span style="font-size:9px;font-weight:800;color:#15803d;background:#dcfce7;border-radius:8px;padding:1px 6px">🥇 CHEAPEST</span>':''}</div>
-        <div style="font-size:11px;color:var(--gray);margin-top:2px">${esc(h.from)} ${fmt2(h.amount)} → <b style="color:var(--dark)">${esc(h.to)} ${fmt2(h.result)}</b> · ${tt}</div>
+    <div style="border:1.5px solid var(--gray-mid);border-radius:12px;padding:10px 12px;margin-bottom:10px;background:var(--white)">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+        <div style="font-size:13px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(g.product)}</div>
+        <button class="settle-paid-btn" style="border-color:var(--danger);color:var(--danger)" onclick="deleteProductGroup('${escAttr(g.product)}')" title="Remove product">🗑</button>
       </div>
-      <button class="settle-paid-btn" style="border-color:var(--danger);color:var(--danger)" onclick="deleteConvEntry(${i})" title="Remove">✕</button>
+      ${g.quotes.map(q=>{
+        let tt='';try{tt=new Date(q.ts).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}catch(e){}
+        const best=q.to===to&&q.result===cheapest;
+        return`
+        <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-top:1px solid var(--gray-mid)">
+          <img data-photoid="${q.id}" src="" alt="" ${q.hasPhoto?'':'style="display:none"'} style="width:44px;height:44px;object-fit:cover;border-radius:8px;border:1.5px solid var(--gray-mid);cursor:pointer" onclick="viewConvPhoto('${q.id}')">
+          <div style="flex:1;min-width:0">
+            <div style="font-size:12px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(q.shop)}${best?' <span style="font-size:9px;font-weight:800;color:#15803d;background:#dcfce7;border-radius:8px;padding:1px 6px">🥇 CHEAPEST</span>':''}</div>
+            <div style="font-size:11px;color:var(--gray);margin-top:2px">${esc(q.from)} ${fmt2(q.amount)} → <b style="color:var(--dark)">${esc(q.to)} ${fmt2(q.result)}</b> · ${tt}</div>
+          </div>
+          <button class="settle-paid-btn" onclick="useQuote('${q.id}')" title="Use this price in Add Expense">➕</button>
+          <button class="settle-paid-btn" style="border-color:var(--danger);color:var(--danger)" onclick="deleteConvEntryById('${q.id}')" title="Remove quote">✕</button>
+        </div>`;}).join('')}
     </div>`;}).join('');
+  // load photo thumbnails asynchronously from IndexedDB
+  list.filter(q=>q.hasPhoto).forEach(q=>{
+    idbGet('conv_'+q.id).then(data=>{const im=wrap.querySelector(`[data-photoid="${q.id}"]`);if(im&&data)im.src=data;}).catch(()=>{});
+  });
 }
 function swapConverter(){const f=document.getElementById('cv-from'),t=document.getElementById('cv-to');const a=f.value;f.value=t.value;t.value=a;renderConverter();}
 window.swapConverter=swapConverter;
@@ -2597,6 +2730,39 @@ function cleanForStore(o){
   return o;
 }
 window.cleanForStore=cleanForStore;
+async function computeStorageInfo(){
+  const el=document.getElementById('storage-info');if(!el)return;
+  el.textContent='Calculating…';
+  let lsBytes=0,lsKeys=0;
+  try{
+    for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);lsKeys++;lsBytes+=(k.length+(localStorage.getItem(k)||'').length)*2;}
+  }catch(e){}
+  let imgCount=0;
+  try{
+    const d=await openIDB();
+    imgCount=await new Promise(res=>{
+      try{
+        const tx=d.transaction('receipts','readonly');
+        const req=tx.objectStore('receipts').count();
+        req.onsuccess=()=>res(typeof req.result==='number'?req.result:0);
+        req.onerror=()=>res(0);
+      }catch(e){res(0);}
+    });
+  }catch(e){}
+  let quotaLine='';
+  if(navigator.storage&&navigator.storage.estimate){
+    try{
+      const est=await navigator.storage.estimate();
+      const used=est.usage||0,quota=est.quota||0;
+      if(quota>0){
+        const pct=Math.min(100,Math.round(used/quota*1000)/10);
+        quotaLine=`<br>Device storage (all sites): <b>${(used/1048576).toFixed(1)} MB</b> of ~${(quota/1073741824).toFixed(1)} GB (${pct}%)`;
+      }
+    }catch(e){}
+  }
+  el.innerHTML=`TripSplit data on this device:<br>Local data (trips, settings, comparisons): <b>${(lsBytes/1024).toFixed(1)} KB</b> across ${lsKeys} item(s)<br>Saved images (receipts &amp; price photos): <b>${imgCount}</b>${quotaLine}`;
+}
+window.computeStorageInfo=computeStorageInfo;
 function copyInviteLink(){
   const link=document.getElementById('s-invite-link').textContent||'';
   if(!link||link==='—')return;
@@ -2664,5 +2830,5 @@ function formatDateLong(s){if(!s)return'';const[y,m,d]=s.split('-').map(Number);
   }
 })();
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3197d0adfab0705',t:'MTc4NzgxNzA1OQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3199c7eac7f0705',t:'MTc4NzgxODM0Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
