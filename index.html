@@ -535,7 +535,7 @@ html[data-theme=dark] .toast-undo{color:#93c5fd}
       <div style="margin-top:14px;border-top:1.5px solid var(--gray-mid);padding-top:12px">
         <div class="section-title" style="margin-bottom:8px">📦 Device Storage</div>
         <div id="storage-info" style="font-size:12px;color:var(--gray);line-height:1.7">Calculating…</div>
-        <p style="font-size:10px;color:var(--gray);margin-top:6px">Measures this device only (offline data, receipts, price photos). Cloud (Firebase) usage is not included — that lives on Google's servers.</p>
+        <p style="font-size:10px;color:var(--gray);margin-top:6px">Measures this device only (offline data, receipts, price photos). Cloud (Firebase) usage is not included.</p>
       </div>
     </div>
   </div>
@@ -849,7 +849,7 @@ html[data-theme=dark] .toast-undo{color:#93c5fd}
       <div class="trip-header-back" onclick="navigateTo('new')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>Trips
       </div>
-      <div class="trip-header-title">Converter</div>
+      <div class="trip-header-title">Compare</div>
       <button class="trip-header-settings" onclick="openSettings()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9c0 .66.39 1.26 1 1.51H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       </button>
@@ -1028,7 +1028,7 @@ html[data-theme=dark] .toast-undo{color:#93c5fd}
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg><span>Settle</span>
   </button>
   <button class="tab-btn" onclick="switchTab('convert')" data-tab="convert">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/></svg><span>Convert</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/></svg><span>Compare</span>
   </button>
 </nav>
 
@@ -1498,7 +1498,7 @@ async function createTrip(){
     // enter the new trip right away instead of bouncing back to the lobby
     currentTrip=tripData;currentCode=code;myIdentity=null;expenses=[];
     renderLobby();showWhoModal();enterTrip();
-  }catch(e){toast('Error: '+e.message,'error');}
+  }catch(e){logError('create trip',e);toast('Error: '+e.message,'error');}
   finally{showLoading(false);document.getElementById('create-btn').disabled=false;}
 }
 window.createTrip=createTrip;
@@ -1845,7 +1845,7 @@ async function saveExpense(){
     else{let exps=getLocalExp(currentCode);if(editingExpenseId){const i=exps.findIndex(e=>e.id===editingExpenseId);if(i>=0){exps[i]={...exps[i],...expData};if(!splitPack)delete exps[i].splitShares;if(!exactPack)delete exps[i].splitAmounts;if(!payersPack)delete exps[i].payers;}}else exps.unshift({id:expId,...expData});saveLocalExp(currentCode,exps);loadLocalExp();}
     logActivity(editingExpenseId?'edit':'add',`${editingExpenseId?'edited':'added'} “${(desc||'Receipt').slice(0,24)}” ${cur} ${fmt2(amount)}`);
     toast(editingExpenseId?'Updated ✓':'Added ✓','success');resetNewForm(true);
-  }catch(e){toast('Save failed: '+e.message,'error');}
+  }catch(e){logError('save expense',e);toast('Save failed: '+e.message,'error');}
   finally{saveBusy=false;setTimeout(()=>{btn.disabled=false;btn.textContent=editingExpenseId?'Update Expense':'Add Expense';},600);}
 }
 window.saveExpense=saveExpense;
@@ -1964,7 +1964,7 @@ async function bulkRemoveImages(){
     }
     if(!firebaseOk||!db)loadLocalExp();
     toast(`Removed images from ${withImg.length} expense(s) ✓`,'success');exitSelectMode();
-  }catch(e){toast('Error: '+e.message,'error');}
+  }catch(e){logError('remove images',e);toast('Error: '+e.message,'error');}
   finally{showLoading(false);}
 }
 window.bulkRemoveImages=bulkRemoveImages;
@@ -1984,7 +1984,7 @@ This cannot be undone.`))return;
     logActivity('bulkDelete',`deleted ${ids.length} expense(s)${withImg?` (incl. ${withImg} image${withImg>1?'s':''})`:''}`);
     toast(`Deleted ${ids.length} expense(s)`,'warn');
     exitSelectMode();
-  }catch(e){toast('Error: '+e.message,'error');}
+  }catch(e){logError('bulk delete expenses',e);toast('Error: '+e.message,'error');}
   finally{showLoading(false);}
 }
 window.bulkDeleteExpenses=bulkDeleteExpenses;
@@ -2058,7 +2058,7 @@ async function deleteExpense(id){
         if(receiptToRestore)await idbSave(id,receiptToRestore);toast('Restored','success');logActivity('restore',`restored “${(exp?.description||'Receipt').slice(0,24)}”`);
       }
     },4000);
-  }catch(e){toast('Delete failed: '+e.message,'error');}
+  }catch(e){logError('delete expense',e);toast('Delete failed: '+e.message,'error');}
 }
 window.deleteExpense=deleteExpense;
 
@@ -2205,7 +2205,7 @@ async function saveBalanceSettings(){
       saveLocalExp(currentCode,exps);loadLocalExp();
     }
     toast('Saved & recalculated ✓','success');renderHeroBlocks();renderBalances();renderSettlement();
-  }catch(e){currentTrip.currency=oldCur;currentTrip.exchangeRate=oldRate;toast('Save failed: '+e.message,'error');}
+  }catch(e){currentTrip.currency=oldCur;currentTrip.exchangeRate=oldRate;logError('recalculate trip currency',e);toast('Save failed: '+e.message,'error');}
   finally{showLoading(false);}
 }
 window.saveBalanceSettings=saveBalanceSettings;
@@ -2375,7 +2375,7 @@ async function savePayment(from,to,amount){
     logActivity('payment',`recorded: ${from} paid ${to} HKD ${fmt2(rec.amountHKD)}`);
     toast('Payment recorded ✓','success',async()=>{await removePayment(id);});
     renderSettlement();
-  }catch(e){toast('Error: '+e.message,'error');}
+  }catch(e){logError('record payment',e);toast('Error: '+e.message,'error');}
   finally{showLoading(false);}
 }
 async function removePayment(id){
@@ -2458,7 +2458,7 @@ async function saveTripSettings(){
     renderTripHeaders();renderDateStrip();
     if(!currentTrip.friends?.includes(myIdentity))myIdentity=null;
     toast('Saved ✓','success');
-  }catch(e){toast('Save failed: '+e.message,'error');}finally{showLoading(false);}
+  }catch(e){logError('save trip settings',e);toast('Save failed: '+e.message,'error');}finally{showLoading(false);}
 }
 window.saveTripSettings=saveTripSettings;
 async function updateTripPassword(){
@@ -2474,7 +2474,7 @@ async function updateTripPassword(){
     if(storedPw!==null)localStorage.setItem('trip_'+currentCode+'_pw',pw);
     saveMyTrip(currentCode,currentTrip.name||'',storedPw!==null?pw:'');
     toast('Password updated ✓','success');
-  }catch(e){toast('Failed: '+e.message,'error');}finally{showLoading(false);}
+  }catch(e){logError('change trip password',e);toast('Failed: '+e.message,'error');}finally{showLoading(false);}
 }
 window.updateTripPassword=updateTripPassword;
 // ── CURRENCY CONVERTER
@@ -2594,7 +2594,7 @@ function saveConvEntry(){
   if(convPhotoDataURL){entry.hasPhoto=true;if(convPhotoDataURL.length<400000)entry.photo=convPhotoDataURL;}
   if(shared&&firebaseOk&&db){
     const{id:_,shared:sh,...docData}=entry;
-    setDoc(doc(db,'trips',currentCode,'comparisons',entry.id),cleanForStore(docData)).catch(err=>toast('Save failed: '+err.message,'error'));
+    setDoc(doc(db,'trips',currentCode,'comparisons',entry.id),cleanForStore(docData)).catch(err=>{logError('save comparison',err);toast('Save failed: '+err.message,'error');});
   }else{
     if(convPhotoDataURL)idbSave('conv_'+entry.id,convPhotoDataURL).catch(()=>{});
     const localEntry={...entry,photo:undefined};
@@ -2657,7 +2657,7 @@ async function toggleProductShared(product){
     }
     renderConvHistory();
     toast(makePublic?'Shared with all members ✓':'Now private (this device only)','success');
-  }catch(e){toast('Error: '+e.message,'error');}
+  }catch(e){logError('toggle comparison sharing',e);toast('Error: '+e.message,'error');}
   finally{showLoading(false);}
 }
 window.toggleProductShared=toggleProductShared;
@@ -2802,25 +2802,40 @@ function viewGalleryReceipt(i){
 window.viewGalleryReceipt=viewGalleryReceipt;
 
 // ── ACTIVITY LOG (persisted — survives deletion, serves as an audit trail)
-const ACT_ICON={add:'➕',edit:'✏️',delete:'🗑️',restore:'♻️',payment:'🤝',paymentRemove:'↩️',bulkDelete:'🗑️',backup:'💾',restoreBackup:'📥'};
+const ACT_ICON={add:'➕',edit:'✏️',delete:'🗑️',restore:'♻️',payment:'🤝',paymentRemove:'↩️',bulkDelete:'🗑️',backup:'💾',restoreBackup:'📥',error:'❌'};
 function getLocalAct(){try{return JSON.parse(localStorage.getItem('localAct_'+currentCode)||'[]');}catch(e){return[];}}
 async function logActivity(action,text){
   if(!currentCode)return;
   const rec={who:myIdentity||'Someone',action,text,ts:new Date().toISOString()};
+  const saveLocal=()=>{const l=getLocalAct();l.unshift(rec);try{localStorage.setItem('localAct_'+currentCode,JSON.stringify(l.slice(0,200)));}catch(e){}};
   try{
-    if(firebaseOk&&db)await setDoc(doc(db,'trips',currentCode,'activity',currentCode+'_act_'+Date.now().toString(36)+Math.random().toString(36).slice(2,5)),rec);
-    else{const l=getLocalAct();l.unshift(rec);try{localStorage.setItem('localAct_'+currentCode,JSON.stringify(l.slice(0,200)));}catch(e){}}
+    if(firebaseOk&&db){try{await setDoc(doc(db,'trips',currentCode,'activity',currentCode+'_act_'+Date.now().toString(36)+Math.random().toString(36).slice(2,5)),rec);}
+      catch(e){saveLocal();}} // cloud write denied/failed → keep the audit entry on-device
+    else saveLocal();
   }catch(e){}
 }
 window.logActivity=logActivity;
+async function logError(context,err){
+  const msg=(err&&err.message)||String(err||'unknown error');
+  await logActivity('error',`${context} failed: ${msg}`);
+}
+window.logError=logError;
 async function readActivityLog(){
+  let cloud=[];
   if(firebaseOk&&db){
     try{
       const snap=await getDocs(query(collection(db,'trips',currentCode,'activity'),orderBy('ts','desc')));
-      return snap.docs.map(dd=>({id:dd.id,...dd.data()})).slice(0,60);
-    }catch(e){return[];}
+      cloud=snap.docs.map(dd=>({id:dd.id,...dd.data()}));
+    }catch(e){cloud=[];}
   }
-  return getLocalAct().slice(0,60);
+  const local=getLocalAct();
+  // merge cloud + local (local holds entries written while cloud was denied/unavailable), dedupe
+  const seen=new Set(),merged=[];
+  for(const e of[...cloud,...local]){
+    const k=(e.ts||'')+'|'+(e.who||'')+'|'+(e.text||'')+'|'+(e.action||'');
+    if(!seen.has(k)){seen.add(k);merged.push(e);}
+  }
+  return merged.sort((a,b)=>(b.ts||'').localeCompare(a.ts||'')).slice(0,60);
 }
 async function renderActivity(){
   const el=document.getElementById('activity-feed');if(!el)return;
@@ -2909,7 +2924,7 @@ window.restoreBackupData=restoreBackupData;
 async function handleRestoreFile(ev){
   const file=ev.target.files&&ev.target.files[0];if(!file)return;
   try{await restoreBackupData(JSON.parse(await file.text()));}
-  catch(e){toast('Invalid backup file','error');}
+  catch(e){logError('restore backup',e);toast('Invalid backup file','error');}
   finally{ev.target.value='';}
 }
 window.handleRestoreFile=handleRestoreFile;
@@ -2975,7 +2990,7 @@ async function deleteTripSettings(){
     if(paymentsUnsub){paymentsUnsub();paymentsUnsub=null;}
     if(convUnsub){convUnsub();convUnsub=null;}
     renderLobby();navigateTo('lobby');toast('Trip deleted','warn');
-  }catch(e){toast('Delete failed: '+e.message,'error');}finally{showLoading(false);}
+  }catch(e){logError('delete trip',e);toast('Delete failed: '+e.message,'error');}finally{showLoading(false);}
 }
 window.deleteTripSettings=deleteTripSettings;
 async function confirmDeleteAll(){
@@ -3002,7 +3017,7 @@ async function confirmDeleteAll(){
     if(convUnsub){convUnsub();convUnsub=null;}
     currentTrip=null;currentCode=null;myIdentity=null;expenses=[];
     navigateTo('lobby');renderLobby();toast('All my trips deleted','warn');
-  }catch(e){toast('Error: '+e.message,'error');}finally{showLoading(false);}
+  }catch(e){logError('delete all trips',e);toast('Error: '+e.message,'error');}finally{showLoading(false);}
 }
 window.confirmDeleteAll=confirmDeleteAll;
 
@@ -3024,5 +3039,5 @@ function formatDateLong(s){if(!s)return'';const[y,m,d]=s.split('-').map(Number);
   }
 })();
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a319db8cbea208bc',t:'MTc4NzgyMDkzMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a31a04813bd30671',t:'MTc4NzgyMjYwNw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
