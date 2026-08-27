@@ -140,7 +140,7 @@ button{cursor:pointer;border:none;background:none}
 #page-new{padding:0 0 24px}
 .new-content{padding:14px 16px}
 .editing-badge{display:inline-flex;align-items:center;gap:6px;background:#fef3c7;color:#d97706;border-radius:20px;padding:6px 14px;font-size:12px;font-weight:700;margin-bottom:14px}
-.date-strip-wrap{overflow-x:auto;padding-bottom:4px;margin-bottom:12px;scrollbar-width:none}
+.date-strip-wrap{overflow-x:auto;padding-bottom:4px;margin-bottom:12px;scrollbar-width:none;position:relative}
 .date-strip-wrap::-webkit-scrollbar{display:none}
 .date-strip{display:flex;gap:8px;width:max-content;padding:2px 2px 4px}
 .date-card{display:flex;flex-direction:column;align-items:center;padding:10px 12px;border-radius:12px;border:2px solid var(--gray-mid);background:var(--white);cursor:pointer;transition:all .15s;min-width:52px;position:relative;flex-shrink:0}
@@ -954,6 +954,13 @@ function fabSetPos(x,y,save){
   if(save){try{localStorage.setItem('fabAddPos',JSON.stringify(p));}catch(e){}}
 }
 function fabDefault(){const w=window.innerWidth||360,h=window.innerHeight||640;fabSetPos(w-78,h-150,false);}
+function focusAmountInput(){
+  try{
+    if(document.querySelector('.modal-overlay.show,.sheet-overlay.show'))return; // don't pop the keyboard behind a dialog
+    const el=document.getElementById('exp-amount');
+    if(el&&document.getElementById('page-new').classList.contains('active'))el.focus({preventScroll:true});
+  }catch(e){}
+}
 function fabUpdate(){
   const show=!!currentTrip&&document.getElementById('page-new').classList.contains('active');
   if(show&&!FAB.style.left)fabDefault();
@@ -1238,7 +1245,7 @@ async function createTrip(){
     toast('Trip created! 🎉','success');
     // enter the new trip right away instead of bouncing back to the lobby
     currentTrip=tripData;currentCode=code;myIdentity=null;expenses=[];
-    renderLobby();enterTrip();showWhoModal();
+    renderLobby();showWhoModal();enterTrip();
   }catch(e){toast('Error: '+e.message,'error');}
   finally{showLoading(false);document.getElementById('create-btn').disabled=false;}
 }
@@ -1325,7 +1332,8 @@ function renderDateStrip(){
       <div class="wd">${wd}</div><div class="dd">${dd}</div><div class="mm">${mm}</div>
     </div>`;
   }).join('');
-  setTimeout(()=>{const a=strip.querySelector('.date-card.active');if(a)a.scrollIntoView({inline:'center',behavior:'smooth',block:'nearest'});},50);
+  // center the active day card INSIDE the strip only — must never scroll the page (strip now lives at the form bottom)
+  setTimeout(()=>{const a=strip.querySelector('.date-card.active');if(!a)return;const wrap=strip.parentElement;try{wrap.scrollLeft=Math.max(0,a.offsetLeft-(wrap.clientWidth-a.offsetWidth)/2);}catch(e){}},50);
 }
 function selectStripDate(d){selectedDate=d;document.getElementById('exp-date').value=d;renderDateStrip();}
 window.selectStripDate=selectStripDate;
@@ -1348,7 +1356,7 @@ function resetNewForm(){
   selectedDate=defDate;document.getElementById('exp-date').value=defDate;
   buildQuickChips();buildCategoryChips();selectCategory('Other');
   buildPaidByDropdown();buildExpCurrencyDropdown();buildSplitGrid();splitAll();renderDateStrip();
-  fabUpdate();
+  fabUpdate();focusAmountInput();
 }
 
 // ── RECEIPT
@@ -1588,7 +1596,7 @@ async function editExpense(id){
   let delBtn=document.getElementById('delete-exp-btn');
   if(!delBtn){delBtn=document.createElement('button');delBtn.id='delete-exp-btn';delBtn.className='btn btn-danger';delBtn.style.marginTop='8px';document.getElementById('form-action-row').after(delBtn);}
   delBtn.textContent='Delete Expense';delBtn.onclick=()=>deleteExpense(id);
-  updateHKDPreview();renderDateStrip();buildQuickChips();
+  updateHKDPreview();renderDateStrip();buildQuickChips();focusAmountInput();
 }
 window.editExpense=editExpense;
 async function deleteExpense(id){
