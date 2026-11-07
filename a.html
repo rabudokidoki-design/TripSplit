@@ -1,0 +1,1167 @@
+<html lang="en"><head>
+<meta charset="utf-8">
+<title>Cybersecurity Baseline Programme for IPO Preparation · Proposal</title>
+<style>
+/* ===== MASTER CSS · Batch 1 · 960 x 540 pt · sizes used: 11, 12, 14, 24, 28, 34 ===== */
+:root{--g900:#0A2E23;--g800:#0E3B2E;--g700:#13553F;--g600:#1B7F5C;--g500:#2FA36B;--g300:#8FD0AE;--g100:#DCEFE4;--g50:#F1F8F4;--amber:#D99A0B;--amber-bg:#FFF4D6;--amber-dk:#7A5600;--gry:#8A9A93;--gry-bg:#EEF1EF;--gry-dk:#3E4D47;--med:#E3C34F;--high:#E08A3C;--crit:#B5382E;--ink:#1D2B25;--hatch:repeating-linear-gradient(135deg,#FFF4D6 0,#FFF4D6 5px,#F6E2A4 5px,#F6E2A4 7px)}
+@page{size:960pt 540pt;margin:0}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#C9D3CE}
+body{font-family:Aptos,"Segoe UI",Calibri,Arial,sans-serif;font-size:11pt;line-height:1.25;color:var(--ink)}
+.slide{position:relative;width:960pt;height:540pt;overflow:hidden;background:#fff;margin:0 auto 12pt;page-break-after:always;break-after:page}
+@media print{html,body{background:#fff}.slide{margin:0}}
+
+/* shell */
+.eyb{position:absolute;left:40pt;top:15pt;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--g600)}
+.ttl{position:absolute;left:40pt;top:33pt;font-size:24pt;line-height:30pt;font-weight:700;color:var(--g800);white-space:nowrap}
+.trk{position:absolute;right:40pt;top:14pt;display:flex;gap:4pt}
+.trk i{font-style:normal;padding:0 8pt;border-radius:10pt;background:var(--g100);color:var(--g700);font-weight:700}
+.trk i.on{background:var(--g700);color:#fff}.trk i.q{background:var(--g300);color:var(--g900)}
+.body{position:absolute;left:40pt;top:70pt;width:880pt;height:432pt;display:flex;flex-direction:column;gap:8pt}
+.main{flex:1;min-height:0}
+.foot{position:absolute;left:40pt;right:40pt;bottom:12pt;display:flex;justify-content:space-between;color:var(--gry-dk);border-top:.75pt solid var(--g100);padding-top:3pt}
+.lead{flex:none;font-size:12pt;line-height:1.3}
+.badge{position:absolute;top:16pt;right:40pt;padding:1pt 8pt;border-radius:3pt;font-weight:700;letter-spacing:.04em}
+.badge.sam{background:var(--amber-bg);color:var(--amber-dk);border:1pt dashed var(--amber)}
+
+/* bottom bands */
+.so{flex:none;display:flex;gap:8pt;align-items:center;background:var(--g50);border:1pt solid var(--g100);border-left:4pt solid var(--g600);border-radius:3pt;padding:4pt 8pt}
+.so .k{flex:none;background:var(--g700);color:#fff;font-weight:700;text-transform:uppercase;padding:0 7pt;border-radius:3pt}
+.nt{flex:none;background:var(--amber-bg);border-left:4pt solid var(--amber);color:var(--amber-dk);border-radius:3pt;padding:4pt 8pt}
+.obj{flex:none;display:flex;align-items:center;gap:10pt;background:var(--g800);color:#fff;border-radius:4pt;padding:6pt 12pt;font-size:12pt}
+.leg{flex:none;display:flex;gap:18pt;align-items:center;color:var(--gry-dk)}
+.out{flex:none;display:flex;gap:6pt;align-items:stretch}
+.ol{flex:none;width:84pt;background:var(--g800);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;text-align:center;border-radius:4pt;padding:3pt}
+.tabs{flex:none;display:flex;gap:2pt}
+.tabs>*{flex:1;text-align:center;padding:4pt;background:var(--g100);color:var(--g800);font-weight:700;border-radius:4pt 4pt 0 0}
+.tabs .on{background:var(--g800);color:#fff}
+
+/* utilities */
+.f12{font-size:12pt}.f14{font-size:14pt}.f24{font-size:24pt}.f28{font-size:28pt}.f34{font-size:34pt}
+.row{display:flex}.col{display:flex;flex-direction:column}.ai-s{align-items:stretch}.fx{flex:1;min-width:0;min-height:0}
+.g1{gap:1pt}.g2{gap:2pt}.g3{gap:3pt}.g4{gap:4pt}.g5{gap:5pt}.g6{gap:6pt}.g7{gap:7pt}.g8{gap:8pt}
+.gd2,.gd3,.gd4{display:grid;gap:8pt}
+.gd2{grid-template-columns:repeat(2,minmax(0,1fr))}.gd3{grid-template-columns:repeat(3,minmax(0,1fr))}.gd4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.mt4{margin-top:4pt}.mt6{margin-top:6pt}.mt8{margin-top:8pt}.mt10{margin-top:10pt}.mt12{margin-top:12pt}.mt16{margin-top:16pt}
+.tc{text-align:center}.tr{text-align:right}.mut{color:var(--gry-dk)}.b{font-weight:700}
+
+/* icons */
+svg.ic{width:20pt;height:20pt;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+svg.ic.s{width:16pt;height:16pt}svg.ic.l{width:26pt;height:26pt}svg.ic.xl{width:34pt;height:34pt}
+
+/* cards and small parts */
+.card{display:flex;flex-direction:column;gap:3pt;min-width:0;background:#fff;border:1pt solid var(--g100);border-radius:4pt;padding:6pt 8pt}
+.card.gn{background:var(--g700);color:#fff;border-color:var(--g700)}.card.lt{background:var(--g50)}
+.card.am{background-color:var(--amber-bg);background-image:var(--hatch);border:1.5pt dashed var(--amber);color:var(--amber-dk)}
+.card.op{border:1.5pt solid var(--g600)}.card.dk{background:var(--g800);color:#fff;border-color:var(--g800)}
+.card.gy{background:var(--gry-bg);border:1.5pt dashed var(--gry);color:var(--gry-dk)}
+.hd{font-weight:700;color:var(--g800)}.card.gn .hd,.card.dk .hd{color:#fff}
+.big{font-size:28pt;font-weight:700;line-height:1.1}
+.ft{margin-top:auto;font-weight:700}
+.lab{font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--g600)}
+.strip{display:flex;align-items:center;gap:6pt;background:var(--g100);border-radius:3pt;padding:2pt 6pt;font-weight:700;color:var(--g800)}
+.nm{font-weight:700;color:var(--g800);font-size:12pt}.ph{color:var(--gry-dk)}.kp{font-weight:700;color:var(--g700)}.v{font-weight:700}
+.ul{list-style:disc;padding-left:12pt}.ul li{margin:0}
+.ck{list-style:none;padding-left:0}.ck li{position:relative;padding-left:14pt}
+.ck li::before{content:"\2713";position:absolute;left:0;color:var(--g600);font-weight:700}
+.ck.no li::before{content:"\2717";color:var(--crit)}
+.crow{display:flex;gap:8pt;align-items:center;border:1pt solid var(--g100);border-radius:4pt;padding:4pt 8pt;background:#fff}
+.crow.ap{background:var(--g50)}
+.chip{display:inline-flex;align-items:center;gap:4pt;padding:0 8pt;border-radius:10pt;background:var(--g100);color:var(--g800);font-weight:700}
+.chip.am{background:var(--amber-bg);color:var(--amber-dk);border:1pt dashed var(--amber)}
+.id{display:inline-block;padding:0 5pt;border-radius:3pt;background:var(--g800);color:#fff;font-weight:700}
+.id.am{background:var(--amber-bg);color:var(--amber-dk);border:1pt dashed var(--amber)}.id.gy{background:var(--gry-bg);color:var(--gry-dk)}
+.id.lt{background:var(--g100);color:var(--g800)}.id.op{background:#fff;color:var(--g700);border:1pt solid var(--g600)}
+.id.t1,.id.p1{background:var(--g800)}.id.t2,.id.p2{background:var(--g700)}.id.t3,.id.p3{background:var(--g600)}
+.sw{display:inline-block;width:16pt;height:11pt;border-radius:2pt;margin-right:5pt;vertical-align:middle}
+.sw.q{background:var(--g600)}.sw.o{background:#fff;border:1.5pt solid var(--g600)}
+.sw.t{background-color:var(--amber-bg);background-image:var(--hatch);border:1pt dashed var(--amber)}.sw.d{background:var(--gry-bg);border:1.5pt dashed var(--gry)}
+
+/* smart-art parts */
+.nb{display:flex;align-items:stretch;background:var(--g800);color:#fff;border-radius:4pt;overflow:hidden}
+.nb .n{flex:none;width:34pt;display:flex;align-items:center;justify-content:center;background:var(--g900);font-weight:700;font-size:14pt}
+.nb .t{flex:1;padding:5pt 8pt}
+.lbt{display:flex;flex-direction:column;gap:4pt}.lr{display:flex;gap:6pt;align-items:stretch}
+.lr .l{flex:none;width:100pt;background:var(--g800);color:#fff;font-weight:700;border-radius:4pt;padding:4pt 8pt;display:flex;align-items:center;gap:6pt}
+.lr .c{flex:1;min-width:0;background:var(--g50);border:1pt solid var(--g100);border-radius:4pt;padding:4pt 8pt}
+.pt{display:flex;gap:10pt;align-items:center;background:var(--g50);border:1pt solid var(--g100);border-radius:6pt;padding:8pt 10pt;min-width:0}
+.pt .L{flex:none;width:40pt;height:40pt;border-radius:8pt;background:var(--g700);color:#fff;display:flex;align-items:center;justify-content:center}
+.pt .pg{color:var(--gry-dk)}.pt p{margin-top:2pt}
+.colh{flex:none;font-size:14pt;font-weight:700;color:var(--g800);border-bottom:2pt solid var(--g500);padding-bottom:3pt}
+.rail{position:relative;flex:1;min-height:0;display:flex;flex-direction:column;gap:8pt}
+.rail::before{content:"";position:absolute;left:17pt;top:20pt;bottom:20pt;width:2pt;background:var(--g300)}
+.ri{position:relative;flex:1;min-height:0;display:flex;gap:10pt;align-items:center}
+.dot{flex:none;z-index:1;width:36pt;height:36pt;border-radius:50%;background:var(--g700);color:#fff;border:2pt solid #fff;display:flex;align-items:center;justify-content:center}
+.cd{flex:1;min-width:0;align-self:stretch;background:var(--g50);border:1pt solid var(--g100);border-radius:4pt;padding:5pt 10pt;display:flex;flex-direction:column;justify-content:center}
+.ob{flex:1;min-height:0;display:flex;border:1pt solid var(--g100);border-radius:4pt;overflow:hidden}
+.ob .it{flex:none;width:54pt;display:flex;align-items:center;justify-content:center;color:#fff}
+.it.a{background:var(--g500)}.it.b{background:var(--g600)}.it.c{background:var(--g700)}.it.d{background:var(--g800)}
+.ob .tx{flex:1;min-width:0;background:var(--g50);padding:5pt 10pt;display:flex;flex-direction:column;justify-content:center}
+.stair{display:flex;align-items:flex-end}.scol{display:flex;flex-direction:column;justify-content:flex-end}
+.step{border:1pt solid var(--g100);background:#fff;border-radius:0 0 4pt 4pt}
+.sh{padding:4pt 8pt;color:#fff;font-weight:700}.sh.s1{background:var(--g800)}.sh.s2{background:var(--g700)}.sh.s3{background:var(--g600)}
+.sb{padding:4pt 8pt}.sp{padding:3pt 8pt;background:var(--g100);color:var(--g800);font-weight:700}
+.wkr{display:flex;gap:1pt}.wkr span{flex:1;text-align:center;background:#fff;border:1pt solid var(--g100);border-radius:2pt}
+.wkr span.m{background:var(--g900);color:#fff;font-weight:700}
+.qsr{height:22pt;position:relative}.qsb{width:27.27%;height:100%;display:flex;align-items:center;padding:0 8pt;background:var(--g300);color:var(--g900);font-weight:700;border-radius:3pt;white-space:nowrap}
+.phr{display:flex;gap:3pt}
+.pent{padding:5pt 16pt 5pt 8pt;color:#fff;font-weight:700;white-space:nowrap;clip-path:polygon(0 0,95% 0,100% 50%,95% 100%,0 100%)}
+.pent.p1{background:var(--g800)}.pent.p2{background:var(--g700)}.pent.p3{background:var(--g600)}
+.chevs{display:flex;gap:4pt}
+.chev{flex:1;display:flex;align-items:center;gap:8pt;padding:8pt 22pt 8pt 12pt;color:#fff;background:var(--g600);clip-path:polygon(0 0,94% 0,100% 50%,94% 100%,0 100%)}
+.chev.p1{background:var(--g800)}.chev.p2{background:var(--g700)}.chev.p3{background:var(--g600)}
+.lane{display:flex;gap:6pt;align-items:stretch}
+.lh{flex:none;width:90pt;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:700;color:#fff;background:var(--g800);border-radius:4pt;padding:3pt}
+.lh.p2{background:var(--g700)}.lh.p3{background:var(--g600)}.lh.qs{background:var(--g300);color:var(--g900)}
+.lb{flex:1;min-width:0;background:var(--g50);border:1pt solid var(--g100);border-radius:4pt;padding:4pt 8pt}
+.zone{border:1.5pt dashed var(--g300);border-radius:6pt;padding:6pt}
+.dt{display:flex;align-items:center;gap:6pt}.dt::before{content:"";flex:none;width:10pt;height:10pt;border-radius:50%;background:var(--g600)}
+.dt.l3::before{background:var(--g800)}.dt.am::before{background:var(--amber)}.dt.gy::before{background:var(--gry)}
+
+/* tables */
+.tb{width:100%;border-collapse:collapse}
+.tb th{background:var(--g800);color:#fff;text-align:left;font-weight:700;padding:3pt 6pt}
+.tb td{border-bottom:1pt solid var(--g100);padding:3pt 6pt;vertical-align:top}
+.tb.cp td,.tb.cp th{padding:2pt 5pt}
+.tb th.c,.tb td.c{text-align:center}.tb th.n,.tb td.n{text-align:right}.tb td.b{font-weight:700}
+.tb tr.sub td{background:var(--g100);font-weight:700;color:var(--g800)}
+.tb tr.tbd td{background-color:var(--amber-bg);background-image:var(--hatch);color:var(--amber-dk)}
+.tb tr.gy td{background:var(--gry-bg);color:var(--gry-dk)}
+.tb tr.t1 td:first-child{border-left:4pt solid var(--g800)}.tb tr.t2 td:first-child{border-left:4pt solid var(--g700)}.tb tr.t3 td:first-child{border-left:4pt solid var(--g600)}
+.tb td.xa,.tb td.xr,.tb td.xc,.tb td.xi,.tb td.xp,.tb td.xn{text-align:center;font-weight:700}
+.tb td.xa{background:var(--g800);color:#fff}.tb td.xr{background:var(--g600);color:#fff}.tb td.xc{background:var(--g300);color:var(--g900)}
+.tb td.xi{background:var(--g100);color:var(--g800)}.tb td.xp{background:#fff;color:var(--g700);border:1.5pt solid var(--g600)}.tb td.xn{color:var(--gry)}
+.mx{width:100%;border-collapse:collapse}.mx th{background:var(--g800);color:#fff;padding:2pt 4pt;text-align:center}
+.mx td{border:1pt solid var(--g100);padding:2pt 4pt;text-align:center}.mx td.l{text-align:left;background:var(--g50);font-weight:700}
+.mx td.x{background:var(--g600);color:#fff;font-weight:700}.mx tr.sub td{background:var(--g100);font-weight:700}
+
+/* charts */
+.br{display:flex;align-items:center;gap:6pt}.bl{flex:none;width:120pt}
+.bt{flex:1;height:16pt;background:var(--g50);border-radius:3pt;overflow:hidden}
+.bf{height:100%;background:var(--g600)}.bf.am{background-color:var(--amber-bg);background-image:var(--hatch);border:1pt dashed var(--amber)}
+.bv{flex:none;width:96pt;text-align:right;font-weight:700}
+.seg{display:flex;height:24pt;border-radius:3pt;overflow:hidden}
+.seg>*{display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;white-space:nowrap}
+.seg .s1{background:var(--g800)}.seg .s2{background:var(--g700)}.seg .s3{background:var(--g600)}.seg .s4{background:var(--g500)}
+.seg .sa{background-color:var(--amber-bg);background-image:var(--hatch);color:var(--amber-dk);border:1pt dashed var(--amber)}
+.mr{display:flex;align-items:center;gap:6pt}.mrl{flex:none;width:150pt}
+.mrt{flex:1;height:14pt;background:var(--g50);border-radius:3pt;position:relative}
+.mrg{position:absolute;top:0;bottom:0;background:var(--g300);border-radius:3pt}.mrc{position:absolute;top:0;bottom:0;background:var(--g800);border-radius:3pt}
+.mrv{flex:none;width:70pt;text-align:right;font-weight:700}
+.hm{display:flex;align-items:center;justify-content:center;border-radius:3pt;font-weight:700;padding:2pt 4pt}
+.hm.lo{background:var(--g100);color:var(--g800)}.hm.me{background:var(--med);color:var(--ink)}.hm.hi{background:var(--high);color:#fff}.hm.cr{background:var(--crit);color:#fff}
+.rk{display:flex;align-items:center;gap:8pt;border:1pt solid var(--g100);border-radius:4pt;padding:3pt 8pt;background:#fff}
+.sc{display:inline-block;padding:0 6pt;border-radius:3pt;font-weight:700;color:#fff;background:var(--g600)}
+.sc.ok{background:var(--g600)}.sc.pa{background:var(--med);color:var(--ink)}.sc.gp{background:var(--high)}.sc.td{background:var(--amber-bg);color:var(--amber-dk);border:1pt dashed var(--amber)}.sc.df{background:var(--gry-bg);color:var(--gry-dk);border:1pt dashed var(--gry)}
+
+/* gantt: 22 weeks, each 4.545% */
+.gh{display:flex;align-items:center}.gr{display:flex;align-items:center;height:22pt;border-bottom:1pt solid var(--g50)}
+.gl{flex:none;width:170pt;padding-right:6pt}.gws{flex:1;display:flex}
+.gw{flex:1;text-align:center;border-left:1pt solid var(--g100)}
+.gt{flex:1;position:relative;height:100%}
+.gt.g22::before,.gt.g22::after{content:"";position:absolute;top:0;bottom:0;border-left:1.5pt dashed var(--g800);z-index:1}
+.gt.g22::before{left:27.27%}.gt.g22::after{left:59.09%}
+.gb{position:absolute;top:3pt;bottom:3pt;display:flex;align-items:center;padding:0 5pt;border-radius:3pt;color:#fff;font-weight:700;white-space:nowrap;overflow:hidden;background:var(--g600)}
+.gb.p1{background:var(--g800)}.gb.p2{background:var(--g700)}.gb.p3{background:var(--g600)}.gb.qs{background:var(--g300);color:var(--g900)}
+.gb.tbd{background-color:var(--amber-bg);background-image:var(--hatch);color:var(--amber-dk);border:1pt dashed var(--amber)}
+.gb.op{background:#fff;color:var(--g700);border:1.5pt solid var(--g600)}.gb.df{background:var(--gry-bg);color:var(--gry-dk);border:1.5pt dashed var(--gry)}
+
+/* documents (samples) */
+.doc{border:1pt solid var(--g100);border-radius:4pt;background:#fff;overflow:hidden}
+.dh{background:var(--g800);color:#fff;font-weight:700;padding:3pt 8pt}.db{padding:6pt 8pt}
+.dr{display:flex;gap:6pt;padding:2pt 0;border-bottom:1pt solid var(--g50)}
+
+/* cover */
+.cv{background:linear-gradient(120deg,var(--g900) 0%,var(--g800) 55%,var(--g700) 100%);color:#fff}
+.cv .bar{position:absolute;left:0;top:0;bottom:0;width:14pt;background:var(--g500)}
+.cv .mot{position:absolute;right:48pt;top:56pt;width:240pt;height:270pt;color:#fff;opacity:.10}
+.ct{position:absolute;left:56pt;top:62pt;width:740pt;display:flex;flex-direction:column;gap:12pt}
+.cv .k1{font-size:14pt;font-weight:700;letter-spacing:.14em;color:var(--g300)}
+.cv h1{font-size:34pt;line-height:1.15;font-weight:700}
+.cv .k2{font-size:14pt;color:var(--g100);max-width:640pt}
+.kpis{display:flex;gap:10pt}
+.kpi{border:1pt solid var(--g500);background:rgba(255,255,255,.07);border-radius:20pt;padding:3pt 14pt;font-weight:700}
+.cv .chevs{margin-top:6pt}
+.cv .chev.p1{background:var(--g600)}.cv .chev.p2{background:var(--g500)}.cv .chev.p3{background:#5FBF8E;color:var(--g900)}
+.cv .meta{position:absolute;left:56pt;bottom:34pt;color:var(--g100);line-height:1.5}
+.cv .meta b{color:#fff}
+</style>
+</head>
+<body>
+
+<!-- ===== ICON SPRITE (hidden; keep in this file) ===== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4M5 4h11l-2 4 2 4H5"></path></symbol>
+<symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 3L2 20h20L12 3z"></path><path d="M12 10v5M12 17.5v.5"></path></symbol>
+<symbol id="i-cloud" viewBox="0 0 24 24"><path d="M6.5 18a4.5 4.5 0 0 1-.4-8.98A6 6 0 0 1 17.6 9a4.5 4.5 0 0 1-.1 9z"></path></symbol>
+<symbol id="i-db" viewBox="0 0 24 24"><ellipse cx="12" cy="5.5" rx="8" ry="3"></ellipse><path d="M4 5.5v13c0 1.7 3.6 3 8 3s8-1.3 8-3v-13M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"></path></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4M12 15v2.5"></path></symbol>
+<symbol id="i-bldg" viewBox="0 0 24 24"><path d="M4 21V4h10v17M14 9h6v12M2 21h20M7.5 8h3M7.5 12h3M7.5 16h3"></path></symbol>
+<symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="M15.5 15.5L21 21"></path></symbol>
+<symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="5"></circle><circle cx="12" cy="12" r="1.2"></circle></symbol>
+<symbol id="i-wrench" viewBox="0 0 24 24"><path d="M20.5 6.5l-3.5 3.5-3-3 3.5-3.5a5 5 0 0 0-6.5 6.5L3 17.5 6.5 21l7.5-7.5a5 5 0 0 0 6.5-7z"></path></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"></path><path d="M8.5 12l2.5 2.5 4.5-5"></path></symbol>
+<symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 3h8l5 5v13H6z"></path><path d="M14 3v5h5M9 13h7M9 17h7"></path></symbol>
+<symbol id="i-docok" viewBox="0 0 24 24"><path d="M6 3h8l5 5v13H6z"></path><path d="M14 3v5h5M9 14.5l2.5 2.5 4-4.5"></path></symbol>
+<symbol id="i-people" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M16 4.8a3.5 3.5 0 0 1 0 6.4M18 14.3c2.2.7 3.5 2.6 3.5 5.7"></path></symbol>
+<symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"></path></symbol>
+<symbol id="i-coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M14.5 8.5c-.5-1-1.5-1.5-2.7-1.5-1.6 0-2.8.9-2.8 2.2 0 3 5.8 1.6 5.8 4.6 0 1.3-1.3 2.2-3 2.2-1.3 0-2.4-.6-2.9-1.7M12 5.5V7M12 17v1.5"></path></symbol>
+<symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c3 3.2 3 14.8 0 18M12 3c-3 3.2-3 14.8 0 18"></path></symbol>
+<symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h12M9 12h12M9 18h12"></path><circle cx="4.5" cy="6" r="1"></circle><circle cx="4.5" cy="12" r="1"></circle><circle cx="4.5" cy="18" r="1"></circle></symbol>
+<symbol id="i-trend" viewBox="0 0 24 24"><path d="M3 20h18M4 16l5-5 4 3 7-8M15 6h5v5"></path></symbol>
+<symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="18" r="2.5"></circle><circle cx="18" cy="6" r="2.5"></circle><path d="M8.5 18H15a3.5 3.5 0 0 0 0-7H9a3.5 3.5 0 0 1 0-7h6.5"></path></symbol>
+<symbol id="i-laptop" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="10" rx="1.5"></rect><path d="M2 19h20l-2-4H4z"></path></symbol>
+<symbol id="i-book" viewBox="0 0 24 24"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v17H6.5A2.5 2.5 0 0 0 4 21.5v-17zM4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path></symbol>
+</defs></svg>
+
+<!-- ============ SLIDE 1 · COVER ============ -->
+<section class="slide cv">
+  <div class="bar"></div>
+  <svg class="ic mot" viewBox="0 0 24 24" style="stroke-width:.5"><use href="#i-shield"></use></svg>
+  <div class="ct">
+    <div class="k1">PROPOSAL FOR [Company]</div>
+    <h1>Cybersecurity Baseline Programme<br>for IPO Preparation</h1>
+    <div class="k2">Gap analysis, roadmap and remediation of the minimum cybersecurity controls, sized for a company of about 200 people.</div>
+    <div class="kpis">
+      <div class="kpi">14 control domains</div>
+      <div class="kpi">Starting set: 15 controls, 5 threats</div>
+      <div class="kpi">22 weeks</div>
+    </div>
+    <div class="chevs">
+      <div class="chev p1"><svg class="ic l"><use href="#i-search"></use></svg><div><b>1 Gap analysis</b><br>Weeks 1–4 · find the gaps</div></div>
+      <div class="chev p2"><svg class="ic l"><use href="#i-route"></use></svg><div><b>2 Roadmap</b><br>Weeks 5–6 · rank and plan</div></div>
+      <div class="chev p3"><svg class="ic l"><use href="#i-wrench"></use></svg><div><b>3 Remediation</b><br>Weeks 7–22 · fix and evidence</div></div>
+    </div>
+  </div>
+  <div class="meta"><b>[Firm Name]</b><br>[date] · [contact name, title, email, phone]<br>Draft v1.0 for discussion · Strictly private &amp; confidential</div>
+</section>
+
+<!-- ============ SLIDE 2 · CONTENTS ============ -->
+<section class="slide">
+  <div class="eyb">Contents</div>
+  <h2 class="ttl">Contents</h2>
+  <div class="body">
+    <p class="lead">Nine parts take the reader from the summary to the detailed deliverables. The appendix holds samples and specifications.</p>
+    <div class="main gd3" style="grid-auto-rows:1fr">
+      <div class="pt"><div class="L"><svg class="ic l"><use href="#i-list"></use></svg></div><div><div class="nm">A · Summary</div><p>Background, objectives, scope, approach, timeline, deliverables and working arrangements.</p></div></div>
+      <div class="pt"><div class="L"><svg class="ic l"><use href="#i-globe"></use></svg></div><div><div class="nm">B · Context</div><p>The five known systems, how they link across Hong Kong and the Mainland, and the data they hold.</p></div></div>
+      <div class="pt"><div class="L"><svg class="ic l"><use href="#i-shield"></use></svg></div><div><div class="nm">C · The baseline</div><p>What the IPO baseline means, what is not claimed, the control domains, threats and minimum controls.</p></div></div>
+      <div class="pt"><div class="L"><svg class="ic l"><use href="#i-route"></use></svg></div><div><div class="nm">D · Approach</div><p>How the work is organised: scope, deliverables, timeline, decision gates, items to be confirmed.</p></div></div>
+      <div class="pt"><div class="L"><svg class="ic l"><use href="#i-search"></use></svg></div><div><div class="nm">E · Phase 1: Gap analysis</div><p>How the assessment is run, how data flows from discovery to destruction, and what Phase 1 delivers.</p></div></div>
+      <div class="pt"><div class="L"><svg class="ic l"><use href="#i-target"></use></svg></div><div><div class="nm">F · Phase 2: Roadmap</div><p>How gaps are ranked by threat and turned into a roadmap and high-level solution needs.</p></div></div>
+      <div class="pt"><div class="L"><svg class="ic l"><use href="#i-wrench"></use></svg></div><div><div class="nm">G · Quick start and Phase 3</div><p>Urgent fixes first, then policies, technical baseline, testing, incident readiness, backup and evidence.</p></div></div>
+      <div class="pt"><div class="L"><svg class="ic l"><use href="#i-coin"></use></svg></div><div><div class="nm">H · Together and money</div><p>Roles, what is needed from [Company], fees, fee assumptions and project assumptions.</p></div></div>
+      <div class="pt"><div class="L"><svg class="ic l"><use href="#i-people"></use></svg></div><div><div class="nm">I · Credentials and next steps</div><p>Why [We] are a fit, the team and credentials, and the next steps.</p></div></div>
+    </div>
+    <div class="so"><span class="k">Appendix</span><span>Reference frameworks, scoring method, sample deliverables, specifications for each policy, procedure and template, and the full responsibility chart.</span></div>
+    <div class="leg"><span><i class="sw q"></i>Quoted in the fee</span><span><i class="sw o"></i>Optional</span><span><i class="sw t"></i>To be confirmed</span><span><i class="sw d"></i>Deferred or out of scope</span></div>
+  </div>
+  <div class="foot"><span>[Firm Name] · Cybersecurity Baseline Programme for IPO Preparation · Strictly private &amp; confidential</span><span>2</span></div>
+</section>
+
+<!-- ============ SLIDE 3 · EXECUTIVE SUMMARY: BACKGROUND AND OBJECTIVES ============ -->
+<section class="slide">
+  <div class="eyb">A · Summary · 1 of 3</div>
+  <h2 class="ttl">Executive summary: background and objectives</h2>
+  <div class="body">
+    <p class="lead">In 22 weeks, [Company] moves from no stated baseline controls to a minimum set of controls with evidence, so management can see the remaining risks before the IPO application.</p>
+    <div class="main row" style="gap:16pt">
+
+      <div class="col fx g8">
+        <div class="colh">Background</div>
+        <div class="rail">
+          <div class="ri"><div class="dot"><svg class="ic"><use href="#i-bldg"></use></svg></div><div class="cd"><div class="hd">The business</div><div>[Company] is a clinical-stage biotech with about 200 staff, based in Hong Kong with offices in Hong Kong and Mainland China.</div></div></div>
+          <div class="ri"><div class="dot"><svg class="ic"><use href="#i-cal"></use></svg></div><div class="cd"><div class="hd">The trigger</div><div>[Company] plans an IPO application within about 6 months. IPO advisers, once appointed, may ask how systems and data are protected.</div></div></div>
+          <div class="ri"><div class="dot"><svg class="ic"><use href="#i-warn"></use></svg></div><div class="cd"><div class="hd">The starting point</div><div>[Company] states it has no baseline cybersecurity controls; [We] verify this in Week 1. Data sits in finance, cloud, staff devices and paper notebooks.</div></div></div>
+          <div class="ri"><div class="dot"><svg class="ic"><use href="#i-lock"></use></svg></div><div class="cd"><div class="hd">The constraint</div><div>The runway is short. Controls need time to run and leave evidence, so the quick start fixes begin in Week 1.</div></div></div>
+        </div>
+      </div>
+
+      <div class="col fx g8">
+        <div class="colh">Objectives</div>
+        <div class="col fx g8">
+          <div class="ob"><div class="it a"><svg class="ic l"><use href="#i-search"></use></svg></div><div class="tx"><div class="hd">Know the gaps</div><div>Assess 14 control domains against recognised international references, using interviews and evidence checks.</div></div></div>
+          <div class="ob"><div class="it b"><svg class="ic l"><use href="#i-route"></use></svg></div><div class="tx"><div class="hd">Plan it</div><div>Rank gaps by threat and build a 22-week roadmap sized for about 200 people, with an owner for each fix and three decision meetings (gates).</div></div></div>
+          <div class="ob"><div class="it c"><svg class="ic l"><use href="#i-wrench"></use></svg></div><div class="tx"><div class="hd">Close the minimum gaps</div><div>Put a starting set of minimum controls in place (about 15). [Company] confirms the final list at the first gate, Week 6.</div></div></div>
+          <div class="ob"><div class="it d"><svg class="ic l"><use href="#i-docok"></use></svg></div><div class="tx"><div class="hd">Evidence it</div><div>Keep dated records for every control, so management can see what is in place and what risk remains.</div></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="obj"><svg class="ic l"><use href="#i-flag"></use></svg><div><b>Target at Week 22</b> — The minimum controls are in place and evidenced, and management has accepted the residual risks. [We] do not claim IPO readiness or compliance.</div></div>
+  </div>
+  <div class="foot"><span>[Firm Name] · Cybersecurity Baseline Programme for IPO Preparation · Strictly private &amp; confidential</span><span>3</span></div>
+</section>
+
+<!-- ============ SLIDE 4 · EXECUTIVE SUMMARY: SCOPE, APPROACH AND TIMELINE ============ -->
+<section class="slide">
+  <div class="eyb">A · Summary · 2 of 3</div>
+  <h2 class="ttl">Executive summary: scope, approach and timeline</h2>
+  <div class="body" style="gap:6pt">
+    <p class="lead">The programme covers [Company]’s five known systems in two offices and runs in three phases over 22 weeks. <b>Gates</b> are short decision meetings with the <b>Executive Sponsor</b>, [Company]’s programme owner (CEO, CFO or equivalent).</p>
+    <div class="main col" style="gap:6pt">
+
+      <!-- SCOPE -->
+      <div style="display:flex;gap:4pt;flex:none;height:100pt">
+        <div style="width:78pt;flex:none;box-sizing:border-box;background:var(--g800);color:#fff;border-radius:4pt;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2pt;font-weight:700"><svg class="ic"><use href="#i-target"></use></svg><span>Scope</span></div>
+        <div style="flex:1.3;min-width:0;box-sizing:border-box;background:var(--g50);border:1pt solid var(--g100);border-radius:4pt;padding:4pt 8pt">
+          <div style="display:flex;align-items:center;gap:5pt;font-weight:700;color:var(--g800)"><svg class="ic s"><use href="#i-shield"></use></svg>In scope</div>
+          <div>5 known systems: finance, Hong Kong cloud files, Mainland cloud files, personal devices, paper lab notebooks</div>
+          <div style="margin-top:2pt">Both offices · 14 control domains · minimum controls decided at Gate 1</div>
+        </div>
+        <div style="flex:1;min-width:0;box-sizing:border-box;background:#fff;border:1.5pt solid var(--g600);border-radius:4pt;padding:4pt 8pt">
+          <div style="display:flex;align-items:center;gap:5pt;font-weight:700;color:var(--g800)"><svg class="ic s"><use href="#i-globe"></use></svg>Optional</div>
+          <div>2 on-site visits to the Mainland office, 2 days each</div>
+          <div style="margin-top:2pt">Visit 1 chosen at signature, visit 2 at Gate 2</div>
+        </div>
+        <div style="flex:1;min-width:0;box-sizing:border-box;background:var(--amber-bg);border:1.5pt dashed var(--amber);color:var(--amber-dk);border-radius:4pt;padding:4pt 8pt">
+          <div style="display:flex;align-items:center;gap:5pt;font-weight:700"><svg class="ic s"><use href="#i-warn"></use></svg>To be confirmed</div>
+          <div>Technical testing, implementation support, solutions and licences, vendor fixes, support after Week 22</div>
+        </div>
+        <div style="flex:1;min-width:0;box-sizing:border-box;background:var(--gry-bg);border:1.5pt dashed var(--gry);color:var(--gry-dk);border-radius:4pt;padding:4pt 8pt">
+          <div style="display:flex;align-items:center;gap:5pt;font-weight:700"><svg class="ic s"><use href="#i-lock"></use></svg>Out of scope</div>
+          <div>Legal advice and cross-border legal analysis, SIEM or SOC, ISO certification, vendor audits, internal audit</div>
+        </div>
+      </div>
+
+      <!-- PLAN MATRIX: phases = timeline = approach -->
+      <div style="flex:1;min-height:0;display:grid;grid-template-columns:78pt minmax(0,1fr) minmax(0,1fr) minmax(0,1.65fr);grid-template-rows:34pt 24pt 1.3fr 1fr 0.9fr;gap:4pt">
+
+        <div></div>
+        <div style="box-sizing:border-box;background:var(--g800);color:#fff;clip-path:polygon(0 0,96% 0,100% 50%,96% 100%,0 100%);padding:2pt 14pt 2pt 8pt;display:flex;flex-direction:column;justify-content:center;line-height:1.2;white-space:nowrap;overflow:hidden"><b>1 Gap analysis · Weeks 1–4</b><span>Assess by domain</span></div>
+        <div style="box-sizing:border-box;background:var(--g700);color:#fff;clip-path:polygon(0 0,96% 0,100% 50%,96% 100%,0 100%);padding:2pt 14pt 2pt 8pt;display:flex;flex-direction:column;justify-content:center;line-height:1.2;white-space:nowrap;overflow:hidden"><b>2 Roadmap · Weeks 5–6</b><span>Prioritise by threat</span></div>
+        <div style="box-sizing:border-box;background:var(--g600);color:#fff;clip-path:polygon(0 0,98% 0,100% 50%,98% 100%,0 100%);padding:2pt 14pt 2pt 8pt;display:flex;flex-direction:column;justify-content:center;line-height:1.2;white-space:nowrap;overflow:hidden"><b>3 Remediation · Weeks 7–22</b><span>Fix in tiers: do first, do next, show it works</span></div>
+
+        <div style="box-sizing:border-box;background:var(--g800);color:#fff;border-radius:4pt;display:flex;align-items:center;justify-content:center;font-weight:700;white-space:nowrap">In parallel</div>
+        <div style="grid-column:2 / span 2;box-sizing:border-box;background:var(--g50);border:1.5pt dashed var(--g600);border-radius:3pt;display:flex;align-items:center;gap:6pt;padding:0 8pt;color:var(--g800);white-space:nowrap;overflow:hidden"><svg class="ic s" style="flex:none;color:var(--g600)"><use href="#i-bolt"></use></svg><b>Quick start · Weeks 1–6</b><span>the do-first fixes start in Week 1</span></div>
+        <div style="box-sizing:border-box;background:var(--amber-bg);border:1.5pt dashed var(--amber);border-radius:3pt;display:flex;align-items:center;gap:6pt;padding:0 8pt;color:var(--amber-dk);white-space:nowrap;overflow:hidden"><svg class="ic s" style="flex:none"><use href="#i-warn"></use></svg><b>Technical testing</b><span>(to be confirmed) · ~Weeks 14–20</span></div>
+
+        <div style="box-sizing:border-box;background:var(--g800);color:#fff;border-radius:4pt;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2pt;font-weight:700;text-align:center"><svg class="ic s"><use href="#i-wrench"></use></svg><span>How [We] work</span></div>
+        <div style="box-sizing:border-box;min-width:0;background:#fff;border:1pt solid var(--g100);border-top:3pt solid var(--g800);border-radius:3pt;padding:3pt 8pt;overflow:hidden"><ul class="ul" style="margin:0;padding-left:12pt"><li>~15 interviews, 5 walkthroughs</li><li>~40 evidence items checked</li><li>14 control domains scored</li><li>2-hour workshop to validate gaps</li></ul></div>
+        <div style="box-sizing:border-box;min-width:0;background:#fff;border:1pt solid var(--g100);border-top:3pt solid var(--g700);border-radius:3pt;padding:3pt 8pt;overflow:hidden"><ul class="ul" style="margin:0;padding-left:12pt"><li>Rank gaps by main threats</li><li>Recommend the minimum controls</li><li>Set owners and target weeks</li><li>List high-level solution needs</li></ul></div>
+        <div style="box-sizing:border-box;min-width:0;background:#fff;border:1pt solid var(--g100);border-top:3pt solid var(--g600);border-radius:3pt;padding:3pt 8pt;overflow:hidden"><ul class="ul" style="margin:0;padding-left:12pt"><li>Write up to 8 policies, 8 procedures, 6 templates</li><li>Write up to 10 required settings; [We] check them</li><li>Incident plan (up to 4 playbooks), backup, restore test</li><li>Train staff, supplier checklist, evidence pack</li></ul></div>
+
+        <div style="box-sizing:border-box;background:var(--g800);color:#fff;border-radius:4pt;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2pt;font-weight:700;text-align:center"><svg class="ic s"><use href="#i-people"></use></svg><span>[Company] input</span></div>
+        <div style="box-sizing:border-box;min-width:0;background:var(--g50);border:1pt solid var(--g100);border-radius:3pt;padding:3pt 8pt;overflow:hidden">[Company] coordinator about 0.5 day a week; interviewees available; read-only admin access within 2 working days</div>
+        <div style="box-sizing:border-box;min-width:0;background:var(--g50);border:1pt solid var(--g100);border-radius:3pt;padding:3pt 8pt;overflow:hidden">Executive Sponsor decides the final controls and an owner for each, at Gate 1</div>
+        <div style="box-sizing:border-box;min-width:0;background:var(--g50);border:1pt solid var(--g100);border-radius:3pt;padding:3pt 8pt;overflow:hidden">[Company] IT applies settings; owners run the controls; staff attend training; [Company] sources solutions (to be confirmed)</div>
+
+        <div style="box-sizing:border-box;background:var(--g800);color:#fff;border-radius:4pt;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2pt;font-weight:700;text-align:center"><svg class="ic s"><use href="#i-flag"></use></svg><span>Decisions</span></div>
+        <div style="box-sizing:border-box;min-width:0;background:#fff;border:1pt solid var(--g100);border-radius:3pt;padding:3pt 8pt;overflow:hidden;display:flex;gap:6pt;align-items:center"><svg width="11pt" height="11pt" viewBox="0 0 10 10" style="flex:none"><path d="M5 0l5 5-5 5-5-5z" fill="#0A2E23"></path></svg><div><b>Kick-off · Week 1</b><br>Agree who applies fixes</div></div>
+        <div style="box-sizing:border-box;min-width:0;background:#fff;border:1pt solid var(--g100);border-radius:3pt;padding:3pt 8pt;overflow:hidden;display:flex;gap:6pt;align-items:center"><svg width="11pt" height="11pt" viewBox="0 0 10 10" style="flex:none"><path d="M5 0l5 5-5 5-5-5z" fill="#0A2E23"></path></svg><div><b>Gate 1 · Week 6</b><br>Confirm controls and roadmap</div></div>
+        <div style="box-sizing:border-box;min-width:0;background:#fff;border:1pt solid var(--g100);border-radius:3pt;padding:3pt 8pt;overflow:hidden;display:flex;flex-direction:column;justify-content:center;gap:2pt">
+          <div style="display:flex;gap:6pt;align-items:center"><svg width="11pt" height="11pt" viewBox="0 0 10 10" style="flex:none"><path d="M5 0l5 5-5 5-5-5z" fill="#0A2E23"></path></svg><span><b>Gate 2 · Week 13</b> agree the testing scope</span></div>
+          <div style="display:flex;gap:6pt;align-items:center"><svg width="11pt" height="11pt" viewBox="0 0 10 10" style="flex:none"><path d="M5 0l5 5-5 5-5-5z" fill="#0A2E23"></path></svg><span><b>Gate 3 · Week 22</b> accept residual risks</span></div>
+        </div>
+
+      </div>
+    </div>
+    <div class="so"><span class="k">Note</span><span>The 5 threats and 15 controls are starting lists. The assessment may change them; the Executive Sponsor decides the final lists at Gate 1.</span></div>
+  </div>
+  <div class="foot"><span>[Firm Name] · Cybersecurity Baseline Programme for IPO Preparation · Strictly private &amp; confidential</span><span>4</span></div>
+</section>
+
+<!-- ============ SLIDE 5 · EXECUTIVE SUMMARY: DELIVERABLES AND WORKING ARRANGEMENTS ============ -->
+<section class="slide">
+  <div class="eyb">A · Summary · 3 of 3</div>
+  <h2 class="ttl">Executive summary: deliverables and working arrangements</h2>
+  <div class="body" style="gap:6pt">
+    <p class="lead">Every deliverable has a due week. The set-up is simple: one [Company] coordinator and the Executive Sponsor. Each gate is a short decision meeting, and any change to scope is estimated and approved in writing before work starts.</p>
+    <div class="main col" style="gap:6pt">
+
+      <!-- DELIVERABLES -->
+      <div style="display:flex;gap:6pt;flex:none;height:178pt">
+        <div style="width:78pt;flex:none;box-sizing:border-box;background:var(--g800);color:#fff;border-radius:4pt;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2pt;font-weight:700;text-align:center"><svg class="ic"><use href="#i-doc"></use></svg><span>Deliverables</span><span style="font-weight:400">18 in total</span></div>
+
+        <div style="flex:0.9;min-width:0;display:flex;flex-direction:column;gap:4pt">
+          <div style="flex:1.9;display:flex;flex-direction:column;box-sizing:border-box;background:#fff;border:1pt solid var(--g100);border-top:3pt solid var(--g800);border-radius:3pt;padding:3pt 8pt">
+            <div style="font-weight:700;color:var(--g800)">Gap analysis · 5</div>
+            <div style="flex:1;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:1pt 8pt;align-content:space-evenly">
+              <span>Project charter and roles</span><b style="color:var(--g700);text-align:right">Wk 2</b>
+              <span>Systems and data-flow inventory</span><b style="color:var(--g700);text-align:right">Wk 4</b>
+              <span>Gap report with 1-page summary</span><b style="color:var(--g700);text-align:right">Wk 4</b>
+              <span>Findings list (up to 50)</span><b style="color:var(--g700);text-align:right">Wk 4</b>
+              <span>Risk register (up to 10 risks)</span><b style="color:var(--g700);text-align:right">Wk 4</b>
+            </div>
+          </div>
+          <div style="flex:0.9;display:flex;flex-direction:column;box-sizing:border-box;background:#fff;border:1pt solid var(--g100);border-top:3pt solid var(--g700);border-radius:3pt;padding:3pt 8pt">
+            <div style="font-weight:700;color:var(--g800)">Roadmap · 2</div>
+            <div style="flex:1;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:1pt 8pt;align-content:space-evenly">
+              <span>Prioritised roadmap</span><b style="color:var(--g700);text-align:right">Wk 6</b>
+              <span>High-level solution needs</span><b style="color:var(--g700);text-align:right">Wk 6</b>
+            </div>
+          </div>
+        </div>
+
+        <div style="flex:1.5;min-width:0;display:flex;flex-direction:column;gap:4pt">
+          <div style="box-sizing:border-box;background:#fff;border:1pt solid var(--g100);border-top:3pt solid var(--g600);border-radius:3pt;padding:3pt 8pt">
+            <div style="font-weight:700;color:var(--g800)">Remediation · 8</div>
+            <div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:1pt 8pt">
+              <span>Up to 8 core policies, 2–3 pages each, English and Simplified Chinese</span><b style="color:var(--g700);text-align:right">Wk 12</b>
+              <span>Up to 8 procedures (1–2 pages each) and 6 templates, both languages</span><b style="color:var(--g700);text-align:right">Wk 16</b>
+              <span>Technical baseline: up to 10 required settings (cloud, finance, devices)</span><b style="color:var(--g700);text-align:right">Wk 3–10</b>
+              <span>Incident plan, up to 4 one-page playbooks, tabletop exercise report</span><b style="color:var(--g700);text-align:right">Wk 12–18</b>
+              <span>Backup design and restore test report</span><b style="color:var(--g700);text-align:right">Wk 18</b>
+              <span>Staff awareness training and attendance records</span><b style="color:var(--g700);text-align:right">Wk 15</b>
+              <span>Third-party onboarding checklist and minimum requirements</span><b style="color:var(--g700);text-align:right">Wk 13</b>
+              <span>Evidence pack and closure report</span><b style="color:var(--g700);text-align:right">Wk 22</b>
+            </div>
+          </div>
+          <div style="display:flex;gap:4pt;flex:1;min-height:0">
+            <div style="flex:1;min-width:0;box-sizing:border-box;background:var(--g50);border:1.5pt solid var(--g600);border-radius:3pt;padding:2pt 8pt;display:flex;align-items:center;gap:6pt"><svg class="ic s" style="flex:none;color:var(--g600)"><use href="#i-list"></use></svg><span><b>Weeks 1–22:</b> weekly notes, progress tracker, change log · 1</span></div>
+            <div style="flex:1;min-width:0;box-sizing:border-box;background:var(--amber-bg);border:1.5pt dashed var(--amber);color:var(--amber-dk);border-radius:3pt;padding:2pt 8pt;display:flex;align-items:center;gap:6pt"><svg class="ic s" style="flex:none"><use href="#i-warn"></use></svg><span><b>To be confirmed:</b> implementation records, test reports · 2</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WORKING ARRANGEMENTS, ACCEPTANCE, ASSUMPTIONS, CHANGES -->
+      <div style="display:flex;gap:6pt;flex:1;min-height:0">
+
+        <div style="flex:1;min-width:0;box-sizing:border-box;background:#fff;border:1pt solid var(--g100);border-top:4pt solid var(--g700);border-radius:3pt;padding:4pt 8pt;overflow:hidden">
+          <div style="display:flex;align-items:center;gap:6pt;font-weight:700;color:var(--g800);margin-bottom:3pt"><svg class="ic s" style="color:var(--g600)"><use href="#i-people"></use></svg>Working arrangements</div>
+          <ul class="ul" style="margin:0;padding-left:12pt"><li>One [Company] coordinator, about 0.5 day a week, is the day-to-day contact</li><li>Weekly 30-minute catch-up</li><li>Decision meetings at kick-off and each gate</li><li>Unresolved after 5 working days: escalate to the Executive Sponsor</li></ul>
+        </div>
+
+        <div style="flex:1;min-width:0;box-sizing:border-box;background:#fff;border:1pt solid var(--g100);border-top:4pt solid var(--g700);border-radius:3pt;padding:4pt 8pt;overflow:hidden">
+          <div style="display:flex;align-items:center;gap:6pt;font-weight:700;color:var(--g800);margin-bottom:3pt"><svg class="ic s" style="color:var(--g600)"><use href="#i-docok"></use></svg>Acceptance</div>
+          <ul class="ul" style="margin:0;padding-left:12pt"><li>Each gate reviews the deliverables due so far</li><li>[Company] comments due within 5 working days</li><li>Executive Sponsor accepts them or lists changes</li><li>Final gate: evidence reviewed; residual risks accepted by [Company]</li></ul>
+        </div>
+
+        <div style="flex:1;min-width:0;box-sizing:border-box;background:#fff;border:1pt solid var(--g100);border-top:4pt solid var(--g700);border-radius:3pt;padding:4pt 8pt;overflow:hidden">
+          <div style="display:flex;align-items:center;gap:6pt;font-weight:700;color:var(--g800);margin-bottom:3pt"><svg class="ic s" style="color:var(--g600)"><use href="#i-list"></use></svg>Key assumptions</div>
+          <ul class="ul" style="margin:0;padding-left:12pt"><li>[Company] IT applies the required settings</li><li>[Company] pays for software, licences and vendor fixes</li><li>Remote-first; site visits optional</li><li>English only unless specified</li></ul>
+        </div>
+
+        <div style="flex:1;min-width:0;box-sizing:border-box;background:#fff;border:1pt solid var(--g100);border-top:4pt solid var(--g700);border-radius:3pt;padding:4pt 8pt;overflow:hidden">
+          <div style="display:flex;align-items:center;gap:6pt;font-weight:700;color:var(--g800);margin-bottom:3pt"><svg class="ic s" style="color:var(--g600)"><use href="#i-trend"></use></svg>Changes to scope</div>
+          <div style="display:flex;flex-direction:column;gap:2pt">
+            <div style="display:flex;align-items:center;gap:6pt"><span style="width:16pt;height:16pt;flex:none;border-radius:50%;background:var(--g700);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700">1</span>Raise a change request</div>
+            <div style="display:flex;align-items:center;gap:6pt"><span style="width:16pt;height:16pt;flex:none;border-radius:50%;background:var(--g700);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700">2</span>Estimate in 3 working days</div>
+            <div style="display:flex;align-items:center;gap:6pt"><span style="width:16pt;height:16pt;flex:none;border-radius:50%;background:var(--g700);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700">3</span>Executive Sponsor decides</div>
+            <div style="display:flex;align-items:center;gap:6pt"><span style="width:16pt;height:16pt;flex:none;border-radius:50%;background:var(--g700);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700">4</span>Do it after written approval</div>
+            <div style="display:flex;align-items:center;gap:6pt"><span style="width:16pt;height:16pt;flex:none;border-radius:50%;background:var(--g700);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700">5</span>Record it in the change log</div>
+          </div>
+          <div style="margin-top:3pt">A gap outside the agreed controls follows the same route.</div>
+        </div>
+
+      </div>
+    </div>
+    <div class="nt"><span><b>Working view, not legal advice.</b> IPO advisers or counsel, once appointed, may ask for more. Their requests are mapped to the baseline at the next gate and handled by change request.</span></div>
+  </div>
+  <div class="foot"><span>[Firm Name] · Cybersecurity Baseline Programme for IPO Preparation · Strictly private &amp; confidential</span><span>5</span></div>
+</section>
+
+<!-- ===================== SLIDE 6 · Systems and cross-border links ===================== -->
+<section class="slide">
+<div class="eyb">B · Context · 1 of 2</div>
+<h2 class="ttl">Systems and cross-border links</h2>
+<div class="body">
+<div class="lead">Five systems across two offices make up the known scope. Solid lines come from the brief; amber dashed lines are assumed, and [We] confirm them in Week 1.</div>
+<div class="main" style="display:flex;align-items:center;justify-content:center">
+<svg style="width:880pt;height:340pt" viewBox="0 0 880 340">
+<defs>
+<marker id="s6g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1B7F5C"></path></marker>
+<marker id="s6a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#D99A0B"></path></marker>
+</defs>
+<!-- zones -->
+<rect x="0" y="0" width="270" height="308" rx="8" fill="#F1F8F4" stroke="#8FD0AE"></rect>
+<rect x="610" y="0" width="270" height="308" rx="8" fill="#F1F8F4" stroke="#8FD0AE"></rect>
+<text x="135" y="19" text-anchor="middle" font-size="11" font-weight="700" fill="#13553F">HONG KONG OFFICE</text>
+<text x="745" y="19" text-anchor="middle" font-size="11" font-weight="700" fill="#13553F">MAINLAND OFFICE</text>
+<!-- links -->
+<line x1="260" y1="56" x2="618" y2="56" stroke="#1B7F5C" stroke-width="2" marker-end="url(#s6g)"></line>
+<rect x="325" y="35" width="230" height="42" rx="21" fill="#fff" stroke="#8FD0AE"></rect>
+<text x="440" y="53" text-anchor="middle" font-size="11" font-weight="700" fill="#13553F">HK users sign in to the ERP</text>
+<text x="440" y="67" text-anchor="middle" font-size="11" fill="#1D2B25">Same ERP serves both offices</text>
+<line x1="264" y1="126" x2="616" y2="126" stroke="#D99A0B" stroke-width="2" stroke-dasharray="6 4" marker-start="url(#s6a)" marker-end="url(#s6a)"></line>
+<rect x="335" y="105" width="210" height="42" rx="21" fill="#FFF4D6" stroke="#D99A0B"></rect>
+<text x="440" y="123" text-anchor="middle" font-size="11" font-weight="700" fill="#7A5600">Files moved between clouds?</text>
+<text x="440" y="137" text-anchor="middle" font-size="11" fill="#7A5600">Method and records unknown</text>
+<line x1="260" y1="198" x2="617" y2="146" stroke="#D99A0B" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#s6a)"></line>
+<rect x="345" y="192" width="190" height="24" rx="12" fill="#FFF4D6" stroke="#D99A0B"></rect>
+<text x="440" y="208" text-anchor="middle" font-size="11" font-weight="700" fill="#7A5600">Devices may reach both clouds</text>
+<line x1="135" y1="172" x2="135" y2="155" stroke="#D99A0B" stroke-width="2" stroke-dasharray="3 2" marker-end="url(#s6a)"></line>
+<line x1="745" y1="172" x2="745" y2="155" stroke="#D99A0B" stroke-width="2" stroke-dasharray="3 2" marker-end="url(#s6a)"></line>
+
+<!-- HK column -->
+<rect x="10" y="30" width="250" height="52" rx="6" fill="#EEF1EF" stroke="#8A9A93"></rect>
+<g style="color:#3E4D47" fill="none" stroke="#3E4D47" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-people" x="18" y="43" width="26" height="26"></use></g>
+<text x="54" y="47" font-size="11" font-weight="700" fill="#3E4D47">Hong Kong users</text>
+<text x="54" y="61" font-size="11" fill="#1D2B25">Staff in the Hong Kong office</text>
+<text x="54" y="75" font-size="11" fill="#3E4D47">Use the ERP held in the Mainland</text>
+
+<rect x="10" y="100" width="250" height="52" rx="6" fill="#fff" stroke="#1B7F5C" stroke-width="1.5"></rect>
+<g style="color:#13553F" fill="none" stroke="#13553F" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-cloud" x="18" y="113" width="26" height="26"></use></g>
+<text x="54" y="117" font-size="11" font-weight="700" fill="#13553F">SYS-02 · HK Data Cloud</text>
+<text x="54" y="131" font-size="11" fill="#1D2B25">Microsoft OneDrive for Business</text>
+<text x="54" y="145" font-size="11" fill="#3E4D47">M365 tenant · Hong Kong files</text>
+
+<rect x="10" y="172" width="250" height="52" rx="6" fill="#fff" stroke="#1B7F5C" stroke-width="1.5"></rect>
+<g style="color:#13553F" fill="none" stroke="#13553F" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-laptop" x="18" y="185" width="26" height="26"></use></g>
+<text x="54" y="189" font-size="11" font-weight="700" fill="#13553F">SYS-04 · BYOD devices</text>
+<text x="54" y="203" font-size="11" fill="#1D2B25">Employee-owned PCs and laptops</text>
+<text x="54" y="217" font-size="11" fill="#3E4D47">Hong Kong staff</text>
+
+<rect x="10" y="244" width="250" height="52" rx="6" fill="#fff" stroke="#1B7F5C" stroke-width="1.5"></rect>
+<g style="color:#13553F" fill="none" stroke="#13553F" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-book" x="18" y="257" width="26" height="26"></use></g>
+<text x="54" y="261" font-size="11" font-weight="700" fill="#13553F">SYS-05 · Lab notebooks</text>
+<text x="54" y="275" font-size="11" fill="#1D2B25">Handwritten R&amp;D notebooks</text>
+<text x="54" y="289" font-size="11" fill="#3E4D47">Paper only · Hong Kong site</text>
+
+<!-- Mainland column -->
+<rect x="620" y="30" width="250" height="52" rx="6" fill="#fff" stroke="#1B7F5C" stroke-width="1.5"></rect>
+<g style="color:#13553F" fill="none" stroke="#13553F" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-coin" x="628" y="43" width="26" height="26"></use></g>
+<text x="664" y="47" font-size="11" font-weight="700" fill="#13553F">SYS-01 · Financial Core</text>
+<text x="664" y="61" font-size="11" fill="#1D2B25">Yonyou ERP · Mainland-hosted SaaS</text>
+<text x="664" y="75" font-size="11" fill="#3E4D47">Ledgers, invoices, vendor payments</text>
+
+<rect x="620" y="100" width="250" height="52" rx="6" fill="#fff" stroke="#1B7F5C" stroke-width="1.5"></rect>
+<g style="color:#13553F" fill="none" stroke="#13553F" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-cloud" x="628" y="113" width="26" height="26"></use></g>
+<text x="664" y="117" font-size="11" font-weight="700" fill="#13553F">SYS-03 · Mainland Data Cloud</text>
+<text x="664" y="131" font-size="11" fill="#1D2B25">Jianguoyun (Nutstore Enterprise)</text>
+<text x="664" y="145" font-size="11" fill="#3E4D47">Preclinical data, lab notes, files</text>
+
+<rect x="620" y="172" width="250" height="52" rx="6" fill="#fff" stroke="#1B7F5C" stroke-width="1.5"></rect>
+<g style="color:#13553F" fill="none" stroke="#13553F" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-laptop" x="628" y="185" width="26" height="26"></use></g>
+<text x="664" y="189" font-size="11" font-weight="700" fill="#13553F">SYS-04 · BYOD devices</text>
+<text x="664" y="203" font-size="11" fill="#1D2B25">Employee-owned PCs and laptops</text>
+<text x="664" y="217" font-size="11" fill="#3E4D47">Mainland staff</text>
+
+<rect x="620" y="244" width="250" height="52" rx="6" fill="#fff" stroke="#1B7F5C" stroke-width="1.5"></rect>
+<g style="color:#13553F" fill="none" stroke="#13553F" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-book" x="628" y="257" width="26" height="26"></use></g>
+<text x="664" y="261" font-size="11" font-weight="700" fill="#13553F">SYS-05 · Lab notebooks</text>
+<text x="664" y="275" font-size="11" fill="#1D2B25">Handwritten R&amp;D notebooks</text>
+<text x="664" y="289" font-size="11" fill="#3E4D47">Paper only · Mainland site</text>
+
+<!-- legend -->
+<line x1="0" y1="328" x2="34" y2="328" stroke="#1B7F5C" stroke-width="2"></line>
+<text x="42" y="332" font-size="11" fill="#3E4D47">Link taken from the brief</text>
+<line x1="230" y1="328" x2="264" y2="328" stroke="#D99A0B" stroke-width="2" stroke-dasharray="6 4"></line>
+<text x="272" y="332" font-size="11" fill="#3E4D47">Assumed link, to be confirmed in Week 1</text>
+<rect x="560" y="322" width="22" height="12" rx="3" fill="#EEF1EF" stroke="#8A9A93"></rect>
+<text x="590" y="332" font-size="11" fill="#3E4D47">Not a system</text>
+</svg>
+</div>
+<div class="so"><span class="k">Note</span><span>The brief gives no control status for any system, so none is assumed here. Cross-border detail is in the cross-border appendix page; cross-border legal analysis stays with [Company]’s counsel (see Project assumptions).</span></div>
+</div>
+<div class="foot"><span>[Firm Name] · Cybersecurity Baseline Programme for IPO Preparation · Strictly private &amp; confidential</span><span>6</span></div>
+</section><!-- ===================== SLIDE 7 · Data assets and how sensitive they are ===================== -->
+<section class="slide">
+<div class="eyb">B · Context · 2 of 2</div>
+<h2 class="ttl">Data assets and how sensitive they are</h2>
+<div class="body">
+<div class="lead">Five known data assets sit on a four-step ladder. The higher the step, the more harm if the data is lost, copied out or cannot be shown to be the original.</div>
+<div class="main" style="display:flex;gap:8pt;align-items:stretch">
+
+<!-- LEFT: how to read -->
+<div style="flex:none;width:258pt;display:flex;flex-direction:column;background:#fff;border:1pt solid var(--g300);border-radius:8pt;overflow:hidden">
+<div style="background:var(--g800);color:#fff;padding:7pt 10pt;display:flex;align-items:center;gap:8pt;font-size:12pt;font-weight:700"><svg class="ic s"><use href="#i-trend"></use></svg><span>How to read the ladder</span></div>
+<div style="padding:10pt;display:flex;flex-direction:column;gap:9pt;flex:1">
+<div style="display:flex;gap:8pt;align-items:flex-start"><div style="flex:none;width:20pt;height:20pt;border-radius:10pt;background:var(--g600);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center">1</div><div><b>Higher step = more harm</b> if the data is lost, copied out or cannot be shown to be the original.</div></div>
+<div style="display:flex;gap:8pt;align-items:flex-start"><div style="flex:none;width:20pt;height:20pt;border-radius:10pt;background:var(--g600);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center">2</div><div><b>DA-01 to DA-05</b> are the five known data assets. “Home” is the system most likely to hold each one.</div></div>
+<div style="display:flex;gap:8pt;align-items:flex-start"><div style="flex:none;width:20pt;height:20pt;border-radius:10pt;background:var(--g600);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center">3</div><div><b>Homes are a starting view.</b> The Phase 1 inventory confirms or corrects them.</div></div>
+<div style="margin-top:auto;background:var(--g100);border:1.5pt solid var(--g600);border-radius:6pt;padding:6pt 8pt"><b>Why it matters.</b> The step sets what is protected first. Research data (Restricted) gets sign-in protection, sharing limits and backup, all due by Week 6.</div>
+</div>
+</div>
+
+<!-- RIGHT: ladder -->
+<div style="flex:1;min-width:0;display:flex;align-items:flex-end;gap:8pt">
+
+<div style="flex:1;min-width:0;height:175pt;display:flex;flex-direction:column;gap:6pt;background:var(--g50);border:1.5pt solid var(--g300);border-radius:8pt;overflow:hidden">
+<div style="background:var(--g300);color:var(--g900);padding:6pt 8pt"><div style="font-size:14pt;font-weight:700">Public</div><div>Safe to publish.</div></div>
+<div style="padding:0 6pt"><div style="border:1pt dashed var(--gry);border-radius:6pt;padding:4pt 6pt;background:var(--gry-bg);color:var(--gry-dk)"><div style="font-weight:700">None listed in the brief</div><div>Checked in the inventory</div></div></div>
+<div style="margin-top:auto;padding:5pt 8pt;border-top:1pt dashed var(--g300)"><b>Matters most:</b> basic care only.</div>
+</div>
+
+<div style="flex:1;min-width:0;height:215pt;display:flex;flex-direction:column;gap:6pt;background:var(--g50);border:1.5pt solid var(--g500);border-radius:8pt;overflow:hidden">
+<div style="background:var(--g500);color:#fff;padding:6pt 8pt"><div style="font-size:14pt;font-weight:700">Internal</div><div>Staff only. Little harm if it leaks.</div></div>
+<div style="padding:0 6pt"><div style="border:1pt solid var(--g300);border-left:4pt solid var(--g500);border-radius:6pt;padding:4pt 6pt;background:#fff"><div style="font-weight:700;color:var(--g900)">DA-05 Corporate documents</div><div>Home: SYS-02 · some items Confidential</div></div></div>
+<div style="margin-top:auto;padding:5pt 8pt;border-top:1pt dashed var(--g300)"><b>Matters most:</b> company accounts only; clean-up when staff leave.</div>
+</div>
+
+<div style="flex:1;min-width:0;height:260pt;display:flex;flex-direction:column;gap:6pt;background:var(--g50);border:1.5pt solid var(--g600);border-radius:8pt;overflow:hidden">
+<div style="background:var(--g600);color:#fff;padding:6pt 8pt"><div style="font-size:14pt;font-weight:700">Confidential</div><div>Named groups only. Real harm if it leaks.</div></div>
+<div style="padding:0 6pt"><div style="border:1pt solid var(--g300);border-left:4pt solid var(--g600);border-radius:6pt;padding:4pt 6pt;background:#fff"><div style="font-weight:700;color:var(--g900)">DA-04 Financial and payment data</div><div>Home: SYS-01</div></div></div>
+<div style="margin-top:auto;padding:5pt 8pt;border-top:1pt dashed var(--g300)"><b>Matters most:</b> payment approvals; access limited to the team.</div>
+</div>
+
+<div style="flex:1;min-width:0;height:310pt;display:flex;flex-direction:column;gap:6pt;background:var(--g50);border:1.5pt solid var(--g800);border-radius:8pt;overflow:hidden">
+<div style="background:var(--g800);color:#fff;padding:6pt 8pt"><div style="font-size:14pt;font-weight:700">Restricted</div><div>Named people only. The core R&amp;D value.</div></div>
+<div style="padding:0 6pt;display:flex;flex-direction:column;gap:6pt">
+<div style="border:1pt solid var(--g300);border-left:4pt solid var(--g800);border-radius:6pt;padding:4pt 6pt;background:#fff"><div style="font-weight:700;color:var(--g900)">DA-01 Preclinical datasets</div><div>Home: SYS-03</div></div>
+<div style="border:1pt solid var(--g300);border-left:4pt solid var(--g800);border-radius:6pt;padding:4pt 6pt;background:#fff"><div style="font-weight:700;color:var(--g900)">DA-02 Lab notes</div><div>Home: SYS-05 paper; copy in SYS-03</div></div>
+<div style="border:1pt solid var(--g300);border-left:4pt solid var(--g800);border-radius:6pt;padding:4pt 6pt;background:#fff"><div style="font-weight:700;color:var(--g900)">DA-03 Proprietary files</div><div>Home: SYS-02 and SYS-03</div></div>
+</div>
+<div style="margin-top:auto;padding:5pt 8pt;border-top:1pt dashed var(--g300)"><b>Matters most:</b> sign-in protection, sharing limits and backup first.</div>
+</div>
+
+</div>
+</div>
+<div class="so"><span class="k">See</span><span>The slide “Data inventory and data flow: discover to destroy” follows each asset from discovery to destruction. The homes shown are a hypothesis that the Phase 1 inventory confirms or corrects.</span></div>
+</div>
+<div class="foot"><span>[Firm Name] · Cybersecurity Baseline Programme for IPO Preparation · Strictly private &amp; confidential</span><span>7</span></div>
+</section>
+
+
+
+<!-- ===================== SLIDE 8 · IPO baseline ===================== -->
+<section class="slide">
+<div class="eyb">C · The baseline · 1 of 7</div>
+<h2 class="ttl">IPO baseline: reference and what is not claimed</h2>
+<div class="body">
+<div class="lead">HKEX material on risk management is a reference point for this work, not a pass mark. [We] show what is in place and what is not, and do not claim IPO readiness or compliance.</div>
+<div class="main" style="display:flex;gap:10pt">
+
+<!-- Panel 1 -->
+<div style="flex:none;width:290pt;border:1pt solid var(--g300);border-radius:8pt;background:#fff;display:flex;flex-direction:column;overflow:hidden">
+<div style="background:var(--g800);color:#fff;padding:7pt 10pt;display:flex;align-items:center;gap:8pt;font-size:12pt;font-weight:700"><svg class="ic s"><use href="#i-book"></use></svg><span>1 · What the reference says</span></div>
+<div style="padding:10pt;display:flex;flex-direction:column;gap:8pt">
+<div><div style="font-weight:700;color:var(--g600)">THE REFERENCE</div><div>HKEX’s Corporate Governance Code (Appendix C1 to the Listing Rules) has the board oversee risk management and internal control. HKEX guidance includes cyber risk within that review.</div></div>
+<div><div style="font-weight:700;color:var(--g600)">HOW TO READ IT</div><div>The Code is written for listed issuers, not IPO applicants. [We] do not read it as a cybersecurity baseline for applicants; it is a reference point only.</div></div>
+<div><div style="font-weight:700;color:var(--g600)">NOT A CYBER REFERENCE</div><div>Appendix C2 (ESG Reporting Code) is not a cybersecurity reference.</div></div>
+<div><div style="font-weight:700;color:var(--g600)">WHY IT STILL MATTERS</div><div>A company that lists becomes a listed issuer, so the direction is clear. A baseline built now avoids a rush later.</div></div>
+</div>
+</div>
+
+<!-- Panel 2 -->
+<div style="flex:none;width:290pt;border:1pt solid var(--g300);border-radius:8pt;background:#fff;display:flex;flex-direction:column;overflow:hidden">
+<div style="background:var(--g800);color:#fff;padding:7pt 10pt;display:flex;align-items:center;gap:8pt;font-size:12pt;font-weight:700"><svg class="ic s"><use href="#i-route"></use></svg><span>2 · How [We] use it</span></div>
+<div style="padding:10pt;display:flex;flex-direction:column;gap:0">
+<div style="display:flex;gap:6pt">
+<div style="flex:1;text-align:center;background:var(--g100);border:1pt solid var(--g300);border-radius:6pt;padding:4pt 2pt;font-weight:700;color:var(--g800)">HKEX<br>reference</div>
+<div style="flex:1;text-align:center;background:var(--g100);border:1pt solid var(--g300);border-radius:6pt;padding:4pt 2pt;font-weight:700;color:var(--g800)">NIST<br>CSF 2.0</div>
+<div style="flex:1;text-align:center;background:var(--g100);border:1pt solid var(--g300);border-radius:6pt;padding:4pt 2pt;font-weight:700;color:var(--g800)">ISO/IEC<br>27001:2022</div>
+</div>
+<svg style="width:16pt;height:9pt;align-self:center;margin:3pt 0" viewBox="0 0 16 9"><path d="M0,0 L16,0 L8,9 z" fill="#8FD0AE"></path></svg>
+<div style="background:var(--g700);color:#fff;border-radius:6pt;padding:5pt 8pt"><div style="font-size:12pt;font-weight:700">Nine baseline outcomes</div><div>What “minimum in place” looks like</div></div>
+<svg style="width:16pt;height:9pt;align-self:center;margin:3pt 0" viewBox="0 0 16 9"><path d="M0,0 L16,0 L8,9 z" fill="#8FD0AE"></path></svg>
+<div style="background:var(--g700);color:#fff;border-radius:6pt;padding:5pt 8pt"><div style="font-size:12pt;font-weight:700">14 control domains</div><div>Where [We] look for gaps</div></div>
+<svg style="width:16pt;height:9pt;align-self:center;margin:3pt 0" viewBox="0 0 16 9"><path d="M0,0 L16,0 L8,9 z" fill="#8FD0AE"></path></svg>
+<div style="background:var(--g700);color:#fff;border-radius:6pt;padding:5pt 8pt"><div style="font-size:12pt;font-weight:700">Main threats, minimum controls</div><div>What [Company] fixes first</div></div>
+<svg style="width:16pt;height:9pt;align-self:center;margin:3pt 0" viewBox="0 0 16 9"><path d="M0,0 L16,0 L8,9 z" fill="#8FD0AE"></path></svg>
+<div style="background:var(--g100);border:1.5pt solid var(--g600);color:var(--g900);border-radius:6pt;padding:5pt 8pt"><div style="font-size:12pt;font-weight:700">Evidence</div><div>What management can show</div></div>
+</div>
+</div>
+
+<!-- Panel 3 -->
+<div style="flex:1;border:1pt solid var(--g300);border-radius:8pt;background:#fff;display:flex;flex-direction:column;overflow:hidden">
+<div style="background:var(--g800);color:#fff;padding:7pt 10pt;display:flex;align-items:center;gap:8pt;font-size:12pt;font-weight:700"><svg class="ic s"><use href="#i-doc"></use></svg><span>3 · Words [We] use</span></div>
+<div style="padding:8pt;display:flex;flex-direction:column;gap:8pt">
+<div style="display:flex;gap:8pt">
+<div style="flex:1;display:flex;flex-direction:column">
+<div style="font-weight:700;color:var(--g600);padding-bottom:3pt;border-bottom:1.5pt solid var(--g600)">[We] say</div>
+<div style="display:flex;gap:5pt;align-items:center;padding:4pt 0;border-bottom:1pt solid var(--g100)"><svg style="flex:none;width:11pt;height:11pt" viewBox="0 0 12 12"><path d="M1.5 6.5 L4.8 9.5 L10.5 2.5" fill="none" stroke="#1B7F5C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>gap identified</span></div>
+<div style="display:flex;gap:5pt;align-items:center;padding:4pt 0;border-bottom:1pt solid var(--g100)"><svg style="flex:none;width:11pt;height:11pt" viewBox="0 0 12 12"><path d="M1.5 6.5 L4.8 9.5 L10.5 2.5" fill="none" stroke="#1B7F5C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>control established</span></div>
+<div style="display:flex;gap:5pt;align-items:center;padding:4pt 0;border-bottom:1pt solid var(--g100)"><svg style="flex:none;width:11pt;height:11pt" viewBox="0 0 12 12"><path d="M1.5 6.5 L4.8 9.5 L10.5 2.5" fill="none" stroke="#1B7F5C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>evidence available</span></div>
+<div style="display:flex;gap:5pt;align-items:center;padding:4pt 0;border-bottom:1pt solid var(--g100)"><svg style="flex:none;width:11pt;height:11pt" viewBox="0 0 12 12"><path d="M1.5 6.5 L4.8 9.5 L10.5 2.5" fill="none" stroke="#1B7F5C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>residual risk</span></div>
+<div style="display:flex;gap:5pt;align-items:center;padding:4pt 0"><svg style="flex:none;width:11pt;height:11pt" viewBox="0 0 12 12"><path d="M1.5 6.5 L4.8 9.5 L10.5 2.5" fill="none" stroke="#1B7F5C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>aligned to reference</span></div>
+</div>
+<div style="flex:1;display:flex;flex-direction:column">
+<div style="font-weight:700;color:var(--crit);padding-bottom:3pt;border-bottom:1.5pt solid var(--crit)">[We] avoid</div>
+<div style="display:flex;gap:5pt;align-items:center;padding:4pt 0;border-bottom:1pt solid var(--g100)"><svg style="flex:none;width:11pt;height:11pt" viewBox="0 0 12 12"><path d="M2 2 L10 10 M10 2 L2 10" fill="none" stroke="#B5382E" stroke-width="1.8" stroke-linecap="round"></path></svg><span>compliant</span></div>
+<div style="display:flex;gap:5pt;align-items:center;padding:4pt 0;border-bottom:1pt solid var(--g100)"><svg style="flex:none;width:11pt;height:11pt" viewBox="0 0 12 12"><path d="M2 2 L10 10 M10 2 L2 10" fill="none" stroke="#B5382E" stroke-width="1.8" stroke-linecap="round"></path></svg><span>certified</span></div>
+<div style="display:flex;gap:5pt;align-items:center;padding:4pt 0;border-bottom:1pt solid var(--g100)"><svg style="flex:none;width:11pt;height:11pt" viewBox="0 0 12 12"><path d="M2 2 L10 10 M10 2 L2 10" fill="none" stroke="#B5382E" stroke-width="1.8" stroke-linecap="round"></path></svg><span>IPO-ready</span></div>
+<div style="display:flex;gap:5pt;align-items:center;padding:4pt 0;border-bottom:1pt solid var(--g100)"><svg style="flex:none;width:11pt;height:11pt" viewBox="0 0 12 12"><path d="M2 2 L10 10 M10 2 L2 10" fill="none" stroke="#B5382E" stroke-width="1.8" stroke-linecap="round"></path></svg><span>legally sufficient</span></div>
+<div style="display:flex;gap:5pt;align-items:center;padding:4pt 0"><svg style="flex:none;width:11pt;height:11pt" viewBox="0 0 12 12"><path d="M2 2 L10 10 M10 2 L2 10" fill="none" stroke="#B5382E" stroke-width="1.8" stroke-linecap="round"></path></svg><span>approved by HKEX</span></div>
+</div>
+</div>
+<div style="background:var(--g50);border:1pt dashed var(--g300);border-radius:6pt;padding:6pt 8pt"><b>Example.</b> Write “control established, evidence available”, not “compliant”.</div>
+<div>The work finds gaps and sets up controls. It does not certify anything, and it gives no assurance to HKEX or to IPO advisers.</div>
+</div>
+</div>
+
+</div>
+<div class="nt"><span><b>Working view, not legal advice.</b> IPO advisers or counsel, once appointed, may ask for more. Their requests are mapped to the baseline at the next gate and handled by change request.</span></div>
+</div>
+<div class="foot"><span>[Firm Name] · Cybersecurity Baseline Programme for IPO Preparation · Strictly private &amp; confidential</span><span>8</span></div>
+</section>
+
+<!-- ===================== SLIDE 9 · Nine baseline outcomes and the domains behind them ===================== -->
+<section class="slide">
+<div class="eyb">C · The baseline · 2 of 7</div>
+<h2 class="ttl">Nine baseline outcomes and the domains behind them</h2>
+<div class="body">
+<div class="lead">Nine plain-language outcomes say what “minimum in place” looks like. Each outcome is delivered by one or more control domains, and each is checked with evidence at the end, not just described.</div>
+<div class="main" style="display:flex;gap:8pt">
+
+<!-- LEFT: outcome table -->
+<div style="flex:none;width:612pt;background:#fff;border:1pt solid var(--g300);border-radius:8pt;display:flex;flex-direction:column;overflow:hidden">
+<div style="display:flex;gap:8pt;align-items:center;padding:3pt 8pt;background:var(--g50);border-bottom:1.5pt solid var(--g600);font-weight:700;color:var(--g700)"><div style="flex:none;width:82pt">Outcome ID</div><div style="flex:none;width:190pt">Outcome</div><div style="flex:1">Shown by</div><div style="flex:none;width:120pt">Delivered by domains</div></div>
+
+<div style="flex:1;display:flex;align-items:center;gap:8pt;padding:2pt 8pt;border-bottom:1pt solid var(--g100)">
+<div style="flex:none;width:82pt;display:flex;align-items:center;gap:8pt"><span style="width:28pt;height:28pt;border-radius:7pt;background:var(--g800);color:#fff;display:flex;align-items:center;justify-content:center"><svg class="ic s"><use href="#i-flag"></use></svg></span><b style="color:var(--g600)">BO-1</b></div>
+<div style="flex:none;width:190pt;font-weight:700;color:var(--g900)">A named owner and an approved security policy</div>
+<div style="flex:1">Approved policy; owner named in writing</div>
+<div style="flex:none;width:120pt;display:flex;flex-wrap:wrap;gap:2pt"><span style="padding:0 4pt;border-radius:4pt;background:var(--g100);color:var(--g800);font-weight:700">CD1</span><span style="padding:0 4pt;border-radius:4pt;background:var(--g100);color:var(--g800);font-weight:700">CD2</span></div>
+</div>
+
+<div style="flex:1;display:flex;align-items:center;gap:8pt;padding:2pt 8pt;border-bottom:1pt solid var(--g100)">
+<div style="flex:none;width:82pt;display:flex;align-items:center;gap:8pt"><span style="width:28pt;height:28pt;border-radius:7pt;background:var(--g800);color:#fff;display:flex;align-items:center;justify-content:center"><svg class="ic s"><use href="#i-list"></use></svg></span><b style="color:var(--g600)">BO-2</b></div>
+<div style="flex:none;width:190pt;font-weight:700;color:var(--g900)">Systems, data flows and third parties are known</div>
+<div style="flex:1">One-page inventory and data-flow record</div>
+<div style="flex:none;width:120pt;display:flex;flex-wrap:wrap;gap:2pt"><span style="padding:0 4pt;border-radius:4pt;background:var(--g100);color:var(--g800);font-weight:700">CD4</span><span style="padding:0 4pt;border-radius:4pt;background:var(--g100);color:var(--g800);font-weight:700">CD8</span><span style="padding:0 4pt;border-radius:4pt;background:var(--g100);color:var(--g800);font-weight:700">CD13</span></div>
+</div>
+
+<div style="flex:1;display:flex;align-items:center;gap:8pt;padding:2pt 8pt;border-bottom:1pt solid var(--g100)">
+<div style="flex:none;width:82pt;display:flex;align-items:center;gap:8pt"><span style="width:28pt;height:28pt;border-radius:7pt;background:var(--g800);color:#fff;display:flex;align-items:center;justify-content:center"><svg class="ic s"><use href="#i-warn"></use></svg></span><b style="color:var(--g600)">BO-3</b></div>
+<div style="flex:none;width:190pt;font-weight:700;color:var(--g900)">Key cyber risks are rated and have owners</div>
+<div style="flex:1">Risk register accepted by the Executive Sponsor</div>
+<div style="flex:none;width:120pt;display:flex;flex-wrap:wrap;gap:2pt"><span style="padding:0 4pt;border-radius:4pt;background:var(--g100);color:var(--g800);font-weight:700">CD3</span></div>
+</div>
+
+<div style="flex:1;display:flex;align-items:center;gap:8pt;padding:2pt 8pt;border-bottom:1pt solid var(--g100)">
+<div style="flex:none;width:82pt;display:flex;align-items:center;gap:8pt"><span style="width:28pt;height:28pt;border-radius:7pt;background:var(--g800);color:#fff;display:flex;align-items:center;justify-content:center"><svg class="ic s"><use href="#i-lock"></use></svg></span><b style="color:var(--g600)">BO-4</b></div>
+<div style="flex:none;width:190pt;font-weight:700;color:var(--g900)">Access is controlled (MFA, least privilege)</div>
+<div style="flex:1">Sign-in setting screenshots; access review record</div>
+<div style="flex:none;width:120pt;display:flex;flex-wrap:wrap;gap:2pt"><span style="padding:0 4pt;border-radius:4pt;background:var(--g100);color:var(--g800);font-weight:700">CD5</span></div>
+</div>
+
+<div style="flex:1;display:flex;align-items:center;gap:8pt;padding:2pt 8pt;border-bottom:1pt solid var(--g100)">
+<div style="flex:none;width:82pt;display:flex;align-items:center;gap:8pt"><span style="width:28pt;height:28pt;border-radius:7pt;background:var(--g800);color:#fff;display:flex;align-items:center;justify-content:center"><svg class="ic s"><use href="#i-laptop"></use></svg></span><b style="color:var(--g600)">BO-5</b></div>
+<div style="flex:none;width:190pt;font-weight:700;color:var(--g900)">Devices and cloud meet a minimum standard</div>
+<div style="flex:1">Settings evidence <span style="background:var(--amber-bg);border:1pt solid var(--amber);color:var(--amber-dk);border-radius:4pt;padding:0 4pt">testing to be confirmed</span></div>
+<div style="flex:none;width:120pt;display:flex;flex-wrap:wrap;gap:2pt"><span style="padding:0 4pt;border-radius:4pt;background:var(--g100);color:var(--g800);font-weight:700">CD6</span><span style="padding:0 4pt;border-radius:4pt;background:var(--g100);color:var(--g800);font-weight:700">CD7</span><span style="padding:0 4pt;border-radius:4pt;background:var(--g100);color:var(--g800);font-weight:700">CD8</span><span style="padding:0 4pt;border-radius:4pt;background:var(--g100);color:var(--g800);font-weight:700">CD9</span></div>
+</div>
+
+<div style="flex:1;display:flex;align-items:center;gap:8pt;padding:2pt 8pt;border-bottom:1pt solid var(--g100)">
+<div style="flex:none;width:82pt;display:flex;align-items:center;gap:8pt"><span style="width:28pt;height:28pt;border-radius:7pt;background:var(--g800);color:#fff;display:flex;align-items:center;justify-content:center"><svg class="ic s"><use href="#i-db"></use></svg></span><b style="color:var(--g600)">BO-6</b></div>
+<div style="flex:none;width:190pt;font-weight:700;color:var(--g900)">Backups exist and a restore has been tested</div>
+<div style="flex:1">Restore test record</div>
+<div style="flex:none;width:120pt;display:flex;flex-wrap:wrap;gap:2pt"><span style="padding:0 4pt;border-radius:4pt;background:var(--g100);color:var(--g800);font-weight:700">CD12</span></div>
+</div>
+
+<div style="flex:1;display:flex;align-items:center;gap:8pt;padding:2pt 8pt;border-bottom:1pt solid var(--g100)">
+<div style="flex:none;width:82pt;display:flex;align-items:center;gap:8pt"><span style="width:28pt;height:28pt;border-radius:7pt;background:var(--g800);color:#fff;display:flex;align-items:center;justify-content:center"><svg class="ic s"><use href="#i-bolt"></use></svg></span><b style="color:var(--g600)">BO-7</b></div>
+<div style="flex:none;width:190pt;font-weight:700;color:var(--g900)">Incidents can be reported and handled</div>
+<div style="flex:1">Incident plan; tabletop report</div>
+<div style="flex:none;width:120pt;display:flex;flex-wrap:wrap;gap:2pt"><span style="padding:0 4pt;border-radius:4pt;background:var(--g100);color:var(--g800);font-weight:700">CD10</span><span style="padding:0 4pt;border-radius:4pt;background:var(--g100);color:var(--g800);font-weight:700">CD11</span></div>
+</div>
+
+<div style="flex:1;display:flex;align-items:center;gap:8pt;padding:2pt 8pt;border-bottom:1pt solid var(--g100)">
+<div style="flex:none;width:82pt;display:flex;align-items:center;gap:8pt"><span style="width:28pt;height:28pt;border-radius:7pt;background:var(--g800);color:#fff;display:flex;align-items:center;justify-content:center"><svg class="ic s"><use href="#i-people"></use></svg></span><b style="color:var(--g600)">BO-8</b></div>
+<div style="flex:none;width:190pt;font-weight:700;color:var(--g900)">People know the basics and records exist</div>
+<div style="flex:1">Training attendance and quiz records</div>
+<div style="flex:none;width:120pt;display:flex;flex-wrap:wrap;gap:2pt"><span style="padding:0 4pt;border-radius:4pt;background:var(--g100);color:var(--g800);font-weight:700">CD14</span></div>
+</div>
+
+<div style="flex:1;display:flex;align-items:center;gap:8pt;padding:2pt 8pt;background:var(--gry-bg);border-top:1pt dashed var(--gry);color:var(--gry-dk)">
+<div style="flex:none;width:82pt;display:flex;align-items:center;gap:8pt"><span style="width:28pt;height:28pt;border-radius:7pt;background:var(--gry);color:#fff;display:flex;align-items:center;justify-content:center"><svg class="ic s"><use href="#i-shield"></use></svg></span><b>BO-9</b></div>
+<div style="flex:none;width:190pt;font-weight:700">Management accepts the residual risks</div>
+<div style="flex:1">Decided at Gate 3: written acceptance by the Executive Sponsor</div>
+<div style="flex:none;width:120pt;display:flex;flex-wrap:wrap;gap:2pt"><span style="padding:0 4pt;border-radius:4pt;background:#fff;border:1pt dashed var(--gry);font-weight:700">CD1</span><span style="padding:0 4pt;border-radius:4pt;background:#fff;border:1pt dashed var(--gry);font-weight:700">CD3</span></div>
+</div>
+</div>
+
+<!-- RIGHT: is that everything? -->
+<div style="flex:1;display:flex;flex-direction:column;gap:6pt;background:#fff;border:1pt solid var(--g300);border-radius:8pt;overflow:hidden">
+<div style="background:var(--g800);color:#fff;padding:7pt 10pt;display:flex;align-items:center;gap:8pt;font-size:12pt;font-weight:700"><svg class="ic s"><use href="#i-target"></use></svg><span>If all nine are evidenced</span></div>
+<div style="margin:0 8pt;background:var(--g100);border-left:4pt solid var(--g600);border-radius:6pt;padding:4pt 8pt"><b style="color:var(--g800)">It means</b><div>The minimum controls are in place and have dated evidence. Management can see which risks remain.</div></div>
+<div style="margin:0 8pt;background:#fff;border:1pt solid var(--crit);border-left:4pt solid var(--crit);border-radius:6pt;padding:4pt 8pt"><b style="color:var(--crit)">It does not mean</b><div>Compliance, certification or IPO readiness; assurance to HKEX or IPO advisers; a full security programme.</div></div>
+<div style="margin:0 8pt;background:var(--gry-bg);border:1.5pt dashed var(--gry);border-radius:6pt;padding:4pt 8pt;color:var(--gry-dk)"><b>Left for later (deferred)</b><div>Round-the-clock monitoring, data-loss-prevention tools, full device management, ISO certification, vendor audits, internal audit.</div></div>
+<div style="margin:0 8pt 8pt;background:var(--amber-bg);border:1pt solid var(--amber);border-radius:6pt;padding:4pt 8pt"><b style="color:var(--amber-dk)">If an outcome is not met</b><div>It is listed as an open gap with an owner. The Executive Sponsor fixes it or accepts the risk at Gate 3.</div></div>
+</div>
+
+</div>
+<div class="so"><span class="k">Why</span><span>The outcomes are [We]’s working statements, not HKEX, NIST or ISO rules. Every outcome has at least one domain behind it, and every domain supports at least one outcome (see Control domains, next).</span></div>
+</div>
+<div class="foot"><span>[Firm Name] · Cybersecurity Baseline Programme for IPO Preparation · Strictly private &amp; confidential</span><span>9</span></div>
+</section>
+
+<!-- ===================== SLIDE 10 · Control domains: the 14 areas checked ===================== -->
+<!-- ============ SLIDE 10 ============ -->
+<section class="slide">
+<div class="eyb">C · The baseline · 3 of 7</div>
+<h2 class="ttl">Control domains: the 14 areas checked</h2>
+<div class="body">
+<div class="lead">[We] group the 14 domains under the six NIST CSF 2.0 functions. Each domain delivers at least one baseline outcome; the BO tag on each card shows which.</div>
+
+<div class="main" style="flex:1;display:flex;gap:10pt;min-height:0">
+
+  <!-- Left: hub -->
+  <div style="width:220pt;flex:none;border:.75pt solid var(--g300);border-radius:6pt;overflow:hidden;display:flex;flex-direction:column;background:#fff">
+    <div style="background:var(--g800);color:#fff;display:flex;align-items:center;gap:6pt;padding:5pt 10pt;font-size:12pt;font-weight:700"><svg class="ic s"><use href="#i-target"></use></svg>NIST CSF 2.0 functions</div>
+    <div style="flex:1;padding:6pt 8pt;display:flex;flex-direction:column;justify-content:space-between;gap:6pt">
+      <svg width="204pt" height="218pt" viewBox="0 0 204 218" style="display:block">
+        <g stroke="#8FD0AE" stroke-width="3">
+          <line x1="102" y1="122" x2="102" y2="47"></line>
+          <line x1="102" y1="122" x2="173.3" y2="98.8"></line>
+          <line x1="102" y1="122" x2="146.1" y2="182.7"></line>
+          <line x1="102" y1="122" x2="57.9" y2="182.7"></line>
+          <line x1="102" y1="122" x2="30.7" y2="98.8"></line>
+        </g>
+        <circle cx="102" cy="122" r="34" fill="#0A2E23"></circle>
+        <text x="102" y="120" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">Govern</text>
+        <text x="102" y="134" text-anchor="middle" font-size="11" fill="#fff">CD1, 2, 13</text>
+
+        <circle cx="102" cy="47" r="30" fill="#13553F"></circle>
+        <text x="102" y="45" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">Identify</text>
+        <text x="102" y="59" text-anchor="middle" font-size="11" fill="#fff">CD3–4</text>
+
+        <circle cx="173.3" cy="98.8" r="30" fill="#1B7F5C"></circle>
+        <text x="173.3" y="97" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">Protect</text>
+        <text x="173.3" y="111" text-anchor="middle" font-size="11" fill="#fff">CD5–9, 14</text>
+
+        <circle cx="146.1" cy="182.7" r="30" fill="#2FA36B"></circle>
+        <text x="146.1" y="181" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">Detect</text>
+        <text x="146.1" y="195" text-anchor="middle" font-size="11" fill="#fff">CD10</text>
+
+        <circle cx="57.9" cy="182.7" r="30" fill="#8FD0AE"></circle>
+        <text x="57.9" y="181" text-anchor="middle" font-size="11" font-weight="700" fill="#0A2E23">Respond</text>
+        <text x="57.9" y="195" text-anchor="middle" font-size="11" fill="#0A2E23">CD11</text>
+
+        <circle cx="30.7" cy="98.8" r="30" fill="#DCEFE4" stroke="#8FD0AE" stroke-width="1.5"></circle>
+        <text x="30.7" y="97" text-anchor="middle" font-size="11" font-weight="700" fill="#0A2E23">Recover</text>
+        <text x="30.7" y="111" text-anchor="middle" font-size="11" fill="#0A2E23">CD12</text>
+      </svg>
+      <div style="background:var(--g50);border:.75pt dashed var(--g300);border-radius:5pt;padding:4pt 7pt;display:flex;flex-direction:column;gap:3pt">
+        <div style="font-weight:700;color:var(--g700)">How to read a card</div>
+        <div style="background:var(--g100);border:.75pt solid var(--g300);border-radius:4pt;padding:2pt 6pt"><div style="font-weight:700"><span style="color:var(--g600)">CD6</span> Endpoint &amp; BYOD Security</div><div><b style="color:var(--g600)">BO-5</b> · ISO A.8.1, A.6.7</div></div>
+        <div>Line 2: the outcome it delivers, then indicative ISO references.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right: function rows -->
+  <div style="flex:1;display:flex;flex-direction:column;gap:3pt;min-height:0">
+
+    <!-- Govern -->
+    <div style="flex:5 1 0;display:grid;grid-template-columns:130pt 1fr;gap:4pt">
+      <div style="background:var(--g900);color:#fff;border-radius:5pt;padding:3pt 8pt;display:flex;flex-direction:column;justify-content:center"><div style="font-size:12pt;font-weight:700">Govern</div><div style="font-style:italic">Who decides, and what are the rules?</div></div>
+      <div style="border:.75pt solid var(--g300);border-radius:5pt;padding:3pt;display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:1fr;gap:3pt">
+        <div style="background:var(--g50);border:.75pt solid var(--g300);border-radius:4pt;padding:2pt 6pt;display:flex;flex-direction:column;justify-content:center"><div style="font-weight:700"><span style="color:var(--g600)">CD1</span> Governance &amp; Accountability</div><div><b style="color:var(--g600)">BO-1 · BO-9</b> · ISO Cl. 5–6, A.5.2</div></div>
+        <div style="background:var(--g50);border:.75pt solid var(--g300);border-radius:4pt;padding:2pt 6pt;display:flex;flex-direction:column;justify-content:center"><div style="font-weight:700"><span style="color:var(--g600)">CD2</span> Policy &amp; Documentation</div><div><b style="color:var(--g600)">BO-1</b> · ISO A.5.1</div></div>
+        <div style="grid-column:1 / -1;background:var(--g50);border:.75pt solid var(--g300);border-radius:4pt;padding:2pt 6pt;display:flex;flex-direction:column;justify-content:center"><div style="font-weight:700"><span style="color:var(--g600)">CD13</span> Third-Party Risk</div><div><b style="color:var(--g600)">BO-2</b> · ISO A.5.19–5.22</div></div>
+      </div>
+    </div>
+
+    <!-- Identify -->
+    <div style="flex:3 1 0;display:grid;grid-template-columns:130pt 1fr;gap:4pt">
+      <div style="background:var(--g700);color:#fff;border-radius:5pt;padding:3pt 8pt;display:flex;flex-direction:column;justify-content:center"><div style="font-size:12pt;font-weight:700">Identify</div><div style="font-style:italic">What exists, and what could go wrong?</div></div>
+      <div style="border:.75pt solid var(--g300);border-radius:5pt;padding:3pt;display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:1fr;gap:3pt">
+        <div style="background:var(--g50);border:.75pt solid var(--g300);border-radius:4pt;padding:2pt 6pt;display:flex;flex-direction:column;justify-content:center"><div style="font-weight:700"><span style="color:var(--g600)">CD3</span> Cyber Risk Management</div><div><b style="color:var(--g600)">BO-3 · BO-9</b> · ISO Cl. 6.1</div></div>
+        <div style="background:var(--g50);border:.75pt solid var(--g300);border-radius:4pt;padding:2pt 6pt;display:flex;flex-direction:column;justify-content:center"><div style="font-weight:700"><span style="color:var(--g600)">CD4</span> Asset &amp; Data Governance</div><div><b style="color:var(--g600)">BO-2</b> · ISO A.5.9, A.5.12</div></div>
+      </div>
+    </div>
+
+    <!-- Protect -->
+    <div style="flex:7.5 1 0;display:grid;grid-template-columns:130pt 1fr;gap:4pt">
+      <div style="background:var(--g600);color:#fff;border-radius:5pt;padding:3pt 8pt;display:flex;flex-direction:column;justify-content:center"><div style="font-size:12pt;font-weight:700">Protect</div><div style="font-style:italic">What keeps attackers and mistakes out?</div></div>
+      <div style="border:.75pt solid var(--g300);border-radius:5pt;padding:3pt;display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:1fr;gap:3pt">
+        <div style="background:var(--g50);border:.75pt solid var(--g300);border-radius:4pt;padding:2pt 6pt;display:flex;flex-direction:column;justify-content:center"><div style="font-weight:700"><span style="color:var(--g600)">CD5</span> Identity &amp; Access Mgmt</div><div><b style="color:var(--g600)">BO-4</b> · ISO A.5.15–5.18, A.8.5</div></div>
+        <div style="background:var(--g50);border:.75pt solid var(--g300);border-radius:4pt;padding:2pt 6pt;display:flex;flex-direction:column;justify-content:center"><div style="font-weight:700"><span style="color:var(--g600)">CD6</span> Endpoint &amp; BYOD Security</div><div><b style="color:var(--g600)">BO-5</b> · ISO A.8.1, A.6.7</div></div>
+        <div style="background:var(--g50);border:.75pt solid var(--g300);border-radius:4pt;padding:2pt 6pt;display:flex;flex-direction:column;justify-content:center"><div style="font-weight:700"><span style="color:var(--g600)">CD7</span> Cloud, SaaS &amp; Network</div><div><b style="color:var(--g600)">BO-5</b> · ISO A.5.23, A.8.20</div></div>
+        <div style="background:var(--g50);border:.75pt solid var(--g300);border-radius:4pt;padding:2pt 6pt;display:flex;flex-direction:column;justify-content:center"><div style="font-weight:700"><span style="color:var(--g600)">CD8</span> Data Protection &amp; Flows</div><div><b style="color:var(--g600)">BO-2 · BO-5</b> · ISO A.5.14, A.8.10</div></div>
+        <div style="background:var(--g50);border:.75pt solid var(--g300);border-radius:4pt;padding:2pt 6pt;display:flex;flex-direction:column;justify-content:center"><div style="font-weight:700"><span style="color:var(--g600)">CD9</span> Vulnerability, Patch, Change</div><div><b style="color:var(--g600)">BO-5</b> · ISO A.8.8, A.8.32</div></div>
+        <div style="background:var(--g50);border:.75pt solid var(--g300);border-radius:4pt;padding:2pt 6pt;display:flex;flex-direction:column;justify-content:center"><div style="font-weight:700"><span style="color:var(--g600)">CD14</span> People, Awareness, Physical</div><div><b style="color:var(--g600)">BO-8</b> · ISO A.6.3, A.7</div></div>
+      </div>
+    </div>
+
+    <!-- Detect -->
+    <div style="flex:3 1 0;display:grid;grid-template-columns:130pt 1fr;gap:4pt">
+      <div style="background:var(--g500);color:#fff;border-radius:5pt;padding:3pt 8pt;display:flex;flex-direction:column;justify-content:center"><div style="font-size:12pt;font-weight:700">Detect</div><div style="font-style:italic">Would a problem be noticed?</div></div>
+      <div style="border:.75pt solid var(--g300);border-radius:5pt;padding:3pt;display:grid;grid-template-columns:1fr;grid-auto-rows:1fr">
+        <div style="background:var(--g50);border:.75pt solid var(--g300);border-radius:4pt;padding:2pt 6pt;display:flex;flex-direction:column;justify-content:center"><div style="font-weight:700"><span style="color:var(--g600)">CD10</span> Logging &amp; Monitoring</div><div><b style="color:var(--g600)">BO-7</b> · ISO A.8.15, A.8.16</div></div>
+      </div>
+    </div>
+
+    <!-- Respond -->
+    <div style="flex:3 1 0;display:grid;grid-template-columns:130pt 1fr;gap:4pt">
+      <div style="background:var(--g300);color:var(--g900);border-radius:5pt;padding:3pt 8pt;display:flex;flex-direction:column;justify-content:center"><div style="font-size:12pt;font-weight:700">Respond</div><div style="font-style:italic">Is it clear who does what in an incident?</div></div>
+      <div style="border:.75pt solid var(--g300);border-radius:5pt;padding:3pt;display:grid;grid-template-columns:1fr;grid-auto-rows:1fr">
+        <div style="background:var(--g50);border:.75pt solid var(--g300);border-radius:4pt;padding:2pt 6pt;display:flex;flex-direction:column;justify-content:center"><div style="font-weight:700"><span style="color:var(--g600)">CD11</span> Incident Response</div><div><b style="color:var(--g600)">BO-7</b> · ISO A.5.24–5.28</div></div>
+      </div>
+    </div>
+
+    <!-- Recover -->
+    <div style="flex:3 1 0;display:grid;grid-template-columns:130pt 1fr;gap:4pt">
+      <div style="background:var(--g100);border:.75pt solid var(--g300);color:var(--g900);border-radius:5pt;padding:3pt 8pt;display:flex;flex-direction:column;justify-content:center"><div style="font-size:12pt;font-weight:700">Recover</div><div style="font-style:italic">Can data and service come back?</div></div>
+      <div style="border:.75pt solid var(--g300);border-radius:5pt;padding:3pt;display:grid;grid-template-columns:1fr;grid-auto-rows:1fr">
+        <div style="background:var(--g50);border:.75pt solid var(--g300);border-radius:4pt;padding:2pt 6pt;display:flex;flex-direction:column;justify-content:center"><div style="font-weight:700"><span style="color:var(--g600)">CD12</span> Backup, Resilience &amp; Continuity</div><div><b style="color:var(--g600)">BO-6</b> · ISO A.5.30, A.8.13</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="so"><span class="k">Note</span><span>The six functions are NIST CSF 2.0; the 14 domains and their grouping are [We]’s own. BO tags repeat the Nine baseline outcomes page. ISO references are indicative (see appendix).</span></div>
+</div>
+<div class="foot"><span>[Firm Name] · Cybersecurity Baseline Programme for IPO Preparation · Strictly private &amp; confidential</span><span>10</span></div>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- ===================== SLIDE 11 · Domain targets ===================== -->
+<section class="slide">
+<div class="eyb">C · The baseline · 4 of 6</div>
+<h2 class="ttl">Domain targets: the level to reach by Week 22</h2>
+<div class="body" style="gap:6pt">
+<div class="lead">Phase 1 scores each domain from L0 to L4. The programme aims for L3 where the main threats are broken and L2 elsewhere. Targets are indicative until the Executive Sponsor confirms them at Gate 1.</div>
+<div class="main" style="display:flex;flex-direction:column;gap:8pt">
+
+<div style="display:flex;gap:10pt">
+<!-- L3 panel -->
+<div style="flex:1;border:1pt solid var(--g300);border-radius:8pt;background:#fff;overflow:hidden">
+<div style="background:var(--g800);color:#fff;padding:6pt 10pt"><div style="font-size:12pt;font-weight:700">Target L3 · 7 domains</div><div>Running, with dated records as evidence</div></div>
+<div style="padding:6pt 10pt;display:flex;flex-direction:column;gap:4pt">
+<div style="display:flex;font-weight:700;color:var(--g700)"><div style="width:206pt;flex:none">Domain</div><div style="flex:1;display:flex"><span style="flex:1;text-align:center">L0</span><span style="flex:1;text-align:center">L1</span><span style="flex:1;text-align:center">L2</span><span style="flex:1;text-align:center">L3</span><span style="flex:1;text-align:center;color:var(--gry)">L4</span></div></div>
+<div style="display:flex;align-items:center"><div style="width:206pt;flex:none"><b>CD1</b> Governance &amp; Accountability</div><div style="flex:1;height:20pt;display:flex;border:1pt solid var(--g100);background:linear-gradient(90deg,#fff 20%,var(--g50) 20%,var(--g50) 40%,#fff 40%,#fff 60%,var(--g50) 60%,var(--g50) 80%,var(--gry-bg) 80%)"><div style="width:80%;background:linear-gradient(90deg,var(--g100) 75%,var(--g800) 75%);color:#fff;display:flex;align-items:center;justify-content:flex-end;padding-right:5pt;font-weight:700">L3</div></div></div>
+<div style="display:flex;align-items:center"><div style="width:206pt;flex:none"><b>CD5</b> Identity &amp; Access Management</div><div style="flex:1;height:20pt;display:flex;border:1pt solid var(--g100);background:linear-gradient(90deg,#fff 20%,var(--g50) 20%,var(--g50) 40%,#fff 40%,#fff 60%,var(--g50) 60%,var(--g50) 80%,var(--gry-bg) 80%)"><div style="width:80%;background:linear-gradient(90deg,var(--g100) 75%,var(--g800) 75%);color:#fff;display:flex;align-items:center;justify-content:flex-end;padding-right:5pt;font-weight:700">L3</div></div></div>
+<div style="display:flex;align-items:center"><div style="width:206pt;flex:none"><b>CD6</b> Endpoint &amp; BYOD Security</div><div style="flex:1;height:20pt;display:flex;border:1pt solid var(--g100);background:linear-gradient(90deg,#fff 20%,var(--g50) 20%,var(--g50) 40%,#fff 40%,#fff 60%,var(--g50) 60%,var(--g50) 80%,var(--gry-bg) 80%)"><div style="width:80%;background:linear-gradient(90deg,var(--g100) 75%,var(--g800) 75%);color:#fff;display:flex;align-items:center;justify-content:flex-end;padding-right:5pt;font-weight:700">L3</div></div></div>
+<div style="display:flex;align-items:center"><div style="width:206pt;flex:none"><b>CD7</b> Cloud, SaaS &amp; Network Security</div><div style="flex:1;height:20pt;display:flex;border:1pt solid var(--g100);background:linear-gradient(90deg,#fff 20%,var(--g50) 20%,var(--g50) 40%,#fff 40%,#fff 60%,var(--g50) 60%,var(--g50) 80%,var(--gry-bg) 80%)"><div style="width:80%;background:linear-gradient(90deg,var(--g100) 75%,var(--g800) 75%);color:#fff;display:flex;align-items:center;justify-content:flex-end;padding-right:5pt;font-weight:700">L3</div></div></div>
+<div style="display:flex;align-items:center"><div style="width:206pt;flex:none"><b>CD8</b> Data Protection &amp; Data Flows</div><div style="flex:1;height:20pt;display:flex;border:1pt solid var(--g100);background:linear-gradient(90deg,#fff 20%,var(--g50) 20%,var(--g50) 40%,#fff 40%,#fff 60%,var(--g50) 60%,var(--g50) 80%,var(--gry-bg) 80%)"><div style="width:80%;background:linear-gradient(90deg,var(--g100) 75%,var(--g800) 75%);color:#fff;display:flex;align-items:center;justify-content:flex-end;padding-right:5pt;font-weight:700">L3</div></div></div>
+<div style="display:flex;align-items:center"><div style="width:206pt;flex:none"><b>CD11</b> Incident Response</div><div style="flex:1;height:20pt;display:flex;border:1pt solid var(--g100);background:linear-gradient(90deg,#fff 20%,var(--g50) 20%,var(--g50) 40%,#fff 40%,#fff 60%,var(--g50) 60%,var(--g50) 80%,var(--gry-bg) 80%)"><div style="width:80%;background:linear-gradient(90deg,var(--g100) 75%,var(--g800) 75%);color:#fff;display:flex;align-items:center;justify-content:flex-end;padding-right:5pt;font-weight:700">L3</div></div></div>
+<div style="display:flex;align-items:center"><div style="width:206pt;flex:none"><b>CD12</b> Backup, Resilience &amp; Continuity</div><div style="flex:1;height:20pt;display:flex;border:1pt solid var(--g100);background:linear-gradient(90deg,#fff 20%,var(--g50) 20%,var(--g50) 40%,#fff 40%,#fff 60%,var(--g50) 60%,var(--g50) 80%,var(--gry-bg) 80%)"><div style="width:80%;background:linear-gradient(90deg,var(--g100) 75%,var(--g800) 75%);color:#fff;display:flex;align-items:center;justify-content:flex-end;padding-right:5pt;font-weight:700">L3</div></div></div>
+</div>
+</div>
+
+<!-- L2 panel -->
+<div style="flex:1;border:1pt solid var(--g300);border-radius:8pt;background:#fff;overflow:hidden">
+<div style="background:var(--g600);color:#fff;padding:6pt 10pt"><div style="font-size:12pt;font-weight:700">Target L2 · 7 domains</div><div>Written down and owned, minimum controls only</div></div>
+<div style="padding:6pt 10pt;display:flex;flex-direction:column;gap:4pt">
+<div style="display:flex;font-weight:700;color:var(--g700)"><div style="width:206pt;flex:none">Domain</div><div style="flex:1;display:flex"><span style="flex:1;text-align:center">L0</span><span style="flex:1;text-align:center">L1</span><span style="flex:1;text-align:center">L2</span><span style="flex:1;text-align:center">L3</span><span style="flex:1;text-align:center;color:var(--gry)">L4</span></div></div>
+<div style="display:flex;align-items:center"><div style="width:206pt;flex:none"><b>CD2</b> Policy &amp; Documentation</div><div style="flex:1;height:20pt;display:flex;border:1pt solid var(--g100);background:linear-gradient(90deg,#fff 20%,var(--g50) 20%,var(--g50) 40%,#fff 40%,#fff 60%,var(--g50) 60%,var(--g50) 80%,var(--gry-bg) 80%)"><div style="width:60%;background:linear-gradient(90deg,var(--g100) 66.67%,var(--g600) 66.67%);color:#fff;display:flex;align-items:center;justify-content:flex-end;padding-right:5pt;font-weight:700">L2</div></div></div>
+<div style="display:flex;align-items:center"><div style="width:206pt;flex:none"><b>CD3</b> Cyber Risk Management</div><div style="flex:1;height:20pt;display:flex;border:1pt solid var(--g100);background:linear-gradient(90deg,#fff 20%,var(--g50) 20%,var(--g50) 40%,#fff 40%,#fff 60%,var(--g50) 60%,var(--g50) 80%,var(--gry-bg) 80%)"><div style="width:60%;background:linear-gradient(90deg,var(--g100) 66.67%,var(--g600) 66.67%);color:#fff;display:flex;align-items:center;justify-content:flex-end;padding-right:5pt;font-weight:700">L2</div></div></div>
+<div style="display:flex;align-items:center"><div style="width:206pt;flex:none"><b>CD4</b> Asset &amp; Data Governance</div><div style="flex:1;height:20pt;display:flex;border:1pt solid var(--g100);background:linear-gradient(90deg,#fff 20%,var(--g50) 20%,var(--g50) 40%,#fff 40%,#fff 60%,var(--g50) 60%,var(--g50) 80%,var(--gry-bg) 80%)"><div style="width:60%;background:linear-gradient(90deg,var(--g100) 66.67%,var(--g600) 66.67%);color:#fff;display:flex;align-items:center;justify-content:flex-end;padding-right:5pt;font-weight:700">L2</div></div></div>
+<div style="display:flex;align-items:center"><div style="width:206pt;flex:none"><b>CD9</b> Vulnerability, Patch &amp; Change</div><div style="flex:1;height:20pt;display:flex;border:1pt solid var(--g100);background:linear-gradient(90deg,#fff 20%,var(--g50) 20%,var(--g50) 40%,#fff 40%,#fff 60%,var(--g50) 60%,var(--g50) 80%,var(--gry-bg) 80%)"><div style="width:60%;background:linear-gradient(90deg,var(--g100) 66.67%,var(--g600) 66.67%);color:#fff;display:flex;align-items:center;justify-content:flex-end;padding-right:5pt;font-weight:700">L2</div></div></div>
+<div style="display:flex;align-items:center"><div style="width:206pt;flex:none"><b>CD10</b> Logging &amp; Monitoring</div><div style="flex:1;height:20pt;display:flex;border:1pt solid var(--g100);background:linear-gradient(90deg,#fff 20%,var(--g50) 20%,var(--g50) 40%,#fff 40%,#fff 60%,var(--g50) 60%,var(--g50) 80%,var(--gry-bg) 80%)"><div style="width:60%;background:linear-gradient(90deg,var(--g100) 66.67%,var(--g600) 66.67%);color:#fff;display:flex;align-items:center;justify-content:flex-end;padding-right:5pt;font-weight:700">L2</div></div></div>
+<div style="display:flex;align-items:center"><div style="width:206pt;flex:none"><b>CD13</b> Third-Party Risk</div><div style="flex:1;height:20pt;display:flex;border:1pt solid var(--g100);background:linear-gradient(90deg,#fff 20%,var(--g50) 20%,var(--g50) 40%,#fff 40%,#fff 60%,var(--g50) 60%,var(--g50) 80%,var(--gry-bg) 80%)"><div style="width:60%;background:linear-gradient(90deg,var(--g100) 66.67%,var(--g600) 66.67%);color:#fff;display:flex;align-items:center;justify-content:flex-end;padding-right:5pt;font-weight:700">L2</div></div></div>
+<div style="display:flex;align-items:center"><div style="width:206pt;flex:none"><b>CD14</b> People, Awareness &amp; Physical</div><div style="flex:1;height:20pt;display:flex;border:1pt solid var(--g100);background:linear-gradient(90deg,#fff 20%,var(--g50) 20%,var(--g50) 40%,#fff 40%,#fff 60%,var(--g50) 60%,var(--g50) 80%,var(--gry-bg) 80%)"><div style="width:60%;background:linear-gradient(90deg,var(--g100) 66.67%,var(--g600) 66.67%);color:#fff;display:flex;align-items:center;justify-content:flex-end;padding-right:5pt;font-weight:700">L2</div></div></div>
+</div>
+</div>
+</div>
+
+<!-- maturity scale -->
+<div style="display:flex;gap:6pt">
+<div style="flex:1;background:var(--gry);color:#fff;border-radius:6pt;padding:6pt 8pt"><div style="font-size:14pt;font-weight:700">L0</div><div style="font-weight:700">Non-existent</div><div>Nothing in place.</div></div>
+<div style="flex:1;background:var(--g300);color:var(--g900);border-radius:6pt;padding:6pt 8pt"><div style="font-size:14pt;font-weight:700">L1</div><div style="font-weight:700">Ad hoc</div><div>Done by some people; nothing written down.</div></div>
+<div style="flex:1;background:var(--g600);color:#fff;border-radius:6pt;padding:6pt 8pt"><div style="font-size:14pt;font-weight:700">L2</div><div style="font-weight:700">Defined</div><div>Written down, with an owner.</div></div>
+<div style="flex:1;background:var(--g800);color:#fff;border-radius:6pt;padding:6pt 8pt"><div style="font-size:14pt;font-weight:700">L3</div><div style="font-weight:700">Implemented &amp; evidenced</div><div>Running, with dated records.</div></div>
+<div style="flex:1;background:var(--gry-bg);color:var(--gry-dk);border:1pt dashed var(--gry);border-radius:6pt;padding:6pt 8pt"><div style="font-size:14pt;font-weight:700">L4</div><div style="font-weight:700">Measured &amp; improved</div><div>Tracked and tuned. Deferred.</div></div>
+</div>
+
+</div>
+<div class="so"><span class="k">Note</span><span>L2 domains are reached through the minimum controls only; L4 is deferred. Today’s score for each domain is set in Phase 1: [Company] states it has no baseline controls and [We] verify that in Week 1.</span></div>
+</div>
+<div class="foot"><span>[Firm Name] · Cybersecurity Baseline Programme for IPO Preparation · Strictly private &amp; confidential</span><span>11</span></div>
+</section>
+
+<!-- ===================== SLIDE 12 · Threats and three tests ===================== -->
+<section class="slide">
+<div class="eyb">C · The baseline · 5 of 7</div>
+<h2 class="ttl">Main threats and the three tests</h2>
+<div class="body">
+<div class="lead">Five threats are the starting list for deciding what to fix first. A control joins the minimum set only if it passes three tests. Phase 1 may change the list; the Executive Sponsor decides it at Gate 1.</div>
+<div class="main" style="display:flex;gap:12pt">
+
+<!-- threats -->
+<div style="flex:none;width:560pt;display:flex;flex-direction:column;gap:6pt">
+<div style="flex:1;display:flex;border-radius:6pt;overflow:hidden;border:1pt solid var(--g300);background:#fff">
+<div style="flex:none;width:92pt;background:var(--g800);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2pt"><svg class="ic"><use href="#i-lock"></use></svg><div style="font-weight:700">TS-A</div></div>
+<div style="padding:5pt 10pt;display:flex;flex-direction:column;justify-content:center;gap:2pt"><div style="font-size:12pt;font-weight:700;color:var(--g900)">Cloud account taken over (OneDrive, Jianguoyun)</div><div><b>Why it fits:</b> preclinical data sits in two cloud platforms; sign-in controls to be confirmed in Week 1.</div></div></div>
+
+<div style="flex:1;display:flex;border-radius:6pt;overflow:hidden;border:1pt solid var(--g300);background:#fff">
+<div style="flex:none;width:92pt;background:var(--g800);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2pt"><svg class="ic"><use href="#i-coin"></use></svg><div style="font-weight:700">TS-B</div></div>
+<div style="padding:5pt 10pt;display:flex;flex-direction:column;justify-content:center;gap:2pt"><div style="font-size:12pt;font-weight:700;color:var(--g900)">Fraudulent or wrong payment (one ERP, both offices)</div><div><b>Why it fits:</b> one ERP serves both offices and handles vendor payments; approval steps to be confirmed in Week 1.</div></div></div>
+
+<div style="flex:1;display:flex;border-radius:6pt;overflow:hidden;border:1pt solid var(--g300);background:#fff">
+<div style="flex:none;width:92pt;background:var(--g800);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2pt"><svg class="ic"><use href="#i-laptop"></use></svg><div style="font-weight:700">TS-C</div></div>
+<div style="padding:5pt 10pt;display:flex;flex-direction:column;justify-content:center;gap:2pt"><div style="font-size:12pt;font-weight:700;color:var(--g900)">Lost, stolen or infected device (BYOD)</div><div><b>Why it fits:</b> staff use their own PCs and laptops for work; the standard for them is to be confirmed in Week 1.</div></div></div>
+
+<div style="flex:1;display:flex;border-radius:6pt;overflow:hidden;border:1pt solid var(--g300);background:#fff">
+<div style="flex:none;width:92pt;background:var(--g800);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2pt"><svg class="ic"><use href="#i-book"></use></svg><div style="font-weight:700">TS-D</div></div>
+<div style="padding:5pt 10pt;display:flex;flex-direction:column;justify-content:center;gap:2pt"><div style="font-size:12pt;font-weight:700;color:var(--g900)">R&amp;D data lost, copied out or not provable</div><div><b>Why it fits:</b> lab notes are on paper at two sites and datasets sit in a Mainland cloud; leaver and record practice to be confirmed.</div></div></div>
+
+<div style="flex:1;display:flex;border-radius:6pt;overflow:hidden;border:1pt solid var(--g300);background:#fff">
+<div style="flex:none;width:92pt;background:var(--g800);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2pt"><svg class="ic"><use href="#i-db"></use></svg><div style="font-weight:700">TS-E</div></div>
+<div style="padding:5pt 10pt;display:flex;flex-direction:column;justify-content:center;gap:2pt"><div style="font-size:12pt;font-weight:700;color:var(--g900)">Data loss or ransomware, with no tested restore</div><div><b>Why it fits:</b> research data sits in cloud platforms; backup and restore arrangements are to be confirmed in Week 1.</div></div></div>
+</div>
+
+<!-- tests -->
+<div style="flex:1;display:flex;flex-direction:column;gap:6pt">
+<div style="background:var(--g800);color:#fff;border-radius:6pt;padding:6pt 10pt;font-size:12pt;font-weight:700;display:flex;align-items:center;gap:8pt"><svg class="ic s"><use href="#i-search"></use></svg><span>Three tests for a minimum control</span></div>
+<div style="display:flex;gap:8pt;align-items:flex-start;background:var(--g50);border:1pt solid var(--g300);border-radius:6pt;padding:6pt 8pt">
+<div style="flex:none;width:24pt;height:24pt;border-radius:12pt;background:var(--g600);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center">1</div>
+<div><div style="font-size:12pt;font-weight:700;color:var(--g900)">It breaks a threat chain</div><div>It stops or slows at least one of the five threats.</div></div></div>
+<div style="display:flex;gap:8pt;align-items:flex-start;background:var(--g50);border:1pt solid var(--g300);border-radius:6pt;padding:6pt 8pt">
+<div style="flex:none;width:24pt;height:24pt;border-radius:12pt;background:var(--g600);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center">2</div>
+<div><div style="font-size:12pt;font-weight:700;color:var(--g900)">Evidence can be shown</div><div>A screenshot, record or document can prove it runs.</div></div></div>
+<div style="display:flex;gap:8pt;align-items:flex-start;background:var(--g50);border:1pt solid var(--g300);border-radius:6pt;padding:6pt 8pt">
+<div style="flex:none;width:24pt;height:24pt;border-radius:12pt;background:var(--g600);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center">3</div>
+<div><div style="font-size:12pt;font-weight:700;color:var(--g900)">[Company] can keep it running</div><div>After Week 22, with generalist IT and a part-time coordinator. If it fails, fold it into another control or defer it.</div></div></div>
+<div style="display:flex;gap:8pt;align-items:flex-start;background:var(--g100);border:1.5pt solid var(--g600);border-radius:6pt;padding:6pt 8pt">
+<div style="flex:none;color:var(--g700)"><svg class="ic"><use href="#i-flag"></use></svg></div>
+<div><b>Who decides.</b> The five threats are [We]’s starting proposal, not a NIST or ISO list. Phase 1 may give fewer or more. The Executive Sponsor decides the final list at Gate 1, on [We]’s recommendation.</div></div>
+</div>
+
+</div>
+<!-- Deferred band: grey -->
+<div style="display:flex;align-items:center;gap:8pt;background:var(--gry-bg);border:1.5pt dashed var(--gry);border-radius:6pt;padding:5pt 10pt;color:var(--gry-dk)">
+<span style="flex:none;background:var(--gry-dk);color:#fff;border-radius:4pt;padding:1pt 8pt;font-weight:700">Deferred</span>
+<div style="display:flex;flex-wrap:wrap;gap:4pt">
+<span style="border:1pt dashed var(--gry);background:#fff;border-radius:10pt;padding:0 8pt">Round-the-clock monitoring (SIEM, SOC)</span>
+<span style="border:1pt dashed var(--gry);background:#fff;border-radius:10pt;padding:0 8pt">Data-loss-prevention tools</span>
+<span style="border:1pt dashed var(--gry);background:#fff;border-radius:10pt;padding:0 8pt">Full device management</span>
+<span style="border:1pt dashed var(--gry);background:#fff;border-radius:10pt;padding:0 8pt">ISO certification</span>
+<span style="border:1pt dashed var(--gry);background:#fff;border-radius:10pt;padding:0 8pt">Vendor audits</span>
+<span style="border:1pt dashed var(--gry);background:#fff;border-radius:10pt;padding:0 8pt">Internal audit</span>
+<span style="border:1pt dashed var(--gry);background:#fff;border-radius:10pt;padding:0 8pt">Cross-border legal analysis (for [Company]’s counsel)</span>
+</div>
+</div>
+</div>
+<div class="foot"><span>[Firm Name] · Cybersecurity Baseline Programme for IPO Preparation · Strictly private &amp; confidential</span><span>12</span></div>
+</section>
+
+<!-- ===================== SLIDE 13 · Minimum controls: the starting list ===================== -->
+<section class="slide">
+<div class="eyb">C · The baseline · 6 of 7</div>
+<h2 class="ttl">Minimum controls: the starting list</h2>
+<div class="body">
+<div class="lead">Fifteen controls are the starting minimum, in three tiers by urgency. This is not every control a company could have. Each has a threat it breaks, a domain, a due week and the evidence that proves it.</div>
+<div class="main">
+<table class="tb cp" style="width:100%;height:100%">
+<colgroup><col style="width:40pt"><col style="width:52pt"><col style="width:380pt"><col style="width:54pt"><col style="width:100pt"><col style="width:64pt"><col style="width:190pt"></colgroup>
+<thead><tr><th class="c">Tier</th><th>ID</th><th>Control</th><th class="c">Threat</th><th>Domain</th><th class="c">Live by</th><th>Evidence</th></tr></thead>
+<tbody>
+<tr class="t1"><td class="c b">1</td><td class="b">MC-01</td><td>Named owner (Executive Sponsor) and short decision meetings</td><td class="c">A–E</td><td>CD1</td><td class="c">Wk 1</td><td>Role letter, decision notes</td></tr>
+<tr class="t1"><td class="c b">1</td><td class="b">MC-02</td><td>One-page inventory: systems, data, accounts, devices</td><td class="c">A–E</td><td>CD4, CD8</td><td class="c">Wk 2</td><td>Inventory signed by owner</td></tr>
+<tr class="t1"><td class="c b">1</td><td class="b">MC-03</td><td>MFA on OneDrive, Jianguoyun (if supported), ERP finance/admin</td><td class="c">A</td><td>CD5</td><td class="c">Wk 5</td><td>Sign-in setting screenshots</td></tr>
+<tr class="t1"><td class="c b">1</td><td class="b">MC-04</td><td>Admin accounts, leavers, payment approval split, bank call-back</td><td class="c">A, B</td><td>CD5</td><td class="c">Wk 5</td><td>Admin list, ERP approval settings</td></tr>
+<tr class="t1"><td class="c b">1</td><td class="b">MC-05</td><td>Minimum BYOD standard; company data in approved clouds only</td><td class="c">C</td><td>CD6</td><td class="c">Wk 6</td><td>Signed standard, sample check</td></tr>
+<tr class="t1"><td class="c b">1</td><td class="b">MC-06</td><td>Cloud sharing limits: no anonymous links, link expiry</td><td class="c">A, D</td><td>CD7, CD8</td><td class="c">Wk 5</td><td>Sharing setting screenshots</td></tr>
+<tr class="t1"><td class="c b">1</td><td class="b">MC-07</td><td>Backup of critical data started; research data first</td><td class="c">D, E</td><td>CD12</td><td class="c">Wk 6</td><td>Backup job log</td></tr>
+<tr class="t1"><td class="c b">1</td><td class="b">MC-08</td><td>“Report and who to call” sheet and form</td><td class="c">A–E</td><td>CD11</td><td class="c">Wk 2</td><td>Issued sheet and report form</td></tr>
+<tr class="t1"><td class="c b">1</td><td class="b">MC-09</td><td>Basic notebook rules: numbered, dated, signed, locked</td><td class="c">D</td><td>CD8, CD14</td><td class="c">Wk 3</td><td>Sample notebook check</td></tr>
+<tr class="t2"><td class="c b">2</td><td class="b">MC-10</td><td>Short policies, written after the settings are decided</td><td class="c">A–E</td><td>CD2</td><td class="c">Wk 12</td><td>Approved policies</td></tr>
+<tr class="t2"><td class="c b">2</td><td class="b">MC-11</td><td>Incident plan, up to 4 one-page playbooks, 1 tabletop</td><td class="c">A–E</td><td>CD11</td><td class="c">Wk 12, 17</td><td>Plan and tabletop report</td></tr>
+<tr class="t2"><td class="c b">2</td><td class="b">MC-12</td><td>Risk register (up to 10 risks), accepted by Executive Sponsor</td><td class="c">A–E</td><td>CD3</td><td class="c">Wk 13</td><td>Register accepted in writing</td></tr>
+<tr class="t2"><td class="c b">2</td><td class="b">MC-13</td><td>One access review, monthly patching, M365 audit log on</td><td class="c">A, C</td><td>CD5, CD9, CD10</td><td class="c">Wk 13</td><td>Review record, patch, audit logs</td></tr>
+<tr class="t2"><td class="c b">2</td><td class="b">MC-14</td><td>Onboarding checklist in use; Yonyou and Nutstore asks tracked</td><td class="c">B, D</td><td>CD13</td><td class="c">Wk 13</td><td>Completed checklists, asks log</td></tr>
+<tr class="t3"><td class="c b">3</td><td class="b">MC-15</td><td>Passed restore test, awareness record, evidence pack, Gate 3</td><td class="c">A–E</td><td>CD1, CD12, CD14</td><td class="c">Wk 22</td><td>Restore record, attendance, pack</td></tr>
+</tbody></table>
+</div>
+<div class="so"><span class="k">Tiers</span><span>Tier 1 do first (Weeks 1–6, the quick start) · Tier 2 do next (Weeks 7–16) · Tier 3 show it works (Weeks 15–22). Phase 1 may add or remove controls and the Executive Sponsor decides at Gate 1. See Minimum controls: coverage and what is left out, next.</span></div>
+</div>
+<div class="foot"><span>[Firm Name] · Cybersecurity Baseline Programme for IPO Preparation · Strictly private &amp; confidential</span><span>13</span></div>
+</section>
+
+<!-- ===================== SLIDE 14 · Minimum controls: coverage and what is left out ===================== -->
+<section class="slide">
+<div class="eyb">C · The baseline · 7 of 7</div>
+<h2 class="ttl">Minimum controls: coverage and what is left out</h2>
+<div class="body">
+<div class="lead">The starting list is the minimum, not every control a company could have. It covers all five threats and all 14 domains; what is left out on purpose is shown in grey, with the reason.</div>
+<div class="main" style="display:flex;gap:8pt">
+
+<!-- LEFT: coverage charts -->
+<div style="flex:none;width:576pt;display:flex;flex-direction:column;gap:8pt">
+
+<div style="background:#fff;border:1pt solid var(--g300);border-radius:8pt;padding:6pt 8pt">
+<svg style="width:560pt;height:176pt;display:block" viewBox="0 0 560 176">
+<!-- tinted columns: controls that help with all five threats -->
+<g fill="#F1F8F4">
+<rect x="204" y="36" width="21" height="140"></rect>
+<rect x="225" y="36" width="21" height="140"></rect>
+<rect x="351" y="36" width="21" height="140"></rect>
+<rect x="393" y="36" width="21" height="140"></rect>
+<rect x="414" y="36" width="21" height="140"></rect>
+<rect x="435" y="36" width="21" height="140"></rect>
+<rect x="498" y="36" width="21" height="140"></rect>
+</g>
+<text x="0" y="12" font-size="11" fill="#3E4D47">Shaded: helps with all five threats</text>
+<text x="204" y="12" font-size="11" font-weight="700" fill="#13553F">Minimum controls MC-01 to MC-15</text>
+<text x="0" y="30" font-size="11" font-weight="700" fill="#13553F">Threat</text>
+<text x="540" y="30" text-anchor="middle" font-size="11" font-weight="700" fill="#13553F">Total</text>
+<g font-size="11" font-weight="700" fill="#13553F" text-anchor="middle">
+<text x="214.5" y="30">01</text><text x="235.5" y="30">02</text><text x="256.5" y="30">03</text><text x="277.5" y="30">04</text><text x="298.5" y="30">05</text>
+<text x="319.5" y="30">06</text><text x="340.5" y="30">07</text><text x="361.5" y="30">08</text><text x="382.5" y="30">09</text><text x="403.5" y="30">10</text>
+<text x="424.5" y="30">11</text><text x="445.5" y="30">12</text><text x="466.5" y="30">13</text><text x="487.5" y="30">14</text><text x="508.5" y="30">15</text>
+</g>
+<g stroke="#DCEFE4"><line x1="0" y1="36" x2="560" y2="36" stroke="#8FD0AE"></line><line x1="0" y1="64" x2="560" y2="64"></line><line x1="0" y1="92" x2="560" y2="92"></line><line x1="0" y1="120" x2="560" y2="120"></line><line x1="0" y1="148" x2="560" y2="148"></line></g>
+<!-- row labels -->
+<text x="0" y="54" font-size="11" fill="#1D2B25"><tspan font-weight="700" fill="#13553F">TS-A</tspan> Cloud account takeover</text>
+<text x="0" y="82" font-size="11" fill="#1D2B25"><tspan font-weight="700" fill="#13553F">TS-B</tspan> Fraudulent or wrong payment</text>
+<text x="0" y="110" font-size="11" fill="#1D2B25"><tspan font-weight="700" fill="#13553F">TS-C</tspan> Lost or infected device</text>
+<text x="0" y="138" font-size="11" fill="#1D2B25"><tspan font-weight="700" fill="#13553F">TS-D</tspan> R&amp;D data lost or copied out</text>
+<text x="0" y="166" font-size="11" fill="#1D2B25"><tspan font-weight="700" fill="#13553F">TS-E</tspan> Data loss or ransomware</text>
+<!-- totals -->
+<g font-size="11" font-weight="700" fill="#0A2E23" text-anchor="middle"><text x="540" y="54">11</text><text x="540" y="82">9</text><text x="540" y="110">9</text><text x="540" y="138">11</text><text x="540" y="166">8</text></g>
+<!-- dots row A (cy 50) -->
+<g fill="#1B7F5C">
+<circle cx="214.5" cy="50" r="5"></circle><circle cx="235.5" cy="50" r="5"></circle><circle cx="256.5" cy="50" r="5"></circle><circle cx="277.5" cy="50" r="5"></circle><circle cx="319.5" cy="50" r="5"></circle><circle cx="361.5" cy="50" r="5"></circle><circle cx="403.5" cy="50" r="5"></circle><circle cx="424.5" cy="50" r="5"></circle><circle cx="445.5" cy="50" r="5"></circle><circle cx="466.5" cy="50" r="5"></circle><circle cx="508.5" cy="50" r="5"></circle>
+<!-- row B (cy 78) -->
+<circle cx="214.5" cy="78" r="5"></circle><circle cx="235.5" cy="78" r="5"></circle><circle cx="277.5" cy="78" r="5"></circle><circle cx="361.5" cy="78" r="5"></circle><circle cx="403.5" cy="78" r="5"></circle><circle cx="424.5" cy="78" r="5"></circle><circle cx="445.5" cy="78" r="5"></circle><circle cx="487.5" cy="78" r="5"></circle><circle cx="508.5" cy="78" r="5"></circle>
+<!-- row C (cy 106) -->
+<circle cx="214.5" cy="106" r="5"></circle><circle cx="235.5" cy="106" r="5"></circle><circle cx="298.5" cy="106" r="5"></circle><circle cx="361.5" cy="106" r="5"></circle><circle cx="403.5" cy="106" r="5"></circle><circle cx="424.5" cy="106" r="5"></circle><circle cx="445.5" cy="106" r="5"></circle><circle cx="466.5" cy="106" r="5"></circle><circle cx="508.5" cy="106" r="5"></circle>
+<!-- row D (cy 134) -->
+<circle cx="214.5" cy="134" r="5"></circle><circle cx="235.5" cy="134" r="5"></circle><circle cx="319.5" cy="134" r="5"></circle><circle cx="340.5" cy="134" r="5"></circle><circle cx="361.5" cy="134" r="5"></circle><circle cx="382.5" cy="134" r="5"></circle><circle cx="403.5" cy="134" r="5"></circle><circle cx="424.5" cy="134" r="5"></circle><circle cx="445.5" cy="134" r="5"></circle><circle cx="487.5" cy="134" r="5"></circle><circle cx="508.5" cy="134" r="5"></circle>
+<!-- row E (cy 162) -->
+<circle cx="214.5" cy="162" r="5"></circle><circle cx="235.5" cy="162" r="5"></circle><circle cx="340.5" cy="162" r="5"></circle><circle cx="361.5" cy="162" r="5"></circle><circle cx="403.5" cy="162" r="5"></circle><circle cx="424.5" cy="162" r="5"></circle><circle cx="445.5" cy="162" r="5"></circle><circle cx="508.5" cy="162" r="5"></circle>
+</g>
+</svg>
+</div>
+
+<div style="background:#fff;border:1pt solid var(--g300);border-radius:8pt;padding:6pt 8pt">
+<svg style="width:560pt;height:116pt;display:block" viewBox="0 0 560 116">
+<text x="0" y="12" font-size="11" font-weight="700" fill="#13553F">Controls behind each domain · 22 control-to-domain links in total</text>
+<line x1="0" y1="92" x2="560" y2="92" stroke="#8FD0AE" stroke-width="1.5"></line>
+<g fill="#1B7F5C">
+<rect x="8" y="52" width="24" height="40"></rect>
+<rect x="48" y="72" width="24" height="20"></rect>
+<rect x="88" y="72" width="24" height="20"></rect>
+<rect x="128" y="72" width="24" height="20"></rect>
+<rect x="168" y="32" width="24" height="60"></rect>
+<rect x="208" y="72" width="24" height="20"></rect>
+<rect x="248" y="72" width="24" height="20"></rect>
+<rect x="288" y="32" width="24" height="60"></rect>
+<rect x="328" y="72" width="24" height="20"></rect>
+<rect x="368" y="72" width="24" height="20"></rect>
+<rect x="408" y="52" width="24" height="40"></rect>
+<rect x="448" y="52" width="24" height="40"></rect>
+<rect x="488" y="72" width="24" height="20"></rect>
+<rect x="528" y="52" width="24" height="40"></rect>
+</g>
+<g font-size="11" font-weight="700" fill="#0A2E23" text-anchor="middle">
+<text x="20" y="48">2</text><text x="60" y="68">1</text><text x="100" y="68">1</text><text x="140" y="68">1</text><text x="180" y="28">3</text><text x="220" y="68">1</text><text x="260" y="68">1</text><text x="300" y="28">3</text><text x="340" y="68">1</text><text x="380" y="68">1</text><text x="420" y="48">2</text><text x="460" y="48">2</text><text x="500" y="68">1</text><text x="540" y="48">2</text>
+</g>
+<g font-size="11" fill="#3E4D47" text-anchor="middle">
+<text x="20" y="108">CD1</text><text x="60" y="108">CD2</text><text x="100" y="108">CD3</text><text x="140" y="108">CD4</text><text x="180" y="108">CD5</text><text x="220" y="108">CD6</text><text x="260" y="108">CD7</text><text x="300" y="108">CD8</text><text x="340" y="108">CD9</text><text x="380" y="108">CD10</text><text x="420" y="108">CD11</text><text x="460" y="108">CD12</text><text x="500" y="108">CD13</text><text x="540" y="108">CD14</text>
+</g>
+</svg>
+</div>
+</div>
+
+<!-- RIGHT: deferred (grey) -->
+<div style="flex:1;display:flex;flex-direction:column;background:var(--gry-bg);border:1.5pt dashed var(--gry);border-radius:8pt;overflow:hidden;color:var(--gry-dk)">
+<div style="background:var(--gry-dk);color:#fff;padding:7pt 10pt;display:flex;align-items:center;gap:8pt;font-size:12pt;font-weight:700"><svg class="ic s"><use href="#i-list"></use></svg><span>Left out on purpose · deferred</span></div>
+<div style="flex:1;padding:8pt 10pt;display:flex;flex-direction:column;justify-content:space-between">
+<div><b>Round-the-clock monitoring (SIEM, SOC)</b><div>Needs round-the-clock staff; fails test 3.</div></div>
+<div><b>Data-loss-prevention tools</b><div>Extra tooling to tune; sharing limits cover the basics first.</div></div>
+<div><b>Full device management</b><div>The BYOD standard comes first; tooling is a later step.</div></div>
+<div><b>ISO certification</b><div>A separate, longer programme with an external auditor.</div></div>
+<div><b>Vendor audits</b><div>[We] set an onboarding checklist, not audits of suppliers.</div></div>
+<div><b>Internal audit</b><div>Independent assurance is outside this scope.</div></div>
+<div><b>Cross-border legal analysis</b><div>Stays with [Company]’s counsel.</div></div>
+</div>
+</div>
+
+</div>
+<div class="so"><span class="k">Change</span><span>Phase 1 may add or drop controls using the three tests, and the Executive Sponsor decides the final list at Gate 1. After Gate 1, an addition that needs extra effort follows change control. Technical testing is not in the list: its scope is to be confirmed.</span></div>
+</div>
+<div class="foot"><span>[Firm Name] · Cybersecurity Baseline Programme for IPO Preparation · Strictly private &amp; confidential</span><span>14</span></div>
+</section>
+
+
+
+
+
+</body></html>
